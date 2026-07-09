@@ -46,7 +46,8 @@
     },
     {
       "parameters": {
-        "operation": "getFile",
+        "resource": "file",
+        "operation": "get",
         "fileId": "={{ $node[\"Telegram Trigger\"].json.message.photo.slice(-1)[0].file_id }}",
         "additionalFields": {}
       },
