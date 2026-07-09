@@ -1,0 +1,122 @@
+{
+  "name": "Telegram to OneDrive Task Logger",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger-node",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        240
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "your-telegram-cred-id",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": "folder/todo_from_telegram.md",
+        "options": {}
+      },
+      "id": "onedrive-download-node",
+      "name": "Download todo.md",
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        220,
+        240
+      ],
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "your-onedrive-cred-id",
+          "name": "OneDrive Credentials"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Берем текст из Telegram\nconst newMsg = $items(\"Telegram Trigger\")[0].json.message.text || \"\";\nconst date = new Date().toISOString().slice(0, 19).replace('T', ' ');\n\n// Форматируем новую запись в формате Markdown-списка\nconst newEntry = `- [ ] [${date}] ${newMsg}\\n`;\n\n// Проверяем, удалось ли скачать старый файл\nlet existingContent = \"\";\ntry {\n  const binaryData = $input.item.binary.data;\n  if (binaryData) {\n    existingContent = Buffer.from(binaryData.data, 'base64').toString('utf-8');\n  }\n} catch (e) {\n  // Если файла не было (первый запуск), создаем заголовок\n  existingContent = \"# 📥 Задачи из Telegram\\n\\n\";\n}\n\n// Объединяем старый контент и новую запись (добавляем вниз)\nconst updatedContent = existingContent + newEntry;\n\nreturn {\n  json: {\n    fileName: \"todo_from_telegram.md\"\n  },\n  binary: {\n    data: {\n      data: Buffer.from(updatedContent).toString('base64'),\n      mimeType: \"text/markdown\",\n      fileName: \"todo_from_telegram.md\"\n    }\n  }\n};"
+      },
+      "id": "append-text-code-node",
+      "name": "Format & Append",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "fileId": "folder/todo_from_telegram.md",
+        "binaryData": true,
+        "options": {}
+      },
+      "id": "onedrive-upload-node",
+      "name": "Upload todo.md",
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        680,
+        240
+      ],
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "your-onedrive-cred-id",
+          "name": "OneDrive Credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download todo.md",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download todo.md": {
+      "main": [
+        [
+          {
+            "node": "Format & Append",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format & Append": {
+      "main": [
+        [
+          {
+            "node": "Upload todo.md",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

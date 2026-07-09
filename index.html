@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Andrii Yatsechko | n8n Automation Specialist & AI Integrator</title>
+  <meta name="description" content="Professional portfolio of Andrii Yatsechko, specializing in advanced n8n workflow automations, autonomous AI agents, and custom API integrations.">
+  <meta name="keywords" content="n8n Developer, AI Integrator, Automation Specialist, AI Agent, LangChain, Python, JavaScript, Telegram Bot API">
+  <meta name="author" content="Andrii Yatsechko">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+  <!-- Background Orbs for Ambient Glow -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="header" id="header">
+    <div class="container nav-container">
+      <a href="#home" class="logo" id="nav-logo" aria-label="Andrii Yatsechko Portfolio Home">
+        <span>&lt;</span>Andrii<span>/</span>Yatsechko<span>&gt;</span>
+      </a>
+      
+      <!-- Nav Links -->
+      <nav class="nav-links" id="nav-menu" aria-label="Primary Navigation">
+        <a href="#home" class="nav-link active" id="link-home">
+          <span class="lang-en">Home</span>
+          <span class="lang-uk">Головна</span>
+        </a>
+        <a href="#about" class="nav-link" id="link-about">
+          <span class="lang-en">About</span>
+          <span class="lang-uk">Про мене</span>
+        </a>
+        <a href="#skills" class="nav-link" id="link-skills">
+          <span class="lang-en">Skills</span>
+          <span class="lang-uk">Стек</span>
+        </a>
+        <a href="#projects" class="nav-link" id="link-projects">
+          <span class="lang-en">Projects</span>
+          <span class="lang-uk">Проєкти</span>
+        </a>
+        <a href="#experience" class="nav-link" id="link-experience">
+          <span class="lang-en">Experience</span>
+          <span class="lang-uk">Досвід</span>
+        </a>
+        <a href="#contact" class="nav-link" id="link-contact">
+          <span class="lang-en">Contact</span>
+          <span class="lang-uk">Контакти</span>
+        </a>
+      </nav>
+      
+      <!-- Language and Theme Switchers & Mobile Menu Trigger -->
+      <div class="nav-actions">
+        <!-- Language Switcher -->
+        <button class="lang-toggle" id="lang-toggle" aria-label="Switch language" type="button">
+          <span class="lang-text" id="lang-current">EN</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light theme" type="button">
+          <i class="fa-solid fa-moon moon-icon"></i>
+          <i class="fa-solid fa-sun sun-icon"></i>
+        </button>
+        
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open mobile menu" type="button">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="section hero" id="home">
+      <div class="container grid hero-grid">
+        <!-- Hero Text content -->
+        <div class="hero-content reveal active">
+          <span class="hero-subtitle">
+            <span class="lang-en">n8n Automation Specialist & AI Integrator</span>
+            <span class="lang-uk">Спеціаліст з автоматизації n8n & AI-інтегратор</span>
+          </span>
+          <h1 class="hero-title text-glow">
+            <span class="lang-en">Automating Workflows <br><span class="gradient-text">with AI & n8n</span></span>
+            <span class="lang-uk">Автоматизація процесів <br><span class="gradient-text">з ШІ та n8n</span></span>
+          </h1>
+          <p class="hero-desc">
+            <span class="lang-en">Hi, I'm Andrii. I design and build production-ready n8n automation pipelines, autonomous AI agents, and custom API integrations that reduce manual operations for businesses by up to 40%.</span>
+            <span class="lang-uk">Привіт, я Андрій. Я проектую та розробляю готові до роботи сценарії автоматизації n8n, автономних ШІ-агентів та індивідуальні інтеграції API, що скорочують ручні операції для бізнесу до 40%.</span>
+          </p>
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-primary" id="hero-btn-work">
+              <span class="lang-en">View My Work <i class="fa-solid fa-arrow-right"></i></span>
+              <span class="lang-uk">Мої роботи <i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+            <a href="#contact" class="btn btn-secondary" id="hero-btn-talk">
+              <span class="lang-en">Let's Connect <i class="fa-regular fa-envelope"></i></span>
+              <span class="lang-uk">Зв'язатися <i class="fa-regular fa-envelope"></i></span>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Hero Graphic avatar -->
+        <div class="hero-visual reveal active">
+          <div class="glowing-ring"></div>
+          <div class="avatar-wrapper">
+            <img src="assets/avatar.jpg" alt="Andrii Yatsechko - n8n Developer & AI Integrator avatar" class="avatar-img" width="320" height="320">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-subtitle">
+            <span class="lang-en">Get to Know Me</span>
+            <span class="lang-uk">Про мене</span>
+          </span>
+          <h2 class="section-title">
+            <span class="lang-en">Workflow Automation Expert</span>
+            <span class="lang-uk">Експерт з автоматизації процесів</span>
+          </h2>
+        </div>
+        
+        <div class="grid about-grid">
+          <!-- Text bio -->
+          <div class="about-content reveal">
+            <h3>
+              <span class="lang-en">I craft highly autonomous systems designed to scale.</span>
+              <span class="lang-uk">Я створюю високоавтономні системи, що легко масштабуються.</span>
+            </h3>
+            <p>
+              <span class="lang-en">I specialize in advanced workflow architecture using n8n to integrate APIs, databases, and large language models (LLMs). My goal is to build zero-click automation pipelines that free businesses from repetitive, time-consuming manual tasks.</span>
+              <span class="lang-uk">Я спеціалізуюся на просунутій архітектурі сценаріїв в n8n для інтеграції API, баз даних та великих мовних моделей (LLM). Моя мета — створювати автоматизації з нульовим ручним втручанням, звільняючи бізнес від рутинних завдань.</span>
+            </p>
+            <p>
+              <span class="lang-en">After serving two years in the Armed Forces of Ukraine (ЗСУ), I developed extreme resilience, adaptability, and high problem-solving capacity under pressure. I bring these values into my developer career, ensuring that every script, server, and automation I deploy is robust, secure, and fully optimized.</span>
+              <span class="lang-uk">Після двох років служби в Збройних Силах України (ЗСУ) я розвинув високу стійкість, адаптивність та вміння швидко вирішувати проблеми в стресових умовах. Я переношу ці цінності у свою кар'єру розробника, гарантуючи надійність, безпеку та повну оптимізацію рішень.</span>
+            </p>
+            <a href="#contact" class="btn btn-primary" id="about-btn-hire">
+              <span class="lang-en">Get in touch</span>
+              <span class="lang-uk">Написати мені</span>
+            </a>
+          </div>
+          
+          <!-- Highlight cards -->
+          <div class="about-info-grid">
+            <div class="glass-panel info-card reveal">
+              <i class="fa-solid fa-bolt"></i>
+              <h4>
+                <span class="lang-en">1+ Years</span>
+                <span class="lang-uk">1+ Рік</span>
+              </h4>
+              <p>
+                <span class="lang-en">n8n & AI Integration Experience</span>
+                <span class="lang-uk">Досвіду з n8n та ШІ-інтеграції</span>
+              </p>
+            </div>
+            
+            <div class="glass-panel info-card reveal">
+              <i class="fa-solid fa-circle-check"></i>
+              <h4>100%</h4>
+              <p>
+                <span class="lang-en">Autonomy in Developed Solutions</span>
+                <span class="lang-uk">Автономність розроблених рішень</span>
+              </p>
+            </div>
+            
+            <div class="glass-panel info-card reveal">
+              <i class="fa-solid fa-clock"></i>
+              <h4>
+                <span class="lang-en">Up to 40%</span>
+                <span class="lang-uk">До 40%</span>
+              </h4>
+              <p>
+                <span class="lang-en">Reduction in Manual Workload</span>
+                <span class="lang-uk">Скорочення ручної праці клієнтів</span>
+              </p>
+            </div>
+            
+            <div class="glass-panel info-card reveal">
+              <i class="fa-solid fa-shield-halved"></i>
+              <h4>
+                <span class="lang-en">2 Years</span>
+                <span class="lang-uk">2 Роки</span>
+              </h4>
+              <p>
+                <span class="lang-en">Military Service / Resilient Mindset</span>
+                <span class="lang-uk">Служби в ЗСУ / Стійкий розум</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-subtitle">
+            <span class="lang-en">My Stack</span>
+            <span class="lang-uk">Мій стек</span>
+          </span>
+          <h2 class="section-title">
+            <span class="lang-en">Expertise & Technologies</span>
+            <span class="lang-uk">Навички та технології</span>
+          </h2>
+        </div>
+        
+        <div class="grid skills-grid">
+          <!-- Automation -->
+          <div class="glass-panel skills-card reveal">
+            <div class="skill-icon-wrapper flex-center">
+              <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <h3>
+              <span class="lang-en">Workflow Automation</span>
+              <span class="lang-uk">Автоматизація процесів</span>
+            </h3>
+            <p>
+              <span class="lang-en">Designing sophisticated multi-stage n8n integrations, processing binary streams, and routing variables dynamically.</span>
+              <span class="lang-uk">Створення складних багатокрокових n8n сценаріїв, обробка бінарних файлів та динамічна маршрутизація даних.</span>
+            </p>
+            <div class="skills-list">
+              <span class="skill-tag">n8n Workflows</span>
+              <span class="skill-tag">Switch / If Logic</span>
+              <span class="skill-tag">JS Code Nodes</span>
+              <span class="skill-tag">HTTP Request Node</span>
+              <span class="skill-tag">Error Trigger Node</span>
+            </div>
+          </div>
+          
+          <!-- AI Integration -->
+          <div class="glass-panel skills-card reveal">
+            <div class="skill-icon-wrapper flex-center">
+              <i class="fa-solid fa-brain"></i>
+            </div>
+            <h3>
+              <span class="lang-en">Artificial Intelligence</span>
+              <span class="lang-uk">Штучний інтелект</span>
+            </h3>
+            <p>
+              <span class="lang-en">Integrating Large Language Models into workflows, managing conversation memory, and automating image prompts.</span>
+              <span class="lang-uk">Інтеграція мовних моделей (LLM) у процеси, керування пам'яттю діалогу та автоматизація графічних запитів.</span>
+            </p>
+            <div class="skills-list">
+              <span class="skill-tag">OpenAI API</span>
+              <span class="skill-tag">OpenRouter API</span>
+              <span class="skill-tag">AI Agent Node</span>
+              <span class="skill-tag">memoryBufferWindow</span>
+              <span class="skill-tag">Prompt Engineering</span>
+            </div>
+          </div>
+          
+          <!-- APIs & Data -->
+          <div class="glass-panel skills-card reveal">
+            <div class="skill-icon-wrapper flex-center">
+              <i class="fa-solid fa-link"></i>
+            </div>
+            <h3>
+              <span class="lang-en">External APIs & Data</span>
+              <span class="lang-uk">Зовнішні API та дані</span>
+            </h3>
+            <p>
+              <span class="lang-en">Connecting communication channels, social media, databases, and financial systems seamlessly.</span>
+              <span class="lang-uk">Швидке підключення каналів зв'язку, соціальних мереж, баз даних та фінансових сервісів.</span>
+            </p>
+            <div class="skills-list">
+              <span class="skill-tag">Telegram Bot API</span>
+              <span class="skill-tag">Google Sheets API</span>
+              <span class="skill-tag">Zernio / Late API</span>
+              <span class="skill-tag">Gmail Trigger</span>
+              <span class="skill-tag">NBU REST API</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS GALLERY -->
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-subtitle">
+            <span class="lang-en">Case Studies</span>
+            <span class="lang-uk">Мої роботи</span>
+          </span>
+          <h2 class="section-title">
+            <span class="lang-en">Featured Automations</span>
+            <span class="lang-uk">Кейси автоматизацій</span>
+          </h2>
+        </div>
+        
+        <!-- Filter Controls -->
+        <div class="projects-filter reveal">
+          <button class="filter-btn active" data-filter="all" type="button" id="filter-btn-all">
+            <span class="lang-en">All</span>
+            <span class="lang-uk">Всі</span>
+          </button>
+          <button class="filter-btn" data-filter="ai-agent" type="button" id="filter-btn-ai">
+            <span class="lang-en">AI Agents</span>
+            <span class="lang-uk">ШІ-Агенти</span>
+          </button>
+          <button class="filter-btn" data-filter="document" type="button" id="filter-btn-doc">
+            <span class="lang-en">Document Parsing</span>
+            <span class="lang-uk">Робота з файлами</span>
+          </button>
+          <button class="filter-btn" data-filter="integration" type="button" id="filter-btn-int">
+            <span class="lang-en">API Integrations</span>
+            <span class="lang-uk">Інтеграції API</span>
+          </button>
+        </div>
+        
+        <!-- Projects Grid -->
+        <div class="grid projects-grid">
+          <!-- Project 1 (AI Agent) -->
+          <article class="glass-panel project-card reveal" data-category="ai-agent" id="project-card-1">
+            <div class="project-image-box">
+              <img src="assets/project1.jpg" alt="AI Social Media Assistant Diagram" class="project-img" loading="lazy">
+              <div class="project-overlay">
+                <div class="project-links">
+                  <a href="README_AI_Social_Media_Assistant.md" class="project-link-btn" aria-label="View Case Study README"><i class="fa-solid fa-file-lines"></i></a>
+                  <a href="pitch_proposal.md" class="project-link-btn" aria-label="View Project Pitch"><i class="fa-regular fa-paper-plane"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-category">
+                  <span class="lang-en">AI Agent & Social Media</span>
+                  <span class="lang-uk">ШІ-Агент та соцмережі</span>
+                </span>
+              </div>
+              <h3 class="project-title">AI Social Media Assistant v1.01</h3>
+              <p class="project-desc">
+                <span class="lang-en">An autonomous content-factory converting voice or text ideas into illustrated SMM posts, auto-published to Instagram and Threads.</span>
+                <span class="lang-uk">Автономна контент-фабрика: перетворює голосові або текстові ідеї на ілюстровані пости в Instagram та Threads.</span>
+              </p>
+              <div class="project-tags">
+                <span>n8n</span>
+                <span>GPT-5-mini</span>
+                <span>Late API</span>
+                <span>memoryBufferWindow</span>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Project 2 (Document Parsing) -->
+          <article class="glass-panel project-card reveal" data-category="document" id="project-card-2">
+            <div class="project-image-box">
+              <img src="assets/project2.jpg" alt="Multi-Format Resume Parser" class="project-img" loading="lazy">
+              <div class="project-overlay">
+                <div class="project-links">
+                  <a href="n8n_workflow_guide.md" class="project-link-btn" aria-label="View n8n Workflow Guide"><i class="fa-solid fa-file-lines"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-category">
+                  <span class="lang-en">Document Processing</span>
+                  <span class="lang-uk">Обробка документів</span>
+                </span>
+              </div>
+              <h3 class="project-title">
+                <span class="lang-en">Multi-Format Resume Parser</span>
+                <span class="lang-uk">Мультиформатний парсер резюме</span>
+              </h3>
+              <p class="project-desc">
+                <span class="lang-en">Automatically extracts data from PDF, DOCX, and images in Gmail attachments, converting them into clean JSON fields.</span>
+                <span class="lang-uk">Автоматичний аналіз вкладень (PDF, DOCX, зображення) у пошті Gmail та експорт даних у структурований JSON.</span>
+              </p>
+              <div class="project-tags">
+                <span>n8n</span>
+                <span>Whisper OCR</span>
+                <span>Zip Extraction</span>
+                <span>JavaScript</span>
+              </div>
+            </div>
+          </article>
+          
+          <!-- Project 3 (API Integration) -->
+          <article class="glass-panel project-card reveal" data-category="integration" id="project-card-3">
+            <div class="project-image-box">
+              <img src="assets/project3.jpg" alt="Gmail AI-Agent and CRM Sync" class="project-img" loading="lazy">
+              <div class="project-overlay">
+                <div class="project-links">
+                  <a href="#" class="project-link-btn" aria-label="View Project Source"><i class="fa-brands fa-github"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-category">
+                  <span class="lang-en">CRM & Mail Synchronization</span>
+                  <span class="lang-uk">Синхронізація CRM та пошти</span>
+                </span>
+              </div>
+              <h3 class="project-title">Gmail AI-Agent CRM Sync</h3>
+              <p class="project-desc">
+                <span class="lang-en">Monitors emails, triggers a smart AI Agent with Google Gemini & OpenRouter, and updates Google Sheets while avoiding duplicates.</span>
+                <span class="lang-uk">Моніторинг пошти, обробка за допомогою ШІ (Gemini/OpenRouter) та розумне оновлення рядків у Google Sheets.</span>
+              </p>
+              <div class="project-tags">
+                <span>n8n</span>
+                <span>Google Gemini</span>
+                <span>Google Sheets API</span>
+                <span>Gmail Trigger</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION -->
+    <section class="section" id="experience">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-subtitle">
+            <span class="lang-en">My Path</span>
+            <span class="lang-uk">Мій шлях</span>
+          </span>
+          <h2 class="section-title">
+            <span class="lang-en">Professional Journey</span>
+            <span class="lang-uk">Професійний досвід</span>
+          </h2>
+        </div>
+        
+        <div class="experience-timeline">
+          <!-- Timeline Item 1 -->
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="glass-panel timeline-card">
+              <span class="timeline-date">2025 - Present</span>
+              <h3>
+                <span class="lang-en">n8n Developer & AI Integrator</span>
+                <span class="lang-uk">n8n Розробник & AI Інтегратор</span>
+              </h3>
+              <span class="timeline-company">
+                <span class="lang-en">Projects & Freelance</span>
+                <span class="lang-uk">Проєкти та фріланс</span>
+              </span>
+              <p>
+                <span class="lang-en">Developing and deploying custom automation workflows and autonomous AI agents for various business cases. Specializing in SMM auto-posting pipelines, financial REST APIs, and CRM sheet sync, achieving operational time savings of up to 40% for clients.</span>
+                <span class="lang-uk">Розробка та впровадження кастомних сценаріїв автоматизації та автономних ШІ-агентів. Спеціалізація на автопостингу, фінансових API та синхронізації з CRM, що економить клієнтам до 40% часу.</span>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Timeline Item 2 -->
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="glass-panel timeline-card">
+              <span class="timeline-date">2023 - 2025</span>
+              <h3>
+                <span class="lang-en">Military Service</span>
+                <span class="lang-uk">Військова служба</span>
+              </h3>
+              <span class="timeline-company">
+                <span class="lang-en">Armed Forces of Ukraine (ЗСУ)</span>
+                <span class="lang-uk">Збройні Сили України (ЗСУ)</span>
+              </span>
+              <p>
+                <span class="lang-en">Served two years in the Armed Forces of Ukraine (ЗСУ). Developed strong discipline, resilience, fast problem-solving in high-stress situations, team coordination, and critical thinking capabilities.</span>
+                <span class="lang-uk">Служба в Збройних Силах України (ЗСУ) протягом двох років. Розвинув високу дисципліну, стійкість, навички швидкого прийняття рішень та управління в критичних ситуаціях.</span>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Timeline Item 3 -->
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="glass-panel timeline-card">
+              <span class="timeline-date">
+                <span class="lang-en">Before 2023</span>
+                <span class="lang-uk">До 2023</span>
+              </span>
+              <h3>
+                <span class="lang-en">Automation Analyst</span>
+                <span class="lang-uk">Аналітик автоматизації</span>
+              </h3>
+              <span class="timeline-company">
+                <span class="lang-en">Technical Operations</span>
+                <span class="lang-uk">Технічні операції</span>
+              </span>
+              <p>
+                <span class="lang-en">Created automated spreadsheet reports, managed database operations, and analyzed process inefficiencies to design structured business templates.</span>
+                <span class="lang-uk">Аналіз процесів, створення автоматизованих звітів у таблицях, робота з базами даних та оптимізація рутинних операцій.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-subtitle">
+            <span class="lang-en">Get in Touch</span>
+            <span class="lang-uk">Контакти</span>
+          </span>
+          <h2 class="section-title">
+            <span class="lang-en">Let's Automate Your Business</span>
+            <span class="lang-uk">Давайте автоматизуємо ваші процеси</span>
+          </h2>
+        </div>
+        
+        <div class="grid contact-grid">
+          <!-- Contact Info -->
+          <div class="contact-info-list reveal">
+            <div class="glass-panel contact-item">
+              <div class="contact-icon flex-center">
+                <i class="fa-regular fa-envelope"></i>
+              </div>
+              <div class="contact-details">
+                <h4>Email</h4>
+                <p><a href="mailto:alba.homelan@gmail.com">alba.homelan@gmail.com</a></p>
+              </div>
+            </div>
+            
+            <div class="glass-panel contact-item">
+              <div class="contact-icon flex-center">
+                <i class="fa-brands fa-telegram"></i>
+              </div>
+              <div class="contact-details">
+                <h4>Telegram</h4>
+                <p><a href="https://t.me/albaRoyalQ" target="_blank" rel="noopener noreferrer">@albaRoyalQ</a></p>
+              </div>
+            </div>
+            
+            <div class="glass-panel contact-item">
+              <div class="contact-icon flex-center">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div class="contact-details">
+                <h4>
+                  <span class="lang-en">Based In</span>
+                  <span class="lang-uk">Локація</span>
+                </h4>
+                <p>
+                  <span class="lang-en">Albania (Open to Remote Worldwide)</span>
+                  <span class="lang-uk">Албанія (віддалено по всьому світу)</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Contact Form -->
+          <div class="glass-panel contact-form reveal">
+            <form id="portfolio-contact-form" novalidate>
+              <div class="form-group-row">
+                <div class="form-group">
+                  <label for="contact-name" class="form-label">
+                    <span class="lang-en">Full Name</span>
+                    <span class="lang-uk">Ваше ім'я</span>
+                  </label>
+                  
+                  <span class="lang-en">
+                    <input type="text" id="contact-name" class="form-input" placeholder="Your name" required>
+                  </span>
+                  <span class="lang-uk">
+                    <input type="text" id="contact-name-uk" class="form-input" placeholder="Як до вас звертатися?" required>
+                  </span>
+                  <span class="error-message" id="error-name">Name is required</span>
+                </div>
+                
+                <div class="form-group">
+                  <label for="contact-email" class="form-label">
+                    <span class="lang-en">Email Address</span>
+                    <span class="lang-uk">Електронна пошта</span>
+                  </label>
+                  <input type="email" id="contact-email" class="form-input" placeholder="Your email" required>
+                  <span class="error-message" id="error-email">Please enter a valid email address</span>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="contact-subject" class="form-label">
+                  <span class="lang-en">Subject</span>
+                  <span class="lang-uk">Тема повідомлення</span>
+                </label>
+                <span class="lang-en">
+                  <input type="text" id="contact-subject" class="form-input" placeholder="What's this about?" required>
+                </span>
+                <span class="lang-uk">
+                  <input type="text" id="contact-subject-uk" class="form-input" placeholder="Тема запиту" required>
+                </span>
+                <span class="error-message" id="error-subject">Subject is required</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="contact-message" class="form-label">
+                  <span class="lang-en">Message</span>
+                  <span class="lang-uk">Повідомлення</span>
+                </label>
+                <span class="lang-en">
+                  <textarea id="contact-message" class="form-input" placeholder="Tell me about your project..." required></textarea>
+                </span>
+                <span class="lang-uk">
+                  <textarea id="contact-message-uk" class="form-input" placeholder="Розкажіть про ваш проєкт..." required></textarea>
+                </span>
+                <span class="error-message" id="error-message-text">Message cannot be empty</span>
+              </div>
+              
+              <button type="submit" class="btn btn-primary" style="width: 100%;" id="form-submit-btn">
+                <span class="lang-en">Send Message <i class="fa-regular fa-paper-plane"></i></span>
+                <span class="lang-uk">Надіслати повідомлення <i class="fa-regular fa-paper-plane"></i></span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <p class="footer-text" id="footer-copyright">&copy; 2026 Andrii Yatsechko. <span class="lang-en">All rights reserved.</span><span class="lang-uk">Всі права захищені.</span></p>
+      
+      <!-- Social Media Buttons -->
+      <div class="social-links">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-btn flex-center" aria-label="GitHub Link" id="social-github"><i class="fa-brands fa-github"></i></a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-btn flex-center" aria-label="LinkedIn Link" id="social-linkedin"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://t.me/albaRoyalQ" target="_blank" rel="noopener noreferrer" class="social-btn flex-center" aria-label="Telegram Link" id="social-telegram"><i class="fa-brands fa-telegram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS Code -->
+  <script src="index.js"></script>
+</body>
+</html>

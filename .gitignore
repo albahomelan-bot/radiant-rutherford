@@ -1,0 +1,13 @@
+# System and local IDE files
+.idea/
+.vscode/
+*.log
+
+# Dependency directories
+node_modules/
+
+# Local build / server outputs
+dist/
+build/
+.DS_Store
+Thumbs.db
