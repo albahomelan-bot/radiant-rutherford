@@ -129,7 +129,7 @@
           "values": [
             {
               "name": "jobText",
-              "value": "={{ $json.text }}"
+              "value": "={{ $json.content.parts[0].text }}"
             }
           ]
         },
@@ -186,9 +186,7 @@
       "parameters": {
         "chatId": "={{ $node[\"Normalize Payload\"].json.message.chat.id }}",
         "text": "={{ $json.text }}",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        }
+        "additionalFields": {}
       },
       "id": "tg-send",
       "name": "Send Assessment",
