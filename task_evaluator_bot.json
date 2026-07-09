@@ -1,5 +1,5 @@
 {
-  "name": "Andrii's Freelance Task Evaluator",
+  "name": "Andrii's Freelance Task Evaluator (Gemini Edition)",
   "nodes": [
     {
       "parameters": {
@@ -25,23 +25,23 @@
     },
     {
       "parameters": {
-        "model": "gpt-4o-mini",
+        "modelName": "gemini-1.5-flash",
         "options": {
           "temperature": 0.3
         }
       },
-      "id": "openai-model",
-      "name": "OpenAI Chat Model",
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "id": "gemini-model",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
         260,
         400
       ],
       "credentials": {
-        "openAiApi": {
-          "id": "your-openai-cred-id",
-          "name": "OpenAI Credentials"
+        "googleGeminiApi": {
+          "id": "your-gemini-cred-id",
+          "name": "Google Gemini API Credentials"
         }
       }
     },
@@ -96,7 +96,7 @@
         ]
       ]
     },
-    "OpenAI Chat Model": {
+    "Google Gemini Chat Model": {
       "ai_languageModel": [
         [
           {
