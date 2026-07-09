@@ -86,16 +86,16 @@
       "parameters": {
         "modelName": "gemini-1.5-flash",
         "options": {
-          "temperature": 0.1
+          "temperature": 0.15
         }
       },
-      "id": "gemini-model-ocr",
-      "name": "Gemini Model (OCR)",
+      "id": "gemini-model-shared",
+      "name": "Gemini Model (Shared)",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        420,
-        300
+        500,
+        420
       ],
       "credentials": {
         "googleGeminiApi": {
@@ -150,14 +150,13 @@
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.jobText }}",
-        "systemMessage": "You are an AI Evaluator for Andrii Yatsechko (57 years old, former military serviceman, n8n Automation Specialist & AI Integrator).\n\nHere is Andrii's Professional Profile:\n- Core Skills: advanced n8n (Switch, If, JS Code, HTTP Requests, API integrations, Webhooks), OpenAI APIs (Whisper, GPTs, Dall-E), OpenRouter, LangChain concept (memoryBufferWindow), Telegram Bot API, Google Sheets API, OneDrive API, Instagram/Threads API (Late API/Zernio).\n- Experience: 1+ years. Built a fully functional AI SMM Assistant, a Multi-Format Resume Parser (renaming docx to zip and parsing XML via JS), and a OneDrive Task Logger.\n- Key strengths: Military discipline, precision, high responsibility, strict testing.\n\nAnalyze the incoming freelance job request and evaluate it against Andrii's profile.\nCalculate and output:\n1. 📋 **Короткий опис проєкту** (Short 2-3 sentence summary of the task)\n2. 📊 **Складність для Андрія** (Легка / Середня / Висока) with a brief technical justification based on his profile\n3. 🎯 **Ймовірність успіху** (Probability of successful delivery from 0% to 100%)\n4. ⏱️ **Орієнтовний час** (Expected time to complete, e.g., 1 day, 3-5 days, 1 week)\n5. 📚 **Аналіз досвіду та рекомендації** (Whether his experience is fully sufficient, or if he needs to study some extra nodes/APIs before accepting the job, listing exactly what to search for)\n\nProvide the output in structured Markdown, in Ukrainian (or Russian if input is in Russian). Keep it professional, honest, and objective."
+        "mode": "chooseBranch",
+        "output": "input1"
       },
-      "id": "ai-chain-eval",
-      "name": "Gemini Evaluator Chain",
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.4,
+      "id": "merge-branches",
+      "name": "Merge Branches",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
       "position": [
         740,
         240
@@ -165,25 +164,18 @@
     },
     {
       "parameters": {
-        "modelName": "gemini-1.5-flash",
-        "options": {
-          "temperature": 0.3
-        }
+        "promptType": "define",
+        "text": "={{ $json.jobText }}",
+        "systemMessage": "You are an AI Evaluator for Andrii Yatsechko (57 years old, former military serviceman, n8n Automation Specialist & AI Integrator).\n\nHere is Andrii's Professional Profile:\n- Core Skills: advanced n8n (Switch, If, JS Code, HTTP Requests, API integrations, Webhooks), OpenAI APIs (Whisper, GPTs, Dall-E), OpenRouter, LangChain concept (memoryBufferWindow), Telegram Bot API, Google Sheets API, OneDrive API, Instagram/Threads API (Late API/Zernio).\n- Experience: 1+ years. Built a fully functional AI SMM Assistant, a Multi-Format Resume Parser (renaming docx to zip and parsing XML via JS), and a OneDrive Task Logger.\n- Key strengths: Military discipline, precision, high responsibility, strict testing.\n\nAnalyze the incoming freelance job request and evaluate it against Andrii's profile.\nCalculate and output:\n1. 📋 **Короткий опис проєкту** (Short 2-3 sentence summary of the task)\n2. 📊 **Складність для Андрія** (Легка / Середня / Висока) with a brief technical justification based on his profile\n3. 🎯 **Ймовірність успеха** (Probability of successful delivery from 0% to 100%)\n4. ⏱️ **Ориентировочное время** (Expected time to complete, e.g., 1 day, 3-5 days, 1 week)\n5. 📚 **Анализ опыта и рекомендации** (Whether his experience is fully sufficient, or if he needs to study some extra nodes/APIs before accepting the job, listing exactly what to search for)\n\nProvide the output in structured Markdown, in Ukrainian (or Russian if input is in Russian). Keep it professional, honest, and objective."
       },
-      "id": "gemini-model-eval",
-      "name": "Gemini Model (Eval)",
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
+      "id": "ai-chain-eval",
+      "name": "Gemini Evaluator Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
       "position": [
-        780,
-        400
-      ],
-      "credentials": {
-        "googleGeminiApi": {
-          "id": "your-gemini-cred-id",
-          "name": "Google Gemini API Credentials"
-        }
-      }
+        920,
+        240
+      ]
     },
     {
       "parameters": {
@@ -198,7 +190,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        960,
+        1120,
         240
       ],
       "credentials": {
@@ -265,7 +257,7 @@
       "main": [
         [
           {
-            "node": "Gemini Evaluator Chain",
+            "node": "Merge Branches",
             "type": "main",
             "index": 0
           }
@@ -273,6 +265,17 @@
       ]
     },
     "Set Raw Text": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Branches": {
       "main": [
         [
           {
@@ -294,20 +297,14 @@
         ]
       ]
     },
-    "Gemini Model (OCR)": {
+    "Gemini Model (Shared)": {
       "ai_languageModel": [
         [
           {
             "node": "Gemini Vision OCR",
             "type": "ai_languageModel",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "Gemini Model (Eval)": {
-      "ai_languageModel": [
-        [
+          },
           {
             "node": "Gemini Evaluator Chain",
             "type": "ai_languageModel",
