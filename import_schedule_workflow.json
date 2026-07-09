@@ -1,0 +1,85 @@
+{
+  "name": "Import Andrii's Daily Routine to Google Calendar",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD\n\nconst events = [\n  {\n    summary: \"🌅 Подъём\",\n    start: \"05:00:00\",\n    end: \"05:15:00\",\n    description: \"Проснуться, немного потянуться и обдумать планы на день в тишине.\"\n  },\n  {\n    summary: \"📱 Информационный менеджмент\",\n    start: \"05:15:00\",\n    end: \"05:30:00\",\n    description: \"Взять телефон, проверить все пришедшие за ночь сообщения, напоминания и внешние рабочие вопросы/уведомления.\"\n  },\n  {\n    summary: \"❤️ Написать Олене\",\n    start: \"05:30:00\",\n    end: \"05:35:00\",\n    description: \"Напоминание: Открыть Telegram-канал и написать Олене «Доброго ранку».\"\n  },\n  {\n    summary: \"🎵 Настройка на день\",\n    start: \"05:35:00\",\n    end: \"05:45:00\",\n    description: \"Посмотреть в окно, поприветствовать новое утро (громко вслух!), включить трек Дана Балана для хорошего настроения.\"\n  },\n  {\n    summary: \"📚 Образовательный блок (Языки)\",\n    start: \"05:45:00\",\n    end: \"07:30:00\",\n    description: \"Изучение иностранных языков: Duolingo: Базовый курс + дополнительный курс; Промова: Практика языков (Албанский и Английский).\"\n  },\n  {\n    summary: \"🌊 Спорт и море\",\n    start: \"07:30:00\",\n    end: \"09:00:00\",\n    description: \"Пойти пешком на море, купание и утренний пляж (купи-купи).\"\n  },\n  {\n    summary: \"🍳 Домашний блок\",\n    start: \"09:00:00\",\n    end: \"10:00:00\",\n    description: \"Возвращение домой, душ, чистка зубов, приготовление и прием здорового завтрака, небольшой отдых.\"\n  },\n  {\n    summary: \"💻 Старт рабочего дня\",\n    start: \"10:00:00\",\n    end: \"10:30:00\",\n    description: \"Создание и публикация постов в социальных сетях.\"\n  }\n];\n\n// We will format the start and end dates as ISO-like strings with local offset (using the n8n execution timezone)\nreturn events.map(event => {\n  return {\n    json: {\n      summary: event.summary,\n      description: event.description,\n      // Let's output time in local format for Google Calendar node\n      startTime: `${today}T${event.start}`,\n      endTime: `${today}T${event.end}`\n    }\n  };\n});"
+      },
+      "id": "generate-events",
+      "name": "Generate Daily Events",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "calendarId": "primary",
+        "start": "={{ $json.startTime }}",
+        "end": "={{ $json.endTime }}",
+        "additionalFields": {
+          "description": "={{ $json.description }}",
+          "summary": "={{ $json.summary }}",
+          "recurrence": [
+            "RRULE:FREQ=DAILY"
+          ]
+        }
+      },
+      "id": "google-calendar",
+      "name": "Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        420,
+        240
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "your-google-calendar-cred-id",
+          "name": "Google Calendar Account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Generate Daily Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Daily Events": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
