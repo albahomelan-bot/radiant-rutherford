@@ -86,7 +86,7 @@
       },
       "id": "gemini-analysis-photo",
       "name": "Gemini Analysis Photo",
-      "type": "n8n-nodes-base.googleGemini",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
       "typeVersion": 1,
       "position": [
         600,
