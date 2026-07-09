@@ -28,7 +28,7 @@
         "rules": {
           "values": [
             {
-              "value1": "={{ $json.message.photo ? 'photo' : 'text' }}",
+              "value1": "={{ ($json.message.photo || $json.message.document) ? 'photo' : 'text' }}",
               "value2": "photo"
             }
           ]
@@ -48,7 +48,7 @@
       "parameters": {
         "resource": "file",
         "operation": "get",
-        "fileId": "={{ $node[\"Telegram Trigger\"].json.message.photo.slice(-1)[0].file_id }}",
+        "fileId": "={{ $node[\"Telegram Trigger\"].json.message.photo ? $node[\"Telegram Trigger\"].json.message.photo.slice(-1)[0].file_id : $node[\"Telegram Trigger\"].json.message.document.file_id }}",
         "additionalFields": {}
       },
       "id": "tg-download",
