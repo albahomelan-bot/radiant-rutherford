@@ -1,0 +1,229 @@
+{
+  "name": "Andrii's Autonomous AI Daily Planner & Email Coordinator",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger (Every day at 8:00)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -280,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 25,
+        "simple": false,
+        "additionalFields": {
+          "q": "after:2026/07/08"
+        }
+      },
+      "id": "gmail-get",
+      "name": "Get Recent Gmails",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -60,
+        100
+      ],
+      "credentials": {
+        "gmailOAuth2Api": {
+          "id": "your-gmail-cred-id",
+          "name": "Andrii's Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendarId": "primary",
+        "operation": "getAll",
+        "limit": 50,
+        "additionalFields": {
+          "timeMin": "={{ new Date().toISOString().split('T')[0] + 'T00:00:00Z' }}",
+          "timeMax": "={{ new Date().toISOString().split('T')[0] + 'T23:59:59Z' }}"
+        }
+      },
+      "id": "gcal-get",
+      "name": "Get Today's Events",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "position": [
+        -60,
+        240
+      ],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "your-google-calendar-cred-id",
+          "name": "Google Calendar Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "filePath": "C:/Users/Admin/Documents/todo.txt",
+        "options": {}
+      },
+      "id": "read-todo-file",
+      "name": "Read Local todo.txt",
+      "type": "n8n-nodes-base.readWriteFileFromDisk",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Emails Content:\n{{ JSON.stringify($node[\"Get Recent Gmails\"].json) }}\n\nToday's Calendar Events:\n{{ JSON.stringify($node[\"Get Today's Events\"].json) }}\n\nLocal File Notes (todo.txt):\n{{ $node[\"Read Local todo.txt\"].json.data || \"No notes in file\" }}",
+        "systemMessage": "Роль: Ты — персональный ИИ-ассистент и координатор проектов для Андрея (57 лет, n8n Automation Specialist).\n\nТвоя задача — помочь организовать рабочий день, разобраться с приоритетами и подготовить ответы на важные сообщения.\n\nШаг за шагом:\n1. Анализ почты: Проверь входящие письма. Выдели среди них те, которые касаются разработки сайтов, крипторынка или требуют срочного ответа. Напиши для них краткое самари (кто пишет и чего хочет).\n2. Подготовка черновиков: Предложи тексты ответов для писем, требующих реакции, в вежливом, профессиональном, но дружелюбном тоне.\n3. Синхронизация задач: Сравни задачи из локального файла с текущим планом.\n4. Планирование дня: Составь почасовой план работы на сегодня. Выдели блоки времени для:\n- Фокусированной работы над сайтами/кодом (3–4 часа).\n- Проверки и отправки подготовленных тобой черновиков писем (30 минут).\n- Отдыха и прогулки на свежем воздухе.\n\nВыведи структурированный отчет на русском или украинском языке (в зависимости от контекста входящих сообщений)."
+      },
+      "id": "ai-planner-chain",
+      "name": "AI Planner (Gemini)",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        260,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "gemini-1.5-flash",
+        "options": {}
+      },
+      "id": "gemini-model-planner",
+      "name": "Gemini Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        300,
+        400
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "your-gemini-cred-id",
+          "name": "Google Gemini API Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "your-telegram-chat-id",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "tg-send-report",
+      "name": "Send Plan to Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        520,
+        240
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "your-telegram-cred-id",
+          "name": "Telegram Bot Credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger (Every day at 8:00)": {
+      "main": [
+        [
+          {
+            "node": "Get Recent Gmails",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Today's Events",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read Local todo.txt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Recent Gmails": {
+      "main": [
+        [
+          {
+            "node": "AI Planner (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Today's Events": {
+      "main": [
+        [
+          {
+            "node": "AI Planner (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Local todo.txt": {
+      "main": [
+        [
+          {
+            "node": "AI Planner (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Planner (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Send Plan to Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Planner (Gemini)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
