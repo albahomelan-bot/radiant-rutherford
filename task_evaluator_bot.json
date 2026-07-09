@@ -80,7 +80,9 @@
     },
     {
       "parameters": {
+        "resource": "image",
         "operation": "analyze",
+        "modelName": "models/gemini-3.5-flash",
         "prompt": "Extract all readable text from this screenshot of a job request. Return ONLY the raw text of the job description. Do not add any chat, prefix, or metadata.",
         "imageBinaryKey": "data"
       },
@@ -101,7 +103,7 @@
     },
     {
       "parameters": {
-        "modelName": "models/gemini-1.5-flash",
+        "modelName": "models/gemini-3.5-flash",
         "options": {
           "temperature": 0.15
         }
