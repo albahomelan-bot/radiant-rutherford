@@ -28,8 +28,8 @@
         "rules": {
           "values": [
             {
-              "value1": "={{ ($json.message.photo || $json.message.document) ? 'photo' : 'text' }}",
-              "value2": "photo"
+              "value1": "={{ !!($json.message.photo || $json.message.document) }}",
+              "value2": "true"
             }
           ]
         },
