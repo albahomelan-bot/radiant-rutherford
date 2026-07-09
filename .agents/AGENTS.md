@@ -9,6 +9,7 @@
 - **Contacts**:
   - Email: `alba.homelan@gmail.com`
   - Telegram: `@albaRoyalQ`
+  - LinkedIn: `https://www.linkedin.com/in/%D0%B0%D0%BD%D0%B4%D1%80%D1%96%D0%B9-%D1%8F%D1%86%D0%B5%D1%87%D0%BA%D0%BE-98157075`
 
 ## Core Technical Stack & Portfolio
 
