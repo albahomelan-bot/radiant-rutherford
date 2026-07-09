@@ -333,8 +333,8 @@
               <img src="assets/project1.jpg" alt="AI Social Media Assistant Diagram" class="project-img" loading="lazy">
               <div class="project-overlay">
                 <div class="project-links">
+                  <a href="#" class="project-link-btn open-modal-btn" aria-label="Open Case Study Modal"><i class="fa-solid fa-expand"></i></a>
                   <a href="README_AI_Social_Media_Assistant.md" class="project-link-btn" aria-label="View Case Study README"><i class="fa-solid fa-file-lines"></i></a>
-                  <a href="pitch_proposal.md" class="project-link-btn" aria-label="View Project Pitch"><i class="fa-regular fa-paper-plane"></i></a>
                 </div>
               </div>
             </div>
@@ -643,6 +643,83 @@
       </div>
     </div>
   </footer>
+
+  <!-- CASE STUDY MODAL -->
+  <div class="modal-backdrop" id="case-study-modal">
+    <div class="glass-panel modal-card">
+      <button class="modal-close" id="modal-close-btn" aria-label="Close modal" type="button">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-body">
+        <!-- English Content -->
+        <div class="lang-en">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">AI Social Media Assistant v1.01</h2>
+          <span class="modal-subtitle">Autonomous SMM content-factory in your pocket</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Project Overview</h3>
+              <p>An autonomous agent built on n8n automation pipelines and OpenAI model APIs. It converts raw voice dictates or brief texts into ready-to-publish SMM posts with custom graphics and handles multi-channel cross-posting in seconds.</p>
+              <h3>Key Features</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Voice-to-Text:</strong> Uses OpenAI Whisper to transcribe spoken thoughts immediately.</li>
+                <li style="margin-bottom: 8px;"><strong>Copywriting Agent:</strong> GPT-5-mini processes context and generates natural-sounding posts with micro-imperfections for maximum authenticity.</li>
+                <li style="margin-bottom: 8px;"><strong>Illustrator Agent:</strong> Generates flat-style graphical illustrations tailored to the post's context, optimized to under 500 KB.</li>
+                <li style="margin-bottom: 8px;"><strong>Google Sheets Logging:</strong> Automatically logs theme, description, date, and link into a centralized spreadsheet.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Stack & Tools</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">OpenAI API</span>
+                <span class="skill-tag">Zernio API</span>
+                <span class="skill-tag">LangChain</span>
+                <span class="skill-tag">Google Sheets</span>
+              </div>
+              <h3>Impact Metric</h3>
+              <div class="impact-metric">
+                <span class="metric-num">15s</span>
+                <span class="metric-lbl">vs. 1 hour manual posting</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Ukrainian Content -->
+        <div class="lang-uk">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">AI Social Media Assistant v1.01</h2>
+          <span class="modal-subtitle">Автономна контент-фабрика у вашій кишені</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Опис проєкту</h3>
+              <p>Повністю автономна SMM-система на базі n8n та OpenAI, що перетворює голосові нотатки або сирий текст на структуровані, готові до публікації пости та синхронно постить їх в Instagram і Threads.</p>
+              <h3>Основні можливості</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Голосове введення:</strong> Швидке розпізнавання голосу через OpenAI Speech-to-Text.</li>
+                <li style="margin-bottom: 8px;"><strong>Копірайтинг:</strong> Агент на базі GPT-5-mini створює природні публікації з урахуванням емодзі та розділенням на абзаци.</li>
+                <li style="margin-bottom: 8px;"><strong>Генерація ілюстрацій:</strong> Автоматичне створення графіки в стилі flat-style під формат Instagram Feed (4:5).</li>
+                <li style="margin-bottom: 8px;"><strong>Автоматичний архів:</strong> Збереження посилань на публікації та тексту в Google Sheets.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Стек технологій</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">OpenAI API</span>
+                <span class="skill-tag">Zernio API</span>
+                <span class="skill-tag">LangChain</span>
+                <span class="skill-tag">Google Sheets</span>
+              </div>
+              <h3>Результат</h3>
+              <div class="impact-metric">
+                <span class="metric-num">15с</span>
+                <span class="metric-lbl">замість 1 години роботи вручну</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- JS Code -->
   <script src="index.js"></script>

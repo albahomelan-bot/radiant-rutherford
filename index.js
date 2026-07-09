@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initLang();
+  initModal();
   initMobileMenu();
   initHeaderScroll();
   initScrollSpy();
@@ -282,4 +283,43 @@ function initLang() {
     localStorage.setItem('lang', newLang);
   });
 }
+
+/* --- CASE STUDY DETAIL MODAL --- */
+function initModal() {
+  const modal = document.getElementById('case-study-modal');
+  const openBtns = document.querySelectorAll('.open-modal-btn');
+  const closeBtn = document.getElementById('modal-close-btn');
+
+  if (!modal || !closeBtn) return;
+
+  openBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  const closeModal = () => {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  closeBtn.addEventListener('click', closeModal);
+  
+  // Close on click outside card
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+}
+
 
