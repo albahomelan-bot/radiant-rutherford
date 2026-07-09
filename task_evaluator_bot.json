@@ -25,7 +25,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Normalizes the Telegram trigger payload and checks for image files or documents\nreturn input.all().map(item => {\n  const msg = item.json.message || item.json.edited_message || item.json.channel_post || {};\n  const hasPhoto = !!(msg.photo || msg.document);\n  return {\n    json: {\n      isScreenshot: hasPhoto,\n      message: msg\n    }\n  };\n});"
+        "jsCode": "// Normalizes the Telegram trigger payload and checks for image files or documents\nreturn $input.all().map(item => {\n  const msg = item.json.message || item.json.edited_message || item.json.channel_post || {};\n  const hasPhoto = !!(msg.photo || msg.document);\n  return {\n    json: {\n      isScreenshot: hasPhoto,\n      message: msg\n    }\n  };\n});"
       },
       "id": "normalize-payload",
       "name": "Normalize Payload",
@@ -80,19 +80,24 @@
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "Extract all readable text from this screenshot of a job request. Return ONLY the raw text of the job description. Do not add any chat, prefix, or metadata.",
-        "hasBinaryInput": true,
-        "binaryKeys": "data"
+        "operation": "analyze",
+        "prompt": "Extract all readable text from this screenshot of a job request. Return ONLY the raw text of the job description. Do not add any chat, prefix, or metadata.",
+        "imageBinaryKey": "data"
       },
-      "id": "gemini-ocr",
-      "name": "Gemini Vision OCR",
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.4,
+      "id": "gemini-analysis-photo",
+      "name": "Gemini Analysis Photo",
+      "type": "n8n-nodes-base.googleGemini",
+      "typeVersion": 1,
       "position": [
         600,
         140
-      ]
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "your-gemini-cred-id",
+          "name": "Google Gemini API Credentials"
+        }
+      }
     },
     {
       "parameters": {
@@ -258,14 +263,14 @@
       "main": [
         [
           {
-            "node": "Gemini Vision OCR",
+            "node": "Gemini Analysis Photo",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Gemini Vision OCR": {
+    "Gemini Analysis Photo": {
       "main": [
         [
           {
@@ -323,11 +328,6 @@
     "Gemini Model (Shared)": {
       "ai_languageModel": [
         [
-          {
-            "node": "Gemini Vision OCR",
-            "type": "ai_languageModel",
-            "index": 0
-          },
           {
             "node": "Gemini Evaluator Chain",
             "type": "ai_languageModel",
