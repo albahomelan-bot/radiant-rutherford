@@ -25,3 +25,14 @@
 - **Structure & Formatting**: Always use clean, structured Markdown, with headers, bullet points, and clearly separated blocks.
 - **Problem Solving Style**: Start with a clear analysis, then structure the findings, and present a complete, ready-to-use solution.
 - **Tone**: Respectful, friendly, natural, and professional.
+
+## AI Copywriting & Conversion Guidelines (Anti-AI Templates)
+
+- **No AI Clichés**: Avoid generic corporate jargon like "team of professionals", "individual approach", "innovative solutions", and general marketing fluff. Replace them with specific facts, numbers, and realistic scenarios.
+- **Conversion-Oriented Content**:
+  - Focus on customer benefits (what they get) rather than just features (what we do).
+  - Use clear, straightforward headlines (4U formula or direct statements) that hook the visitor's pain points.
+  - Detail concrete steps of the process to provide reassurance.
+  - Implement low-friction Call-to-Actions (CTAs) that make it easy for tired or busy users to take the first step.
+- **Tone**: Write in a "human-to-human" style. Plain, live language, zero fluff, highly structured and easy to scan.
+
