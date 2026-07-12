@@ -75,9 +75,19 @@ TRANSP:OPAQUE
 END:VEVENT
 
 BEGIN:VEVENT
-SUMMARY:💻 Старт рабочего дня
-DESCRIPTION:Создание и публикация постов в социальных сетях. Работа над проектами.
+SUMMARY:💻 Развитие и n8n (Утренний блок)
+DESCRIPTION:Изучение и проектирование автоматизаций n8n.
 DTSTART:20260709T100000
+DTEND:20260709T113000
+RRULE:FREQ=DAILY
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+END:VEVENT
+
+BEGIN:VEVENT
+SUMMARY:💻 Рабочий блок
+DESCRIPTION:Выполнение клиентских задач, создание и публикация постов в социальных сетях.
+DTSTART:20260709T113000
 DTEND:20260709T130000
 RRULE:FREQ=DAILY
 STATUS:CONFIRMED
@@ -95,10 +105,30 @@ TRANSP:OPAQUE
 END:VEVENT
 
 BEGIN:VEVENT
+SUMMARY:💻 Развитие и n8n (Дневной блок)
+DESCRIPTION:Разработка и тестирование сценариев автоматизации.
+DTSTART:20260709T144500
+DTEND:20260709T161500
+RRULE:FREQ=DAILY
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+END:VEVENT
+
+BEGIN:VEVENT
 SUMMARY:📚 Образовательный блок (Языки - Вечер)
 DESCRIPTION:Повторение и практика иностранных языков.
 DTSTART:20260709T163000
 DTEND:20260709T173000
+RRULE:FREQ=DAILY
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+END:VEVENT
+
+BEGIN:VEVENT
+SUMMARY:💻 Развитие и n8n (Вечерний блок)
+DESCRIPTION:Чтение документации, разбор новых нод, спокойное кодирование.
+DTSTART:20260709T180000
+DTEND:20260709T193000
 RRULE:FREQ=DAILY
 STATUS:CONFIRMED
 TRANSP:OPAQUE
