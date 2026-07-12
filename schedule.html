@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Мій Найкращий День</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #090F0C;
+            --card-bg: rgba(26, 38, 34, 0.45);
+            --card-active-bg: rgba(197, 168, 128, 0.15);
+            --border-color: rgba(197, 168, 128, 0.15);
+            --border-active: #C5A880;
+            --text-main: #FFFFFF;
+            --text-muted: #8C9D96;
+            --gold: #C5A880;
+            --gold-glow: rgba(197, 168, 128, 0.4);
+            
+            --color-routine: #C5A880;
+            --color-study: #4F82C4;
+            --color-sport: #2E8B57;
+            --color-n8n: #9A4FC4;
+            --color-work: #A1C44F;
+            --color-rest: #C44F4F;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px 15px 40px 15px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 10px 0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #C5A880 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Live status banner */
+        .live-banner {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(21, 31, 27, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .live-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--gold);
+            border-radius: 50%;
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 8px var(--gold); }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        .live-task-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .live-countdown {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Timeline Container */
+        .timeline-container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            padding-left: 24px;
+        }
+
+        /* The vertical timeline bar */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 7px;
+            bottom: 15px;
+            width: 2px;
+            background: rgba(197, 168, 128, 0.15);
+        }
+
+        /* Timeline Item Card */
+        .time-block {
+            position: relative;
+            margin-bottom: 20px;
+            transition: all 0.4s ease;
+        }
+
+        /* Timeline Node/Bullet */
+        .time-node {
+            position: absolute;
+            left: -24px;
+            top: 24px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 2px solid var(--text-muted);
+            z-index: 2;
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
+        }
+
+        .time-block.active .time-node {
+            border-color: var(--border-active);
+            background: var(--border-active);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 16px 20px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .time-block.active .card {
+            background: var(--card-active-bg);
+            border-color: var(--border-active);
+            box-shadow: 0 8px 32px rgba(197, 168, 128, 0.08);
+            transform: scale(1.02);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-time {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.02em;
+        }
+
+        .card-type-tag {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Color Coding Accents on left border */
+        .card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20%;
+            bottom: 20%;
+            width: 4px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .type-routine .card::before { background-color: var(--color-routine); }
+        .type-study .card::before { background-color: var(--color-study); }
+        .type-sport .card::before { background-color: var(--color-sport); }
+        .type-n8n .card::before { background-color: var(--color-n8n); }
+        .type-work .card::before { background-color: var(--color-work); }
+        .type-rest .card::before { background-color: var(--color-rest); }
+        
+        .type-routine .card-type-tag { color: var(--color-routine); }
+        .type-study .card-type-tag { color: var(--color-study); }
+        .type-sport .card-type-tag { color: var(--color-sport); }
+        .type-n8n .card-type-tag { color: var(--color-n8n); }
+        .type-work .card-type-tag { color: var(--color-work); }
+        .type-rest .card-type-tag { color: var(--color-rest); }
+
+        .type-routine.active .time-node { border-color: var(--color-routine); }
+        .type-study.active .time-node { border-color: var(--color-study); }
+        .type-sport.active .time-node { border-color: var(--color-sport); }
+        .type-n8n.active .time-node { border-color: var(--color-n8n); }
+        .type-work.active .time-node { border-color: var(--color-work); }
+        .type-rest.active .time-node { border-color: var(--color-rest); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>МІЙ НАЙКРАЩИЙ ДЕНЬ</h1>
+        <p>Ідеальний графік навчання та роботи</p>
+    </div>
+
+    <!-- Live Status Widget -->
+    <div id="liveBanner" class="live-banner">
+        <div class="live-header">
+            <div class="live-badge">
+                <span class="live-dot"></span>
+                <span>Зараз виконується</span>
+            </div>
+            <div id="liveTime">00:00:00</div>
+        </div>
+        <div id="liveTaskName" class="live-task-name">Завантаження...</div>
+        <div id="liveCountdown" class="live-countdown">Залишилося: -- хв</div>
+    </div>
+
+    <!-- Timeline Wrapper -->
+    <div class="timeline-container" id="timeline">
+        <!-- Event Card 1 -->
+        <div class="time-block type-routine" data-start="05:00" data-end="05:15">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">05:00 — 05:15</span>
+                    <span class="card-type-tag">Рутина</span>
+                </div>
+                <div class="card-title">🌅 Подъём</div>
+                <div class="card-desc">Проснуться, немного потянуться и обдумать планы на день в тишине.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 2 -->
+        <div class="time-block type-routine" data-start="05:15" data-end="05:30">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">05:15 — 05:30</span>
+                    <span class="card-type-tag">Рутина</span>
+                </div>
+                <div class="card-title">📱 Інфо-менеджмент</div>
+                <div class="card-desc">Взять телефон, проверить все пришедшие за ночь сообщения и уведомления.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 3 -->
+        <div class="time-block type-routine" data-start="05:30" data-end="05:35">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">05:30 — 05:35</span>
+                    <span class="card-type-tag">Рутина</span>
+                </div>
+                <div class="card-title">❤️ Написати Олене</div>
+                <div class="card-desc">Открыть Telegram и написать Олене «Доброго ранку».</div>
+            </div>
+        </div>
+
+        <!-- Event Card 4 -->
+        <div class="time-block type-routine" data-start="05:35" data-end="05:45">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">05:35 — 05:45</span>
+                    <span class="card-type-tag">Рутина</span>
+                </div>
+                <div class="card-title">🎵 Настройка на день</div>
+                <div class="card-desc">Поприветствовать утреннее солнце вслух, включить музыку Дана Балана для настроения.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 5 -->
+        <div class="time-block type-study" data-start="05:45" data-end="07:30">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">05:45 — 07:30</span>
+                    <span class="card-type-tag">Мови</span>
+                </div>
+                <div class="card-title">📚 Языки (Утро)</div>
+                <div class="card-desc">Изучение иностранных языков в Duolingo, Промова, Албанский/Английский.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 6 -->
+        <div class="time-block type-sport" data-start="07:30" data-end="09:00">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">07:30 — 09:00</span>
+                    <span class="card-type-tag">Спорт</span>
+                </div>
+                <div class="card-title">🌊 Спорт и море</div>
+                <div class="card-desc">Пойти пешком на море, освежающее купание и пляж (купи-купи).</div>
+            </div>
+        </div>
+
+        <!-- Event Card 7 -->
+        <div class="time-block type-routine" data-start="09:00" data-end="10:00">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">09:00 — 10:00</span>
+                    <span class="card-type-tag">Рутина</span>
+                </div>
+                <div class="card-title">🍳 Домашний блок</div>
+                <div class="card-desc">Душ, чистка зубов, приготовление и прием здорового завтрака, отдых.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 8 -->
+        <div class="time-block type-n8n" data-start="10:00" data-end="11:30">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">10:00 — 11:30</span>
+                    <span class="card-type-tag">n8n</span>
+                </div>
+                <div class="card-title">💻 Развитие и n8n (Утро)</div>
+                <div class="card-desc">Активное изучение и проектирование новых автоматизаций в n8n.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 9 -->
+        <div class="time-block type-work" data-start="11:30" data-end="13:00">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">11:30 — 13:00</span>
+                    <span class="card-type-tag">Робота</span>
+                </div>
+                <div class="card-title">💼 Рабочий блок</div>
+                <div class="card-desc">Выполнение клиентских задач, создание и публикация SMM-постов.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 10 -->
+        <div class="time-block type-study" data-start="13:00" data-end="14:30">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">13:00 — 14:30</span>
+                    <span class="card-type-tag">Мови</span>
+                </div>
+                <div class="card-title">📚 Языки (День)</div>
+                <div class="card-desc">Изучение Английского и Албанского языков (дневной блок).</div>
+            </div>
+        </div>
+
+        <!-- Event Card 11 -->
+        <div class="time-block type-rest" data-start="14:30" data-end="14:45">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">14:30 — 14:45</span>
+                    <span class="card-type-tag">Відпочинок</span>
+                </div>
+                <div class="card-title">🍽️ Обед / Перерыв</div>
+                <div class="card-desc">Вкусный обед и короткий расслабляющий отдых.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 12 -->
+        <div class="time-block type-n8n" data-start="14:45" data-end="16:15">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">14:45 — 16:15</span>
+                    <span class="card-type-tag">n8n</span>
+                </div>
+                <div class="card-title">💻 Развитие и n8n (День)</div>
+                <div class="card-desc">Разработка, отладка и тестирование сложных сценариев автоматизации.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 13 -->
+        <div class="time-block type-rest" data-start="16:15" data-end="16:30">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">16:15 — 16:30</span>
+                    <span class="card-type-tag">Відпочинок</span>
+                </div>
+                <div class="card-title">☕ Короткий перерыв</div>
+                <div class="card-desc">Разминка, проветривание комнаты, подготовка к вечернему обучению.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 14 -->
+        <div class="time-block type-study" data-start="16:30" data-end="17:30">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">16:30 — 17:30</span>
+                    <span class="card-type-tag">Мови</span>
+                </div>
+                <div class="card-title">📚 Языки (Вечер)</div>
+                <div class="card-desc">Повторение изученного материала, практика разговорной речи и слов.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 15 -->
+        <div class="time-block type-sport" data-start="17:30" data-end="18:00">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">17:30 — 18:00</span>
+                    <span class="card-type-tag">Спорт</span>
+                </div>
+                <div class="card-title">🏃‍♂️ Спорт / Свободно</div>
+                <div class="card-desc">Вечерняя прогулка, разминка или свободный личный слот.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 16 -->
+        <div class="time-block type-n8n" data-start="18:00" data-end="19:30">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">18:00 — 19:30</span>
+                    <span class="card-type-tag">n8n</span>
+                </div>
+                <div class="card-title">💻 Развитие и n8n (Вечер)</div>
+                <div class="card-desc">Чтение документации n8n, разбор новых нод, спокойное программирование.</div>
+            </div>
+        </div>
+
+        <!-- Event Card 17 -->
+        <div class="time-block type-rest" data-start="19:30" data-end="23:59">
+            <div class="time-node"></div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-time">19:30 — 23:59</span>
+                    <span class="card-type-tag">Відпочинок</span>
+                </div>
+                <div class="card-title">💤 Вечерний отдых</div>
+                <div class="card-desc">Ужин, личное время, подготовка ко сну и здоровый сон.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateLiveTracker() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // Show real-time clock
+            document.getElementById('liveTime').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            let currentTask = null;
+            
+            const blocks = Array.from(document.querySelectorAll('.time-block'));
+            
+            blocks.forEach((block) => {
+                const [startH, startM] = block.getAttribute('data-start').split(':').map(Number);
+                const [endH, endM] = block.getAttribute('data-end').split(':').map(Number);
+                
+                const startTotal = startH * 60 + startM;
+                const endTotal = endH * 60 + endM;
+                
+                // Remove active classes
+                block.classList.remove('active');
+                
+                if (currentMinutes >= startTotal && currentMinutes < endTotal) {
+                    currentTask = {
+                        el: block,
+                        title: block.querySelector('.card-title').textContent,
+                        endTotal: endTotal
+                    };
+                    block.classList.add('active');
+                }
+            });
+            
+            // Update widget text
+            if (currentTask) {
+                document.getElementById('liveTaskName').textContent = currentTask.title;
+                const minutesLeft = currentTask.endTotal - currentMinutes;
+                document.getElementById('liveCountdown').textContent = `Залишилося: ${minutesLeft} хв`;
+            } else {
+                document.getElementById('liveTaskName').textContent = "Вільний час / Відпочинок";
+                document.getElementById('liveCountdown').textContent = "Спимо або відпочиваємо";
+            }
+        }
+
+        // Auto-scroll to active card on load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateLiveTracker();
+            setInterval(updateLiveTracker, 1000);
+            
+            setTimeout(() => {
+                const activeCard = document.querySelector('.time-block.active');
+                if (activeCard) {
+                    activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 300);
+        });
+    </script>
+</body>
+</html>
