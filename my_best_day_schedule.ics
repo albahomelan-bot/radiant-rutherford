@@ -45,7 +45,7 @@ TRANSP:OPAQUE
 END:VEVENT
 
 BEGIN:VEVENT
-SUMMARY:📚 Образовательный блок (Языки)
+SUMMARY:📚 Образовательный блок (Языки - Утро)
 DESCRIPTION:Изучение иностранных языков: Duolingo: Базовый курс (основа) + дополнительный курс; Промова: Практика языков; Раздел изучения Албанского и Английского языков.
 DTSTART:20260709T054500
 DTEND:20260709T073000
@@ -76,9 +76,29 @@ END:VEVENT
 
 BEGIN:VEVENT
 SUMMARY:💻 Старт рабочего дня
-DESCRIPTION:Создание и публикация постов в социальных сетях.
+DESCRIPTION:Создание и публикация постов в социальных сетях. Работа над проектами.
 DTSTART:20260709T100000
-DTEND:20260709T103000
+DTEND:20260709T130000
+RRULE:FREQ=DAILY
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+END:VEVENT
+
+BEGIN:VEVENT
+SUMMARY:📚 Образовательный блок (Языки - День)
+DESCRIPTION:Изучение Английского и Албанского языков.
+DTSTART:20260709T130000
+DTEND:20260709T143000
+RRULE:FREQ=DAILY
+STATUS:CONFIRMED
+TRANSP:OPAQUE
+END:VEVENT
+
+BEGIN:VEVENT
+SUMMARY:📚 Образовательный блок (Языки - Вечер)
+DESCRIPTION:Повторение и практика иностранных языков.
+DTSTART:20260709T163000
+DTEND:20260709T173000
 RRULE:FREQ=DAILY
 STATUS:CONFIRMED
 TRANSP:OPAQUE
