@@ -75,6 +75,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  overflow-x: hidden;
 }
 
 body {
@@ -1121,6 +1122,13 @@ textarea.form-input {
 }
 
 @media (max-width: 768px) {
+  .header {
+    position: sticky;
+    background-color: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
   :root {
     --section-padding: 80px 0;
   }
