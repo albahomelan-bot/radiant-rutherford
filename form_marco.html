@@ -3,26 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Надіслати заявку</title>
+  <title>CYBERPUNK FORM // SYSTEM ACCESS</title>
   
-  <!-- Підключення шрифту Inter -->
+  <!-- Підключення футуристичних шрифтів Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-color: #0b0f19;
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --accent: #06b6d4;
-      --input-bg: rgba(255, 255, 255, 0.02);
-      --input-border: rgba(255, 255, 255, 0.1);
-      --input-focus: #6366f1;
+      --bg-color: #030611;
+      --card-bg: rgba(6, 12, 32, 0.85);
+      --neon-blue: #00f0ff;
+      --neon-pink: #ff007f;
+      --neon-purple: #9d4edd;
+      --text-main: #00f0ff;
+      --text-sec: #e2e8f0;
+      --text-muted: #64748b;
+      --border-glow: rgba(0, 240, 255, 0.2);
     }
 
     * {
@@ -33,107 +31,205 @@
 
     body {
       background-color: var(--bg-color);
-      font-family: 'Inter', sans-serif;
-      color: var(--text-main);
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--text-sec);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 30px 20px;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* Фоновий декор для атмосфери */
+    /* Фонова кіберпанк-сітка */
     body::before {
       content: '';
       position: absolute;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0,0,0,0) 70%);
-      top: 10%;
-      left: 15%;
-      z-index: -1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 30px 30px;
+      background-position: center;
+      z-index: -2;
     }
+
+    /* Ефект неонового туману */
     body::after {
       content: '';
       position: absolute;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, rgba(0,0,0,0) 70%);
-      bottom: 10%;
-      right: 15%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, rgba(255, 0, 127, 0.03) 50%, rgba(0,0,0,0) 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Анімована лінія сканування (CRT-ефект) */
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+      ), linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.06),
+        rgba(0, 255, 0, 0.02),
+        rgba(0, 0, 255, 0.06)
+      );
+      background-size: 100% 4px, 6px 100%;
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0.7;
     }
 
     .container {
       width: 100%;
       max-width: 550px;
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 20px;
+      border: 2px solid var(--neon-blue);
+      border-radius: 4px;
       padding: 40px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      box-shadow: 
+        0 0 15px rgba(0, 240, 255, 0.15),
+        inset 0 0 15px rgba(0, 240, 255, 0.1);
       position: relative;
+      /* Зрізані кіберпанк-кути */
+      clip-path: polygon(
+        0px 20px, 
+        20px 0px, 
+        100% 0px, 
+        100% calc(100% - 20px), 
+        calc(100% - 20px) 100%, 
+        0px 100%
+      );
     }
 
+    /* Кутові декоративні елементи */
+    .corner-decor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    
+    .corner-decor::before {
+      content: 'SYS.LOC // 4.3';
+      position: absolute;
+      bottom: 8px;
+      right: 15px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: var(--neon-pink);
+      letter-spacing: 1px;
+      opacity: 0.7;
+    }
+
+    .corner-decor::after {
+      content: 'ONLINE';
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: #10b981;
+      text-shadow: 0 0 5px #10b981;
+      letter-spacing: 1px;
+    }
+
+    /* Кіберпанк заголовок */
     h2 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--text-main) 30%, var(--text-muted) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2 span {
+      color: var(--neon-pink);
+      text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
     }
 
     .subtitle {
-      font-size: 14px;
-      color: var(--text-muted);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      color: var(--neon-blue);
+      text-transform: uppercase;
       margin-bottom: 30px;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+      padding-bottom: 10px;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 22px;
+      position: relative;
     }
 
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 20px;
     }
 
+    /* Стилізація назв полів */
     label {
       display: block;
-      font-size: 13px;
-      font-weight: 500;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      text-transform: uppercase;
       margin-bottom: 8px;
-      color: var(--text-main);
+      color: var(--neon-blue);
+      letter-spacing: 1px;
+      text-shadow: 0 0 3px rgba(0, 240, 255, 0.3);
     }
 
-    label span {
-      color: #ef4444;
+    label span.req {
+      color: var(--neon-pink);
+      text-shadow: 0 0 5px var(--neon-pink);
       margin-left: 2px;
     }
 
+    /* Стилі для інпутів */
     input, textarea {
       width: 100%;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 8px;
+      background: rgba(3, 8, 24, 0.8);
+      border: 1px solid var(--neon-blue);
+      border-radius: 0px; /* Тільки гострі кути */
       padding: 12px 16px;
-      font-family: inherit;
+      font-family: 'Share Tech Mono', monospace;
       font-size: 14px;
-      color: var(--text-main);
+      color: #ffffff;
       outline: none;
-      transition: all 0.25s ease;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 0 5px rgba(0, 240, 255, 0.05);
     }
 
     input:focus, textarea:focus {
-      border-color: var(--input-focus);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--neon-pink);
+      box-shadow: 
+        0 0 10px rgba(255, 0, 127, 0.3),
+        inset 0 0 5px rgba(255, 0, 127, 0.1);
+      background: rgba(3, 8, 24, 0.95);
     }
 
     textarea {
@@ -141,68 +237,128 @@
       min-height: 100px;
     }
 
+    /* Підказки або індикатори всередині полів */
+    .input-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 38px;
+      width: 4px;
+      height: 4px;
+      background: var(--neon-blue);
+      box-shadow: 0 0 5px var(--neon-blue);
+    }
+    
+    .input-wrapper:focus-within::after {
+      background: var(--neon-pink);
+      box-shadow: 0 0 5px var(--neon-pink);
+    }
+
+    /* Кіберпанк кнопка */
     .btn-submit {
       width: 100%;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-      border: none;
-      border-radius: 8px;
-      padding: 14px;
-      font-size: 15px;
-      font-weight: 600;
+      background: transparent;
+      border: 1px solid var(--neon-pink);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
       color: #ffffff;
+      text-transform: uppercase;
+      padding: 15px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      /* Зрізані кути кнопки */
+      clip-path: polygon(0 0, 93% 0, 100% 35%, 100% 100%, 7% 100%, 0 65%);
+      box-shadow: 0 0 10px rgba(255, 0, 127, 0.15);
+      margin-top: 15px;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg, 
+        transparent, 
+        rgba(0, 240, 255, 0.3), 
+        transparent
+      );
+      transition: all 0.6s ease;
     }
 
     .btn-submit:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+      background: var(--neon-pink);
+      color: #000000;
+      text-shadow: none;
+      box-shadow: 0 0 20px var(--neon-pink);
+    }
+
+    .btn-submit:hover::before {
+      left: 100%;
     }
 
     .btn-submit:active {
-      transform: translateY(1px);
+      transform: scale(0.98);
     }
 
-    /* Стан успіху */
+    /* Екран успішної відправки (Термінал зламано) */
     .success-container {
       display: none;
       text-align: center;
-      padding: 20px 0;
+      padding: 10px 0;
+      animation: terminalGlitch 0.4s ease-out forwards;
+    }
+
+    .terminal-header {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 14px;
+      color: var(--neon-pink);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
     }
 
     .success-icon {
-      width: 64px;
-      height: 64px;
-      background: rgba(6, 182, 212, 0.1);
-      border: 1px solid rgba(6, 182, 212, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 24px;
-      color: var(--accent);
-      font-size: 32px;
-      animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 48px;
+      color: var(--neon-blue);
+      text-shadow: 0 0 15px var(--neon-blue);
+      margin-bottom: 20px;
     }
 
     .success-title {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: var(--text-main);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
     }
 
     .success-message {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.5;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      color: var(--text-sec);
+      line-height: 1.6;
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px dashed var(--neon-blue);
+      padding: 15px;
     }
 
-    @keyframes scaleUp {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    /* Анімація появи терміналу */
+    @keyframes terminalGlitch {
+      0% { opacity: 0; transform: scale(0.95); filter: hue-rotate(90deg); }
+      50% { opacity: 0.5; transform: scale(1.02); filter: hue-rotate(-45deg); }
+      100% { opacity: 1; transform: scale(1); filter: none; }
     }
 
     @media (max-width: 500px) {
@@ -211,63 +367,76 @@
         gap: 0;
       }
       .container {
-        padding: 24px;
+        padding: 25px;
       }
     }
   </style>
 </head>
 <body>
 
+  <!-- Лінії сканування монітора -->
+  <div class="scanlines"></div>
+
   <div class="container">
-    <!-- Форма -->
+    <div class="corner-decor"></div>
+    
+    <!-- Стан форми -->
     <form id="requestForm">
-      <h2>Надіслати запит</h2>
-      <p class="subtitle">Будь ласка, заповніть форму нижче для оцінки вашого проєкту.</p>
+      <h2><span>//</span> SYS_CONNECT</h2>
+      <p class="subtitle">INPUT PROTOCOL // UPLOAD REQUEST TO N8N</p>
 
-      <div class="form-group">
-        <label for="name">Ваше ім'я <span>*</span></label>
-        <input type="text" id="name" name="name" required placeholder="Олександр">
+      <div class="form-group input-wrapper">
+        <label for="name">[ 01. USER_NAME ]<span class="req">*</span></label>
+        <input type="text" id="name" name="name" required placeholder="ENTR_NAME">
       </div>
 
-      <div class="form-group">
-        <label for="email">E-mail <span>*</span></label>
-        <input type="email" id="email" name="email" required placeholder="alex@example.com">
+      <div class="form-group input-wrapper">
+        <label for="email">[ 02. USER_EMAIL ]<span class="req">*</span></label>
+        <input type="email" id="email" name="email" required placeholder="ENTR_EMAIL">
       </div>
 
-      <div class="form-group">
-        <label for="company">Назва компанії <span>*</span></label>
-        <input type="text" id="company" name="company" required placeholder="MyCompany LLC">
+      <div class="form-group input-wrapper">
+        <label for="company">[ 03. COMP_NAME ]<span class="req">*</span></label>
+        <input type="text" id="company" name="company" required placeholder="ENTR_COMPANY">
       </div>
 
-      <div class="form-group">
-        <label for="request">Опис завдання <span>*</span></label>
-        <textarea id="request" name="request" required placeholder="Опишіть, що саме потрібно зробити..."></textarea>
+      <div class="form-group input-wrapper">
+        <label for="request">[ 04. REQUEST_DETAILS ]<span class="req">*</span></label>
+        <textarea id="request" name="request" required placeholder="ENTR_DETAILS..."></textarea>
       </div>
 
       <div class="form-row">
-        <div class="form-group">
-          <label for="budget">Бюджет ($)</label>
-          <input type="text" id="budget" name="budget" placeholder="1000">
+        <div class="form-group input-wrapper">
+          <label for="budget">[ 05. EST_BUDGET ]</label>
+          <input type="text" id="budget" name="budget" placeholder="ENTR_BUDGET">
         </div>
-        <div class="form-group">
-          <label for="deadline">Дедлайн</label>
-          <input type="text" id="deadline" name="deadline" placeholder="2 тижні">
+        <div class="form-group input-wrapper">
+          <label for="deadline">[ 06. TIMELINE ]</label>
+          <input type="text" id="deadline" name="deadline" placeholder="ENTR_DEADLINE">
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="website">Сайт компанії</label>
-        <input type="url" id="website" name="website" placeholder="https://example.com">
+      <div class="form-group input-wrapper">
+        <label for="website">[ 07. COMP_WEBSITE ]</label>
+        <input type="url" id="website" name="website" placeholder="https://">
       </div>
 
-      <button type="submit" class="btn-submit">Відправити запит</button>
+      <button type="submit" class="btn-submit">RUN_TRANSMISSION</button>
     </form>
 
-    <!-- Стан успіху -->
+    <!-- Стан успіху (Термінальний лог) -->
     <div id="successState" class="success-container">
-      <div class="success-icon">✓</div>
-      <h3 class="success-title">Дякуємо!</h3>
-      <p class="success-message">Заявку прийнято. Наш спеціаліст зв'яжеться з вами найближчим часом.</p>
+      <div class="terminal-header">
+        <span>[ STATUS: OK ]</span>
+        <span>[ PORT: 443 ]</span>
+      </div>
+      <div class="success-icon">>>> ACCESS_GRANTED</div>
+      <h3 class="success-title">TRANSMISSION COMPLETED</h3>
+      <p class="success-message">
+        SYSTEM: Заявку прийнято успішно.<br>
+        DATA: Всі пакети передано на Webhook n8n.<br>
+        RESPONSE: Наш спеціаліст зв'яжеться з вами.
+      </p>
     </div>
   </div>
 
@@ -279,8 +448,9 @@
       e.preventDefault();
 
       const submitButton = this.querySelector('.btn-submit');
+      const originalText = submitButton.innerText;
       submitButton.disabled = true;
-      submitButton.innerText = 'Надсилання...';
+      submitButton.innerText = 'TRANSMITTING...';
 
       const formData = {
         name: document.getElementById('name').value,
@@ -306,15 +476,15 @@
           document.getElementById('requestForm').style.display = 'none';
           document.getElementById('successState').style.display = 'block';
         } else {
-          alert('Помилка сервера при відправці. Спробуйте пізніше.');
+          alert('SYSTEM ERROR: RESPONSE CODE ' + response.status);
           submitButton.disabled = false;
-          submitButton.innerText = 'Відправити запит';
+          submitButton.innerText = originalText;
         }
       } catch (error) {
-        console.error('Error submitting form:', error);
-        alert('Не вдалося надіслати запит. Перевірте з\'єднання з інтернетом.');
+        console.error('Transmission error:', error);
+        alert('SYSTEM ERROR: TRANSMISSION FAILED');
         submitButton.disabled = false;
-        submitButton.innerText = 'Відправити запит';
+        submitButton.innerText = originalText;
       }
     });
   </script>
