@@ -430,19 +430,19 @@
         <span>[ STATUS: OK ]</span>
         <span>[ PORT: 443 ]</span>
       </div>
-      <div class="success-icon">>>> ACCESS_GRANTED</div>
-      <h3 class="success-title">TRANSMISSION COMPLETED</h3>
+      <div class="success-icon">>>> CONNECTION TERMINATED</div>
+      <h3 class="success-title">Okay, goodbye</h3>
       <p class="success-message">
-        SYSTEM: Заявку прийнято успішно.<br>
-        DATA: Всі пакети передано на Webhook n8n.<br>
-        RESPONSE: Наш спеціаліст зв'яжеться з вами.
+        SYSTEM: Заявку прийнято. Сесію закрито.<br>
+        DATA: Всі пакети успішно відправлено на n8n.<br>
+        STATUS: DISCONNECTED.
       </p>
     </div>
   </div>
 
   <script>
     // Вставте сюди свій URL з Webhook n8n замість '__WEBHOOK_URL__'
-    const webhookUrl = '__WEBHOOK_URL__';
+    const webhookUrl = 'https://albasever.app.n8n.cloud/webhook-test/a96cae51-d532-4b7b-a86a-deb1e9b49b89';
 
     document.getElementById('requestForm').addEventListener('submit', async function(e) {
       e.preventDefault();
