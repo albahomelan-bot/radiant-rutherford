@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Надіслати заявку</title>
+  
+  <!-- Підключення шрифту Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #06b6d4;
+      --input-bg: rgba(255, 255, 255, 0.02);
+      --input-border: rgba(255, 255, 255, 0.1);
+      --input-focus: #6366f1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Фоновий декор для атмосфери */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0,0,0,0) 70%);
+      top: 10%;
+      left: 15%;
+      z-index: -1;
+    }
+    body::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, rgba(0,0,0,0) 70%);
+      bottom: 10%;
+      right: 15%;
+      z-index: -1;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 550px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--text-main) 30%, var(--text-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    label span {
+      color: #ef4444;
+      margin-left: 2px;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-submit:active {
+      transform: translateY(1px);
+    }
+
+    /* Стан успіху */
+    .success-container {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      color: var(--accent);
+      font-size: 32px;
+      animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .success-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .success-message {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    @keyframes scaleUp {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 500px) {
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .container {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Форма -->
+    <form id="requestForm">
+      <h2>Надіслати запит</h2>
+      <p class="subtitle">Будь ласка, заповніть форму нижче для оцінки вашого проєкту.</p>
+
+      <div class="form-group">
+        <label for="name">Ваше ім'я <span>*</span></label>
+        <input type="text" id="name" name="name" required placeholder="Олександр">
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-mail <span>*</span></label>
+        <input type="email" id="email" name="email" required placeholder="alex@example.com">
+      </div>
+
+      <div class="form-group">
+        <label for="company">Назва компанії <span>*</span></label>
+        <input type="text" id="company" name="company" required placeholder="MyCompany LLC">
+      </div>
+
+      <div class="form-group">
+        <label for="request">Опис завдання <span>*</span></label>
+        <textarea id="request" name="request" required placeholder="Опишіть, що саме потрібно зробити..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="budget">Бюджет ($)</label>
+          <input type="text" id="budget" name="budget" placeholder="1000">
+        </div>
+        <div class="form-group">
+          <label for="deadline">Дедлайн</label>
+          <input type="text" id="deadline" name="deadline" placeholder="2 тижні">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="website">Сайт компанії</label>
+        <input type="url" id="website" name="website" placeholder="https://example.com">
+      </div>
+
+      <button type="submit" class="btn-submit">Відправити запит</button>
+    </form>
+
+    <!-- Стан успіху -->
+    <div id="successState" class="success-container">
+      <div class="success-icon">✓</div>
+      <h3 class="success-title">Дякуємо!</h3>
+      <p class="success-message">Заявку прийнято. Наш спеціаліст зв'яжеться з вами найближчим часом.</p>
+    </div>
+  </div>
+
+  <script>
+    // Вставте сюди свій URL з Webhook n8n замість '__WEBHOOK_URL__'
+    const webhookUrl = '__WEBHOOK_URL__';
+
+    document.getElementById('requestForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const submitButton = this.querySelector('.btn-submit');
+      submitButton.disabled = true;
+      submitButton.innerText = 'Надсилання...';
+
+      const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        company: document.getElementById('company').value,
+        request: document.getElementById('request').value,
+        budget: document.getElementById('budget').value,
+        deadline: document.getElementById('deadline').value,
+        website: document.getElementById('website').value
+      };
+
+      try {
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          // Ховаємо форму, показуємо екран успіху
+          document.getElementById('requestForm').style.display = 'none';
+          document.getElementById('successState').style.display = 'block';
+        } else {
+          alert('Помилка сервера при відправці. Спробуйте пізніше.');
+          submitButton.disabled = false;
+          submitButton.innerText = 'Відправити запит';
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        alert('Не вдалося надіслати запит. Перевірте з\'єднання з інтернетом.');
+        submitButton.disabled = false;
+        submitButton.innerText = 'Відправити запит';
+      }
+    });
+  </script>
+
+</body>
+</html>
