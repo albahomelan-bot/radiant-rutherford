@@ -1,0 +1,327 @@
+{
+  "name": "Albanian Translator Telegram Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "868151c9-dafe-4396-9052-6cbe7867fc6d",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        112
+      ],
+      "webhookId": "fa249904-0fb0-4253-be98-47cdab052da6",
+      "credentials": {
+        "telegramApi": {
+          "id": "3IvA8JAnzRvSozLW",
+          "name": "Telegram account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "voice-check",
+              "leftValue": "={{ $json.message.voice.file_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "8a9cdeb7-9b70-43f6-adf4-4475f12fb0b7",
+      "name": "Is Voice Message",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "b534af7c-96ea-40e5-b0c9-f1ebb172efd7",
+      "name": "Download Voice File",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        16
+      ],
+      "webhookId": "9d0d78f2-d4ba-4242-b6d3-52436f586aae",
+      "credentials": {
+        "telegramApi": {
+          "id": "3IvA8JAnzRvSozLW",
+          "name": "Telegram account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "88b57cb0-7164-4089-b808-afa4cbc93948",
+      "name": "Transcribe Voice",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        672,
+        16
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4XBA6U2hCe2dPkmn",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "src-voice",
+              "name": "sourceText",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ef4e7925-9fc5-44ea-a42a-c344c6d7797e",
+      "name": "Voice Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.sourceText }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Ты — переводчик-помощник по албанскому языку. На вход поступает слово или фраза на русском или украинском языке. Определи язык ввода автоматически.\n\nВерни ответ СТРОГО в следующем формате (на русском языке, используя эмодзи-заголовки):\n\n🇦🇱 Перевод: <перевод на албанский язык>\n🗣 Произношение (кириллицей): <фонетическая транскрипция албанского перевода русскими/кириллическими буквами, максимально близко к реальному звучанию>\n\n💬 Ходовые фразы с этим словом:\n1. <албанская фраза> — <кириллическое произношение> — <перевод на русский>\n2. <албанская фраза> — <кириллическое произношение> — <перевод на русский>\n3. <албанская фраза> — <кириллическое произношение> — <перевод на русский>\n\nПравила:\n- Давай самые употребительные, разговорные (обиходные) фразы, которые реально используют носители.\n- Если ввод — целая фраза, переведи её целиком, дай произношение и приведи похожие ходовые выражения.\n- Пиши кириллическое произношение понятно, отражая особенности албанского произношения (ë как безударное «ы/э», gj как «дьй», q как мягкое «ч», ç как «ч», xh как «дж», ll как твёрдое «л», ъ и т.п.).\n- Не добавляй никаких пояснений вне указанного формата."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "6bc05ea1-904b-4600-af47-5344dedd2634",
+      "name": "Translate to Albanian",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1120,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "id": "ef3aadcb-6983-47c0-a7ee-ae10717f1ca1",
+      "name": "Gemini Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        336
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $(\"Telegram Trigger\").item.json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "e596debd-9b15-4b8c-b45a-f84eee2fd700",
+      "name": "Send Translation",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1472,
+        112
+      ],
+      "webhookId": "c691e949-3824-436c-9c84-485ff26aeb21",
+      "credentials": {
+        "telegramApi": {
+          "id": "3IvA8JAnzRvSozLW",
+          "name": "Telegram account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "src-text",
+              "name": "sourceText",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "91600e1b-e96f-4d90-8543-35c3cb0a60da",
+      "name": "Message Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        208
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Is Voice Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Voice Message": {
+      "main": [
+        [
+          {
+            "node": "Download Voice File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Voice File": {
+      "main": [
+        [
+          {
+            "node": "Transcribe Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Voice": {
+      "main": [
+        [
+          {
+            "node": "Voice Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice Text": {
+      "main": [
+        [
+          {
+            "node": "Translate to Albanian",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Translate to Albanian": {
+      "main": [
+        [
+          {
+            "node": "Send Translation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Translate to Albanian",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Text": {
+      "main": [
+        [
+          {
+            "node": "Translate to Albanian",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "466216b5-252d-45cc-be90-1862edc0bd6b",
+  "meta": {
+    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
+  },
+  "nodeGroups": [],
+  "id": "irDW8qyu5nYQwiPQ",
+  "tags": []
+}
