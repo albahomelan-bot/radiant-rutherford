@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: AI Financial Assistant | Andrii Yatsechko</title>
+  <meta name="description" content="Detailed case study of the AI Financial Assistant workflow.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNbvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- CSS Design System Links -->
+  <link rel="stylesheet" href="index.css">
+  
+  <style>
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+    }
+    
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color var(--transition-fast), transform var(--transition-fast);
+      margin-bottom: 24px;
+    }
+    
+    .back-btn:hover {
+      color: var(--accent-primary);
+      transform: translateX(-4px);
+    }
+    
+    .hero-container {
+      padding-top: 120px;
+      padding-bottom: 60px;
+    }
+    
+    .case-header-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 48px;
+      align-items: center;
+    }
+    
+    .case-title {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .case-subtitle {
+      font-size: 1.25rem;
+      color: var(--accent-primary);
+      font-weight: 500;
+      margin-bottom: 24px;
+      display: block;
+    }
+    
+    .roi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(0, 242, 254, 0.1);
+      border: 1px solid var(--accent-primary);
+      border-radius: 30px;
+      color: var(--accent-primary);
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 24px;
+    }
+    
+    .roi-badge i {
+      font-size: 1.2rem;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin: 48px 0;
+    }
+    
+    .info-card {
+      padding: 32px;
+      text-align: center;
+    }
+    
+    .info-card h4 {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    
+    .info-card p {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+    }
+    
+    .architecture-section {
+      padding: 80px 0;
+      background: linear-gradient(to bottom, transparent, var(--bg-secondary), transparent);
+    }
+    
+    /* Flowchart CSS */
+    .flowchart {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      max-width: 700px;
+      margin: 48px auto;
+      position: relative;
+    }
+    
+    .flow-step {
+      padding: 24px 32px;
+      position: relative;
+      transition: transform var(--transition-fast), border-color var(--transition-fast);
+    }
+    
+    .flow-step:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-primary);
+    }
+    
+    .flow-step::after {
+      content: '↓';
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+      font-weight: 700;
+    }
+    
+    .flow-step:last-child::after {
+      display: none;
+    }
+    
+    .step-num {
+      position: absolute;
+      left: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      color: #07080d;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    }
+    
+    .step-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--accent-primary);
+    }
+    
+    .step-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+    
+    .detailed-modules {
+      padding: 80px 0;
+    }
+    
+    .module-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    
+    .module-card {
+      padding: 32px;
+    }
+    
+    .module-icon {
+      font-size: 2rem;
+      color: var(--accent-primary);
+      margin-bottom: 20px;
+    }
+    
+    .module-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      font-family: var(--font-heading);
+    }
+    
+    .cta-section {
+      padding: 100px 0;
+      text-align: center;
+    }
+    
+    .cta-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+    
+    .cta-container h2 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      font-family: var(--font-heading);
+    }
+    
+    .cta-container p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 32px;
+    }
+    
+    @media (max-width: 992px) {
+      .case-header-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        text-align: center;
+      }
+      
+      .case-title {
+        font-size: 2.5rem;
+      }
+      
+      .roi-badge {
+        justify-content: center;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .module-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .step-num {
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: none;
+        margin-bottom: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Orbs -->
+  <div class="orb-container">
+    <div class="orb orb-1" style="top: 12%; left: 6%;"></div>
+    <div class="orb orb-2" style="top: 48%; right: 6%;"></div>
+    <div class="orb orb-3" style="top: 78%; left: 18%;"></div>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="header scrolled" id="header">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" id="nav-logo">
+        <span>&lt;</span>Andrii<span>/</span>Yatsechko<span>&gt;</span>
+      </a>
+      
+      <div class="nav-actions">
+        <button class="lang-toggle" id="lang-toggle" aria-label="Toggle language">
+          <span id="lang-current">EN</span>
+        </button>
+        <a href="index.html#projects" class="btn btn-secondary" style="padding: 10px 16px; font-size: 0.9rem;">
+          <span class="lang-en"><i class="fa-solid fa-arrow-left"></i> Portfolio</span>
+          <span class="lang-uk"><i class="fa-solid fa-arrow-left"></i> Портфоліо</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <main>
+    <section class="hero-container">
+      <div class="container">
+        <a href="index.html#projects" class="back-btn">
+          <span class="lang-en"><i class="fa-solid fa-arrow-left"></i> Back to projects</span>
+          <span class="lang-uk"><i class="fa-solid fa-arrow-left"></i> Назад до проектів</span>
+        </a>
+        
+        <div class="case-header-grid">
+          <div class="reveal active">
+            <div class="roi-badge">
+              <i class="fa-solid fa-bolt"></i>
+              <span class="lang-en">Instant receipt scanning & logging</span>
+              <span class="lang-uk">Миттєве сканування чеків та запис</span>
+            </div>
+            
+            <h1 class="case-title">AI Financial Assistant</h1>
+            
+            <span class="case-subtitle">
+              <span class="lang-en">Autonomous Receipt Parsing & Expense Tracking</span>
+              <span class="lang-uk">Автономне сканування чеків та облік витрат</span>
+            </span>
+            
+            <p class="lang-en" style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 24px;">
+              An intelligent personal accounting system built on n8n. It analyzes images of receipts, parses totals, items, and tax data via Gemini Vision AI, groups them into budget categories, and updates Google Sheets.
+            </p>
+            <p class="lang-uk" style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 24px;">
+              Інтелектуальна система персонального обліку на базі n8n. Вона розпізнає зображення чеків, вилучає суми та дати за допомогою Gemini Vision AI, групує витрати та оновлює таблиці Google Sheets.
+            </p>
+            
+            <div class="case-tags">
+              <span class="skill-tag">n8n</span>
+              <span class="skill-tag">Gemini Vision API</span>
+              <span class="skill-tag">Telegram Bot API</span>
+              <span class="skill-tag">Google Sheets API</span>
+            </div>
+          </div>
+          
+          <div class="reveal active">
+            <div class="glass-panel" style="padding: 20px; overflow: hidden; border-radius: 20px;">
+              <img src="assets/project4.jpg" alt="Financial Assistant Preview" style="width: 100%; border-radius: 12px; display: block; border: 1px solid var(--card-border);">
+            </div>
+          </div>
+        </div>
+        
+        <!-- ROI Indicators -->
+        <div class="info-grid reveal active">
+          <div class="glass-panel info-card">
+            <span class="lang-en"><h4>Scan Time</h4><p>&lt; 5 Seconds</p></span>
+            <span class="lang-uk"><h4>Час сканування</h4><p>&lt; 5 секунд</p></span>
+          </div>
+          <div class="glass-panel info-card">
+            <span class="lang-en"><h4>Budget Categories</h4><p>Auto-Generated</p></span>
+            <span class="lang-uk"><h4>Категорії витрат</h4><p>Автоматичні</p></span>
+          </div>
+          <div class="glass-panel info-card">
+            <span class="lang-en"><h4>Accuracy Rate</h4><p>98% Successful</p></span>
+            <span class="lang-uk"><h4>Точність розпізнання</h4><p>98% Успішно</p></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE PROBLEM & SOLUTION -->
+    <section class="section" style="padding-top: 40px;">
+      <div class="container">
+        <div class="module-grid">
+          <div class="glass-panel" style="padding: 40px;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 20px; color: #f43f5e;">
+              <span class="lang-en">The Problem (Expense Fatigue)</span>
+              <span class="lang-uk">Проблема (Складність обліку)</span>
+            </h3>
+            <p class="lang-en" style="color: var(--text-secondary);">
+              Maintaining personal or business budgets is tedious. Manually logging every coffee transaction, store receipt, or gas purchase in spreadsheet cells takes constant discipline, and people eventually stop tracking their finances due to input friction.
+            </p>
+            <p class="lang-uk" style="color: var(--text-secondary);">
+              Ведення бюджету — нудна справа. Ручне занесення кожної кави, чека або витрат на пальне в комірки таблиць вимагає постійної дисципліни, і врешті-решт люди кидають цю рутину через незручність щоденного введення.
+            </p>
+          </div>
+          
+          <div class="glass-panel" style="padding: 40px;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 20px; color: var(--accent-primary);">
+              <span class="lang-en">The Solution (AI Expense Logger)</span>
+              <span class="lang-uk">Рішення (ІИ-Аналітик витрат)</span>
+            </h3>
+            <p class="lang-en" style="color: var(--text-secondary);">
+              Snap a photo of the receipt or type a quick text ("Groceries 45$") into a secure Telegram bot. The n8n backend triggers Gemini Vision AI to read the text or analyze the receipt image, extract the total, category, and date, and append the record in Google Sheets.
+            </p>
+            <p class="lang-uk" style="color: var(--text-secondary);">
+              Сфотографуйте чек або введіть короткий текст («продукти 1200 грн») у Telegram-бота. Сценарій n8n передає зображення моделі Gemini Vision AI, яка миттєво зчитує суму, дату й категорію та записує їх у таблицю Google Sheets.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE / WORKFLOW SECTION -->
+    <section class="architecture-section">
+      <div class="container">
+        <div class="section-header" style="text-align: center;">
+          <span class="section-subtitle">
+            <span class="lang-en">System Flow</span>
+            <span class="lang-uk">Крок за кроком</span>
+          </span>
+          <h2 class="section-title">
+            <span class="lang-en">AI Expense Logging Workflow</span>
+            <span class="lang-uk">Архітектура фінансового помічника</span>
+          </h2>
+        </div>
+        
+        <div class="flowchart">
+          <!-- Step 1 -->
+          <div class="glass-panel flow-step">
+            <div class="step-num">1</div>
+            <h3 class="step-title">
+              <span class="lang-en">Input Collection (Telegram)</span>
+              <span class="lang-uk">Прийом даних (Telegram)</span>
+            </h3>
+            <p class="step-desc">
+              <span class="lang-en">User uploads a receipt photo, voice note, or text message. n8n extracts the binary file or text stream.</span>
+              <span class="lang-uk">Користувач надсилає фото чека, голосове чи текстове повідомлення. n8n витягує бінарний файл або текст.</span>
+            </p>
+          </div>
+          
+          <!-- Step 2 -->
+          <div class="glass-panel flow-step">
+            <div class="step-num">2</div>
+            <h3 class="step-title">
+              <span class="lang-en">Gemini Vision AI Analysis</span>
+              <span class="lang-uk">Аналіз через Gemini Vision AI</span>
+            </h3>
+            <p class="step-desc">
+              <span class="lang-en">If it is an image, Gemini Vision analyzes the layout to find the vendor, date, line items, and final total sum. Texts are parsed via standard LLM calls.</span>
+              <span class="lang-uk">Якщо надіслано фото, Gemini Vision розпізнає структуру чека, визначає продавця, дату, товари та фінальну суму. Текст парситься стандартною LLM.</span>
+            </p>
+          </div>
+          
+          <!-- Step 3 -->
+          <div class="glass-panel flow-step">
+            <div class="step-num">3</div>
+            <h3 class="step-title">
+              <span class="lang-en">Category Allocation</span>
+              <span class="lang-uk">Класифікація категорій</span>
+            </h3>
+            <p class="step-desc">
+              <span class="lang-en">The AI automatically assigns a financial category (e.g. "Food", "Transport", "Utilities") based on the purchase items.</span>
+              <span class="lang-uk">ІИ-модель автоматично підбирає фінансову категорію («Продукти», «Транспорт», «Комунальні») на основі переліку куплених товарів.</span>
+            </p>
+          </div>
+          
+          <!-- Step 4 -->
+          <div class="glass-panel flow-step">
+            <div class="step-num">4</div>
+            <h3 class="step-title">
+              <span class="lang-en">Sheets Database Update</span>
+              <span class="lang-uk">Запис у Google Sheets</span>
+            </h3>
+            <p class="step-desc">
+              <span class="lang-en">n8n writes the parsed transaction row to Google Sheets, calculates the remaining monthly balance, and reports back in the chat.</span>
+              <span class="lang-uk">n8n заносить транзакцію до Google Sheets, вираховує залишок ліміту бюджету на місяць та надсилає користувачеві підсумок у чат.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALL TO ACTION SECTION -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="glass-panel cta-container" style="border: 1px solid var(--accent-primary); box-shadow: 0 0 40px rgba(0, 242, 254, 0.1);">
+          <h2 class="lang-en">Automate Your Finance Tracking Today</h2>
+          <h2 class="lang-uk">Автоматизуйте облік фінансів вже сьогодні</h2>
+          
+          <p class="lang-en">
+            Ready to track budgets with zero friction? Connect with Andrii on Telegram to deploy this assistant.
+          </p>
+          <p class="lang-uk">
+            Готові контролювати бюджет без зайвих зусиль? Напишіть Андрію в Telegram, щоб впровадити цього ІИ-помічника.
+          </p>
+          
+          <a href="https://t.me/albaRoyalQ" class="btn btn-primary btn-tg-quick" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-telegram" style="font-size: 1.3rem;"></i>
+            <span class="lang-en">Message Andrii on Telegram</span>
+            <span class="lang-uk">Написати Андрію в Telegram</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <p class="footer-text">
+        &copy; 2026 Andrii Yatsechko. All rights reserved.
+      </p>
+      
+      <div class="social-links">
+        <a href="https://t.me/albaRoyalQ" class="social-btn flex-center" target="_blank" rel="noopener noreferrer" aria-label="Telegram Profile"><i class="fa-brands fa-telegram"></i></a>
+        <a href="https://www.linkedin.com/in/%D0%B0%D0%BD%D0%B4%D1%80%D1%96%D0%B9-%D1%8F%D1%86%D0%B5%D1%87%D0%BA%D0%BE-98157075" class="social-btn flex-center" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+
+      const savedLang = localStorage.getItem('lang') || 'en';
+      document.documentElement.setAttribute('data-lang', savedLang);
+      
+      const langCurrent = document.getElementById('lang-current');
+      if (langCurrent) langCurrent.textContent = savedLang.toUpperCase();
+
+      const langToggle = document.getElementById('lang-toggle');
+      if (langToggle) {
+        langToggle.addEventListener('click', () => {
+          const currentLang = document.documentElement.getAttribute('data-lang');
+          const newLang = currentLang === 'en' ? 'uk' : 'en';
+          document.documentElement.setAttribute('data-lang', newLang);
+          if (langCurrent) langCurrent.textContent = newLang.toUpperCase();
+          localStorage.setItem('lang', newLang);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

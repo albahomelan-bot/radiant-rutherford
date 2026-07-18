@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study: HR Assistant Olena | Andrii Yatsechko</title>
+  <meta name="description" content="Detailed case study of the HR Assistant Olena recruitment workflow.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNbvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- CSS Design System Links -->
+  <link rel="stylesheet" href="index.css">
+  
+  <style>
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+    }
+    
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color var(--transition-fast), transform var(--transition-fast);
+      margin-bottom: 24px;
+    }
+    
+    .back-btn:hover {
+      color: var(--accent-primary);
+      transform: translateX(-4px);
+    }
+    
+    .hero-container {
+      padding-top: 120px;
+      padding-bottom: 60px;
+    }
+    
+    .case-header-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 48px;
+      align-items: center;
+    }
+    
+    .case-title {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .case-subtitle {
+      font-size: 1.25rem;
+      color: var(--accent-primary);
+      font-weight: 500;
+      margin-bottom: 24px;
+      display: block;
+    }
+    
+    .roi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(0, 242, 254, 0.1);
+      border: 1px solid var(--accent-primary);
+      border-radius: 30px;
+      color: var(--accent-primary);
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 24px;
+    }
+    
+    .roi-badge i {
+      font-size: 1.2rem;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin: 48px 0;
+    }
+    
+    .info-card {
+      padding: 32px;
+      text-align: center;
+    }
+    
+    .info-card h4 {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    
+    .info-card p {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+    }
+    
+    .architecture-section {
+      padding: 80px 0;
+      background: linear-gradient(to bottom, transparent, var(--bg-secondary), transparent);
+    }
+    
+    /* Flowchart CSS */
+    .flowchart {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      max-width: 700px;
+      margin: 48px auto;
+      position: relative;
+    }
+    
+    .flow-step {
+      padding: 24px 32px;
+      position: relative;
+      transition: transform var(--transition-fast), border-color var(--transition-fast);
+    }
+    
+    .flow-step:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-primary);
+    }
+    
+    .flow-step::after {
+      content: '↓';
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+      font-weight: 700;
+    }
+    
+    .flow-step:last-child::after {
+      display: none;
+    }
+    
+    .step-num {
+      position: absolute;
+      left: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      color: #07080d;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    }
+    
+    .step-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--accent-primary);
+    }
+    
+    .step-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+    
+    .detailed-modules {
+      padding: 80px 0;
+    }
+    
+    .module-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+    
+    .module-card {
+      padding: 32px;
+    }
+    
+    .module-icon {
+      font-size: 2rem;
+      color: var(--accent-primary);
+      margin-bottom: 20px;
+    }
+    
+    .module-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      font-family: var(--font-heading);
+    }
+    
+    .cta-section {
+      padding: 100px 0;
+      text-align: center;
+    }
+    
+    .cta-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+    
+    .cta-container h2 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      font-family: var(--font-heading);
+    }
+    
+    .cta-container p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 32px;
+    }
+    
+    @media (max-width: 992px) {
+      .case-header-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        text-align: center;
+      }
+      
+      .case-title {
+        font-size: 2.5rem;
+      }
+      
+      .roi-badge {
+        justify-content: center;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .module-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .step-num {
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: none;
+        margin-bottom: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Orbs -->
+  <div class="orb-container">
+    <div class="orb orb-1" style="top: 14%; left: 9%;"></div>
+    <div class="orb orb-2" style="top: 52%; right: 9%;"></div>
+    <div class="orb orb-3" style="top: 82%; left: 14%;"></div>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="header scrolled" id="header">
+    <div class="container nav-container">
+      <a href="index.html" class="logo" id="nav-logo">
+        <span>&lt;</span>Andrii<span>/</span>Yatsechko<span>&gt;</span>
+      </a>
+      
+      <div class="nav-actions">
+        <button class="lang-toggle" id="lang-toggle" aria-label="Toggle language">
+          <span id="lang-current">EN</span>
+        </button>
+        <a href="index.html#projects" class="btn btn-secondary" style="padding: 10px 16px; font-size: 0.9rem;">
+          <span class="lang-en"><i class="fa-solid fa-arrow-left"></i> Portfolio</span>
+          <span class="lang-uk"><i class="fa-solid fa-arrow-left"></i> Портфоліо</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <main>
+    <section class="hero-container">
+      <div class="container">
+        <a href="index.html#projects" class="back-btn">
+          <span class="lang-en"><i class="fa-solid fa-arrow-left"></i> Back to projects</span>
+          <span class="lang-uk"><i class="fa-solid fa-arrow-left"></i> Назад до проектів</span>
+        </a>
+        
+        <div class="case-header-grid">
+          <div class="reveal active">
+            <div class="roi-badge">
+              <i class="fa-solid fa-bolt"></i>
+              <span class="lang-en">90% HR screening tasks automated</span>
+              <span class="lang-uk">90% HR-завдань скринінгу автоматизовано</span>
+            </div>
+            
+            <h1 class="case-title">HR Assistant Olena</h1>
+            
+            <span class="case-subtitle">
+              <span class="lang-en">Autonomous AI Recruiter & Interview Scheduler</span>
+              <span class="lang-uk">Автономний ШІ-рекрутер та планувальник співбесід</span>
+            </span>
+            
+            <p class="lang-en" style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 24px;">
+              A fully conversational recruitment AI agent built on n8n. It interviews job candidates in Telegram, evaluates criteria alignments, scores profiles, and automatically books meeting slots directly on the HR calendar.
+            </p>
+            <p class="lang-uk" style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 24px;">
+              Діалоговий рекрутинговий ШІ-агент на базі n8n. Він спілкується з кандидатами у Telegram, оцінює кваліфікацію, рахує бали відповідності вакансії та самостійно бронює вільні вікна у Google-календарі рекрутера.
+            </p>
+            
+            <div class="case-tags">
+              <span class="skill-tag">n8n</span>
+              <span class="skill-tag">OpenAI API</span>
+              <span class="skill-tag">Google Calendar</span>
+              <span class="skill-tag">Telegram Bot API</span>
+              <span class="skill-tag">LangChain Memory</span>
+            </div>
+          </div>
+          
+          <div class="reveal active">
+            <div class="glass-panel" style="padding: 20px; overflow: hidden; border-radius: 20px;">
+              <img src="assets/project5.jpg" alt="HR Assistant Olena Preview" style="width: 100%; border-radius: 12px; display: block; border: 1px solid var(--card-border);">
+            </div>
+          </div>
+        </div>
+        
+        <!-- ROI Indicators -->
+        <div class="info-grid reveal active">
+          <div class="glass-panel info-card">
+            <span class="lang-en"><h4>HR Hours Saved</h4><p>~12 Hours/Week</p></span>
+            <span class="lang-uk"><h4>Заощаджений час HR</h4><p>~12 годин/тиждень</p></span>
+          </div>
+          <div class="glass-panel info-card">
+            <span class="lang-en"><h4>Candidate Screening</h4><p>100% Automated</p></span>
+            <span class="lang-uk"><h4>Скринінг кандидатів</h4><p>100% Автоматично</p></span>
+          </div>
+          <div class="glass-panel info-card">
+            <span class="lang-en"><h4>Booking Friction</h4><p>Zero Double-booking</p></span>
+            <span class="lang-uk"><h4>Конфлікти календаря</h4><p>Відсутні</p></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THE PROBLEM & SOLUTION -->
+    <section class="section" style="padding-top: 40px;">
+      <div class="container">
+        <div class="module-grid">
+          <div class="glass-panel" style="padding: 40px;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 20px; color: #f43f5e;">
+              <span class="lang-en">The Problem (HR Bottlenecks)</span>
+              <span class="lang-uk">Проблема (Перевантаження HR)</span>
+            </h3>
+            <p class="lang-en" style="color: var(--text-secondary);">
+              Processing hundreds of applications, chatting with candidates to ask baseline screening questions, checking calendar availability, and manually scheduling introductory calls drains recruiting teams and delays hiring cycles.
+            </p>
+            <p class="lang-uk" style="color: var(--text-secondary);">
+              Опрацювання сотень відгуків, листування з кожним кандидатом для перевірки базових вимог, пошук вільних слотів у календарі та призначення перших дзвінків вручну забирають багато сил та затягують процес найму.
+            </p>
+          </div>
+          
+          <div class="glass-panel" style="padding: 40px;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.6rem; margin-bottom: 20px; color: var(--accent-primary);">
+              <span class="lang-en">The Solution (AI Agent Olena)</span>
+              <span class="lang-uk">Рішення (ШІ-Ассистент Олена)</span>
+            </h3>
+            <p class="lang-en" style="color: var(--text-secondary);">
+              An autonomous conversational recruiter bot named Olena. She guides candidates through initial questions in Telegram, scores responses against job requirements using GPT-4, and dynamically books interviews directly on Google Calendar.
+            </p>
+            <p class="lang-uk" style="color: var(--text-secondary);">
+              Автономний діалоговий бот-рекрутер «Олена». Вона проводить кандидата за списком питань у Telegram, оцінює досвід та навички за допомогою GPT-4, і якщо кандидат підходить — самостійно бронює зустріч у вашому календарі.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE / WORKFLOW SECTION -->
+    <section class="architecture-section">
+      <div class="container">
+        <div class="section-header" style="text-align: center;">
+          <span class="section-subtitle">
+            <span class="lang-en">System Flow</span>
+            <span class="lang-uk">Крок за кроком</span>
+          </span>
+          <h2 class="section-title">
+            <span class="lang-en">Recruitment Bot Architecture</span>
+            <span class="lang-uk">Схема роботи ШІ-рекрутера</span>
+          </h2>
+        </div>
+        
+        <div class="flowchart">
+          <!-- Step 1 -->
+          <div class="glass-panel flow-step">
+            <div class="step-num">1</div>
+            <h3 class="step-title">
+              <span class="lang-en">First Contact & Dialogue Capture</span>
+              <span class="lang-uk">Перший контакт та початок діалогу</span>
+            </h3>
+            <p class="step-desc">
+              <span class="lang-en">Candidate clicks /start in Telegram. n8n registers the user session and initiates the tailored pre-screening script.</span>
+              <span class="lang-uk">Кандидат запускає бота в Telegram. n8n створює сесію користувача та активує адаптивний сценарій інтерв'ю.</span>
+            </p>
+          </div>
+          
+          <!-- Step 2 -->
+          <div class="glass-panel flow-step">
+            <div class="step-num">2</div>
+            <h3 class="step-title">
+              <span class="lang-en">Interactive Screening via LLM</span>
+              <span class="lang-uk">Інтерактивний скринінг через LLM</span>
+            </h3>
+            <p class="step-desc">
+              <span class="lang-en">The bot queries details regarding work experience, key skills, and expectations, evaluating the dialogue state dynamically with memory.</span>
+              <span class="lang-uk">Бот розпитує про досвід, ключові навички та очікування. Відповіді аналізуються у реальному часі з урахуванням історії діалогу.</span>
+            </p>
+          </div>
+          
+          <!-- Step 3 -->
+          <div class="glass-panel flow-step">
+            <div class="step-num">3</div>
+            <h3 class="step-title">
+              <span class="lang-en">Real-Time Calendar Availability Check</span>
+              <span class="lang-uk">Перевірка вільного часу в календарі</span>
+            </h3>
+            <p class="step-desc">
+              <span class="lang-en">If candidate score meets requirements, n8n queries Google Calendar API to fetch active recruiter free slots and presents them directly in Telegram.</span>
+              <span class="lang-uk">Якщо кандидат відповідає вимогам, n8n звертається до Google Calendar API, знаходить вільні слоти рекрутера та показує їх кандидату у вигляді кнопок.</span>
+            </p>
+          </div>
+          
+          <!-- Step 4 -->
+          <div class="glass-panel flow-step">
+            <div class="step-num">4</div>
+            <h3 class="step-title">
+              <span class="lang-en">Automatic Booking & Notification</span>
+              <span class="lang-uk">Автоматичне бронювання та сповіщення</span>
+            </h3>
+            <p class="step-desc">
+              <span class="lang-en">Candidate selects a slot. n8n creates the calendar event with Google Meet link, updates the sheets archive, and alerts the HR team.</span>
+              <span class="lang-uk">Кандидат вибирає зручний час. Бот створює подію в календарі з посиланням на Google Meet, зберігає дані та сповіщає HR-команду.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALL TO ACTION SECTION -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="glass-panel cta-container" style="border: 1px solid var(--accent-primary); box-shadow: 0 0 40px rgba(0, 242, 254, 0.1);">
+          <h2 class="lang-en">Deploy an AI Recruiter for Your Team</h2>
+          <h2 class="lang-uk">Впровадьте ШІ-рекрутера у вашу компанію</h2>
+          
+          <p class="lang-en">
+            Reduce screening times and automate meeting bookings. Connect with Andrii to build your team's custom assistant.
+          </p>
+          <p class="lang-uk">
+            Бажаєте звільнити рекрутерів від рутинних бесід та координування зустрічей? Зв'яжіться з Андрієм для обговорення.
+          </p>
+          
+          <a href="https://t.me/albaRoyalQ" class="btn btn-primary btn-tg-quick" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-telegram" style="font-size: 1.3rem;"></i>
+            <span class="lang-en">Message Andrii on Telegram</span>
+            <span class="lang-uk">Написати Андрію в Telegram</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <p class="footer-text">
+        &copy; 2026 Andrii Yatsechko. All rights reserved.
+      </p>
+      
+      <div class="social-links">
+        <a href="https://t.me/albaRoyalQ" class="social-btn flex-center" target="_blank" rel="noopener noreferrer" aria-label="Telegram Profile"><i class="fa-brands fa-telegram"></i></a>
+        <a href="https://www.linkedin.com/in/%D0%B0%D0%BD%D0%B4%D1%80%D1%96%D0%B9-%D1%8F%D1%86%D0%B5%D1%87%D0%BA%D0%BE-98157075" class="social-btn flex-center" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+
+      const savedLang = localStorage.getItem('lang') || 'en';
+      document.documentElement.setAttribute('data-lang', savedLang);
+      
+      const langCurrent = document.getElementById('lang-current');
+      if (langCurrent) langCurrent.textContent = savedLang.toUpperCase();
+
+      const langToggle = document.getElementById('lang-toggle');
+      if (langToggle) {
+        langToggle.addEventListener('click', () => {
+          const currentLang = document.documentElement.getAttribute('data-lang');
+          const newLang = currentLang === 'en' ? 'uk' : 'en';
+          document.documentElement.setAttribute('data-lang', newLang);
+          if (langCurrent) langCurrent.textContent = newLang.toUpperCase();
+          localStorage.setItem('lang', newLang);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

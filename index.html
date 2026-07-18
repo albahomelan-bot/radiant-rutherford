@@ -16,6 +16,34 @@
   
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- JSON-LD Microdata for SEO & AI Crawlers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Андрій Яцечко",
+    "alternateName": "Andrii Yatsechko",
+    "jobTitle": "n8n Automation Specialist & AI Integrator",
+    "url": "https://deluxe-alba.netlify.app/",
+    "email": "alba.homelan@gmail.com",
+    "sameAs": [
+      "https://t.me/albaRoyalQ",
+      "https://www.linkedin.com/in/%D0%B0%D0%BD%D0%B4%D1%80%D1%96%D0%B9-%D1%8F%D1%86%D0%B5%D1%87%D0%BA%D0%BE-98157075"
+    ],
+    "knowsAbout": [
+      "n8n Workflows",
+      "AI Agent Integrations",
+      "LangChain Conceptions",
+      "API Integrations",
+      "Telegram Bot API",
+      "OpenAI API",
+      "Google Sheets API",
+      "OpenRouter API",
+      "Workflow Automation"
+    ],
+    "description": "Спеціаліст з автоматизації процесів n8n, створення автономних ШІ-агентів та інтеграції зовнішніх API."
+  }
+  </script>
 </head>
 <body>
 
@@ -407,8 +435,8 @@
               <img src="assets/project1.jpg" alt="AI Social Media Assistant Diagram" class="project-img" loading="lazy">
               <div class="project-overlay">
                 <div class="project-links">
-                  <a href="#" class="project-link-btn open-modal-btn" aria-label="Open Case Study Modal"><i class="fa-solid fa-expand"></i></a>
-                  <a href="README_AI_Social_Media_Assistant.md" class="project-link-btn" aria-label="View Case Study README"><i class="fa-solid fa-file-lines"></i></a>
+                  <a href="#" class="project-link-btn open-modal-btn" data-modal="case-study-modal-1" aria-label="Open Case Study Modal"><i class="fa-solid fa-expand"></i></a>
+                  <a href="case_study_social_media_assistant.html" target="_blank" class="project-link-btn" aria-label="View Case Study Detailed Page"><i class="fa-solid fa-file-lines"></i></a>
                 </div>
               </div>
             </div>
@@ -439,7 +467,8 @@
               <img src="assets/project2.jpg" alt="Multi-Format Resume Parser" class="project-img" loading="lazy">
               <div class="project-overlay">
                 <div class="project-links">
-                  <a href="n8n_workflow_guide.md" class="project-link-btn" aria-label="View n8n Workflow Guide"><i class="fa-solid fa-file-lines"></i></a>
+                  <a href="#" class="project-link-btn open-modal-btn" data-modal="case-study-modal-2" aria-label="Open Case Study Modal"><i class="fa-solid fa-expand"></i></a>
+                  <a href="case_study_resume_parser.html" target="_blank" class="project-link-btn" aria-label="View Case Study Detailed Page"><i class="fa-solid fa-file-lines"></i></a>
                 </div>
               </div>
             </div>
@@ -473,7 +502,8 @@
               <img src="assets/project3.jpg" alt="Telegram to OneDrive Task Logger" class="project-img" loading="lazy">
               <div class="project-overlay">
                 <div class="project-links">
-                  <a href="telegram_to_onedrive_workflow.json" class="project-link-btn" aria-label="View OneDrive Workflow JSON"><i class="fa-solid fa-file-lines"></i></a>
+                  <a href="#" class="project-link-btn open-modal-btn" data-modal="case-study-modal-3" aria-label="Open Case Study Modal"><i class="fa-solid fa-expand"></i></a>
+                  <a href="case_study_onedrive_logger.html" target="_blank" class="project-link-btn" aria-label="View Case Study Detailed Page"><i class="fa-solid fa-file-lines"></i></a>
                 </div>
               </div>
             </div>
@@ -497,10 +527,106 @@
               </div>
             </div>
           </article>
+
+          <!-- Project 4 (AI Agent) -->
+          <article class="glass-panel project-card reveal" data-category="ai-agent" id="project-card-4">
+            <div class="project-image-box">
+              <img src="assets/project4.jpg" alt="AI Financial Assistant" class="project-img" loading="lazy">
+              <div class="project-overlay">
+                <div class="project-links">
+                  <a href="#" class="project-link-btn open-modal-btn" data-modal="case-study-modal-4" aria-label="Open Case Study Modal"><i class="fa-solid fa-expand"></i></a>
+                  <a href="case_study_financial_assistant.html" target="_blank" class="project-link-btn" aria-label="View Case Study Detailed Page"><i class="fa-solid fa-file-lines"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-category">
+                  <span class="lang-en">AI Agent & Finance</span>
+                  <span class="lang-uk">ШІ-Агент та фінанси</span>
+                </span>
+              </div>
+              <h3 class="project-title">AI Financial Assistant</h3>
+              <p class="project-desc">
+                <span class="lang-en">Telegram bot that tracks expenses, parses receipts, categorizes transactions via Gemini AI, and syncs data to Google Sheets.</span>
+                <span class="lang-uk">Telegram-бот для обліку фінансів: розпізнає чеки, класифікує витрати через Gemini AI та заносить їх до Google Sheets.</span>
+              </p>
+              <div class="project-tags">
+                <span>n8n</span>
+                <span>Gemini AI</span>
+                <span>Telegram API</span>
+                <span>Google Sheets</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 5 (AI Agent) -->
+          <article class="glass-panel project-card reveal" data-category="ai-agent" id="project-card-5">
+            <div class="project-image-box">
+              <img src="assets/project5.jpg" alt="HR Assistant Olena" class="project-img" loading="lazy">
+              <div class="project-overlay">
+                <div class="project-links">
+                  <a href="#" class="project-link-btn open-modal-btn" data-modal="case-study-modal-5" aria-label="Open Case Study Modal"><i class="fa-solid fa-expand"></i></a>
+                  <a href="case_study_hr_assistant.html" target="_blank" class="project-link-btn" aria-label="View Case Study Detailed Page"><i class="fa-solid fa-file-lines"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-category">
+                  <span class="lang-en">AI Recruitment Agent</span>
+                  <span class="lang-uk">ШІ-Агент для рекрутингу</span>
+                </span>
+              </div>
+              <h3 class="project-title">HR Assistant Olena</h3>
+              <p class="project-desc">
+                <span class="lang-en">Autonomous AI recruiter that screens candidates, analyzes resumes, and schedules interviews in Google Calendar.</span>
+                <span class="lang-uk">Автономний ШІ-рекрутер: проводить первинний скринінг, аналізує резюме та бронює зустрічі в Google-календарі.</span>
+              </p>
+              <div class="project-tags">
+                <span>n8n</span>
+                <span>OpenAI API</span>
+                <span>Google Calendar</span>
+                <span>Telegram API</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 6 (Document Parsing) -->
+          <article class="glass-panel project-card reveal" data-category="document" id="project-card-6">
+            <div class="project-image-box">
+              <img src="assets/project6.jpg" alt="Photo-to-PDF Converter Bot" class="project-img" loading="lazy">
+              <div class="project-overlay">
+                <div class="project-links">
+                  <a href="#" class="project-link-btn open-modal-btn" data-modal="case-study-modal-6" aria-label="Open Case Study Modal"><i class="fa-solid fa-expand"></i></a>
+                  <a href="case_study_photo_to_pdf.html" target="_blank" class="project-link-btn" aria-label="View Case Study Detailed Page"><i class="fa-solid fa-file-lines"></i></a>
+                </div>
+              </div>
+            </div>
+            <div class="project-content">
+              <div class="project-meta">
+                <span class="project-category">
+                  <span class="lang-en">Document Processing</span>
+                  <span class="lang-uk">Обробка документів</span>
+                </span>
+              </div>
+              <h3 class="project-title">Photo-to-PDF Converter</h3>
+              <p class="project-desc">
+                <span class="lang-en">Utility bot that takes raw photos of documents, straightens them, runs OCR text extraction, and merges them into a clean PDF.</span>
+                <span class="lang-uk">Бот-конвертер в PDF: приймає фото документів, вирівнює зображення, проводить OCR та об'єднує в один PDF-файл.</span>
+              </p>
+              <div class="project-tags">
+                <span>n8n</span>
+                <span>OCR Engine</span>
+                <span>Binary Processing</span>
+                <span>Telegram API</span>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </section>
-
+    
     <!-- EXPERIENCE SECTION -->
     <section class="section" id="experience">
       <div class="container">
@@ -727,13 +853,13 @@
   </footer>
 
   <!-- CASE STUDY MODAL -->
-  <div class="modal-backdrop" id="case-study-modal">
+  <!-- Project 1 Modal -->
+  <div class="modal-backdrop" id="case-study-modal-1">
     <div class="glass-panel modal-card">
-      <button class="modal-close" id="modal-close-btn" aria-label="Close modal" type="button">
+      <button class="modal-close" aria-label="Close modal" type="button">
         <i class="fa-solid fa-xmark"></i>
       </button>
       <div class="modal-body">
-        <!-- English Content -->
         <div class="lang-en">
           <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">AI Social Media Assistant v1.01</h2>
           <span class="modal-subtitle">Autonomous SMM content-factory in your pocket</span>
@@ -766,14 +892,13 @@
             </div>
           </div>
         </div>
-        <!-- Ukrainian Content -->
         <div class="lang-uk">
           <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">AI Social Media Assistant v1.01</h2>
           <span class="modal-subtitle">Автономна контент-фабрика у вашій кишені</span>
           <div class="modal-details-grid">
             <div class="modal-details-text">
               <h3>Опис проєкту</h3>
-              <p>Повністю автономна SMM-система на базі n8n та OpenAI, що перетворює голосові нотатки або сирий текст на структуровані, готові до публікації пости та синхронно постить їх в Instagram і Threads.</p>
+              <p>Повністю автономна SMM-система на базі n8n та OpenAI, що перетворює голосові нотатки або сирий текст на структуровані, готові до публікації пости та синхронно постить их в Instagram і Threads.</p>
               <h3>Основні можливості</h3>
               <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
                 <li style="margin-bottom: 8px;"><strong>Голосове введення:</strong> Швидке розпізнавання голосу через OpenAI Speech-to-Text.</li>
@@ -803,6 +928,378 @@
     </div>
   </div>
 
+  <!-- Project 2 Modal -->
+  <div class="modal-backdrop" id="case-study-modal-2">
+    <div class="glass-panel modal-card">
+      <button class="modal-close" aria-label="Close modal" type="button">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-body">
+        <div class="lang-en">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">Multi-Format Resume Parser</h2>
+          <span class="modal-subtitle">Automated Document Parsing & Structured Data Extraction</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Project Overview</h3>
+              <p>An automated document processing system. It extracts resumes from emails (PDF, DOCX, or images), uses OCR text-recognition to process scans, structures fields via GPT models, and exports directly to the database.</p>
+              <h3>Key Features</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Gmail Integration:</strong> n8n listens to Gmail inbox for incoming applications.</li>
+                <li style="margin-bottom: 8px;"><strong>Multi-Format parsing:</strong> Reads PDF, Word files, and extracts image data.</li>
+                <li style="margin-bottom: 8px;"><strong>AI OCR Processing:</strong> Whisper OCR node processes scans and images into text.</li>
+                <li style="margin-bottom: 8px;"><strong>Structured Output:</strong> Maps applicant data directly into organized CRM/Sheets rows.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Stack & Tools</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">GPT-4o-mini</span>
+                <span class="skill-tag">Whisper OCR</span>
+                <span class="skill-tag">Gmail API</span>
+                <span class="skill-tag">Google Drive</span>
+              </div>
+              <h3>Impact Metric</h3>
+              <div class="impact-metric">
+                <span class="metric-num">85%</span>
+                <span class="metric-lbl">saved in manual HR screening</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lang-uk">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">Multi-Format Resume Parser</h2>
+          <span class="modal-subtitle">Автоматичний аналіз документів та вилучення даних</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Опис проєкту</h3>
+              <p>Система автоматичної обробки вхідних документів. Вона завантажує резюме кандидатів з пошти, розпізнає формати PDF/DOCX, витягує текст через OCR (для фото) та розбиває контакти по полях через ШІ.</p>
+              <h3>Основні можливості</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Моніторинг пошти:</strong> Автоматичний тригер на нові листи в Gmail.</li>
+                <li style="margin-bottom: 8px;"><strong>Робота з файлами:</strong> Конвертує PDF, Word та зображення у текст.</li>
+                <li style="margin-bottom: 8px;"><strong>ШІ-структурування:</strong> GPT-4o-mini витягує досвід, контакти та навички.</li>
+                <li style="margin-bottom: 8px;"><strong>Інтеграція бази:</strong> Переносить готові профілі в Google-таблиці.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Стек технологій</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">GPT-4o-mini</span>
+                <span class="skill-tag">Whisper OCR</span>
+                <span class="skill-tag">Gmail API</span>
+                <span class="skill-tag">Google Drive</span>
+              </div>
+              <h3>Результат</h3>
+              <div class="impact-metric">
+                <span class="metric-num">85%</span>
+                <span class="metric-lbl">менше ручного копіювання даних</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 3 Modal -->
+  <div class="modal-backdrop" id="case-study-modal-3">
+    <div class="glass-panel modal-card">
+      <button class="modal-close" aria-label="Close modal" type="button">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-body">
+        <div class="lang-en">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">Telegram to OneDrive Logger</h2>
+          <span class="modal-subtitle">Automated Instant Messaging & Document Sync</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Project Overview</h3>
+              <p>A cloud synchronization utility. It logs chat messages, tasks, and system notes directly to Microsoft OneDrive, prepending timestamps, processing fields via JavaScript, and keeping document integrity.</p>
+              <h3>Key Features</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Instant Sync:</strong> Transfers messages to OneDrive files in real time.</li>
+                <li style="margin-bottom: 8px;"><strong>Date Formatting:</strong> Custom JavaScript prepends clean timestamps to inputs.</li>
+                <li style="margin-bottom: 8px;"><strong>Secure Channel:</strong> Restricts logger triggers to specific Telegram admins.</li>
+                <li style="margin-bottom: 8px;"><strong>Cloud Archive:</strong> Automatically maintains historical backups in OneDrive folders.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Stack & Tools</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">Telegram API</span>
+                <span class="skill-tag">OneDrive API</span>
+                <span class="skill-tag">JavaScript</span>
+              </div>
+              <h3>Impact Metric</h3>
+              <div class="impact-metric">
+                <span class="metric-num">&lt; 3s</span>
+                <span class="metric-lbl">sync latency</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lang-uk">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">Telegram to OneDrive Logger</h2>
+          <span class="modal-subtitle">Автоматичний хмарний реєстратор нотаток</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Опис проєкту</h3>
+              <p>Утиліта хмарної синхронізації. Вона записує ваші швидкі нотатки, лог-записи та списки справ з Telegram-чату прямо в OneDrive, додаючи часові мітки та форматуючи текст за допомогою JavaScript.</p>
+              <h3>Основні можливості</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Швидкий запис:</strong> Прямий логінг нотаток з чату Telegram.</li>
+                <li style="margin-bottom: 8px;"><strong>Часові мітки:</strong> JS-код автоматично додає дату та час перед текстом.</li>
+                <li style="margin-bottom: 8px;"><strong>Приватність:</strong> Надійна авторизація доступу по API до OneDrive.</li>
+                <li style="margin-bottom: 8px;"><strong>Оновлення на льоту:</strong> Зчитує старий файл, додає нові рядки та заливає назад.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Стек технологій</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">Telegram API</span>
+                <span class="skill-tag">OneDrive API</span>
+                <span class="skill-tag">JavaScript</span>
+              </div>
+              <h3>Результат</h3>
+              <div class="impact-metric">
+                <span class="metric-num">&lt; 3с</span>
+                <span class="metric-lbl">час оновлення хмарного логу</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 4 Modal -->
+  <div class="modal-backdrop" id="case-study-modal-4">
+    <div class="glass-panel modal-card">
+      <button class="modal-close" aria-label="Close modal" type="button">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-body">
+        <div class="lang-en">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">AI Financial Assistant</h2>
+          <span class="modal-subtitle">Autonomous Receipt Parsing & Expense Tracking</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Project Overview</h3>
+              <p>An intelligent budget tracking assistant. It processes store receipt photos or plain text notes, extracts transactions details using Gemini Vision AI, and maps them directly into expense columns in Google Sheets.</p>
+              <h3>Key Features</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Vision OCR:</strong> Gemini AI reads handwriting, totals, and items from photos.</li>
+                <li style="margin-bottom: 8px;"><strong>Smart Categorization:</strong> Automatically tags items into "Food", "Bills", etc.</li>
+                <li style="margin-bottom: 8px;"><strong>Text Parser:</strong> Supports quick text logging (e.g. "taxi 15$").</li>
+                <li style="margin-bottom: 8px;"><strong>Budget Sync:</strong> Computes monthly remaining limits in real-time.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Stack & Tools</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">Gemini Vision</span>
+                <span class="skill-tag">Telegram API</span>
+                <span class="skill-tag">Google Sheets</span>
+              </div>
+              <h3>Impact Metric</h3>
+              <div class="impact-metric">
+                <span class="metric-num">&lt; 5s</span>
+                <span class="metric-lbl">from photo to sheets log</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lang-uk">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">AI Financial Assistant</h2>
+          <span class="modal-subtitle">Автономне сканування чеків та облік витрат</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Опис проєкту</h3>
+              <p>Розумний помічник для автоматичного обліку витрат. Він приймає фотографії чеків або тексти, розпізнає суми та категорії за допомогою нейромережі Gemini Vision і синхронізує дані з вашою Google-таблицею.</p>
+              <h3>Основні можливості</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Розпізнавання чеків:</strong> Gemini Vision зчитує суми, дати та товари з фото.</li>
+                <li style="margin-bottom: 8px;"><strong>Класифікація витрат:</strong> Автоматично визначає категорію покупки.</li>
+                <li style="margin-bottom: 8px;"><strong>Швидке введення:</strong> Розпізнає сирий текст (наприклад, "таксі 200 грн").</li>
+                <li style="margin-bottom: 8px;"><strong>Баланс бюджету:</strong> Вираховує залишок ліміту коштів на місяць.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Стек технологій</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">Gemini Vision</span>
+                <span class="skill-tag">Telegram API</span>
+                <span class="skill-tag">Google Sheets</span>
+              </div>
+              <h3>Результат</h3>
+              <div class="impact-metric">
+                <span class="metric-num">&lt; 5с</span>
+                <span class="metric-lbl">час обробки чека та запису</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 5 Modal -->
+  <div class="modal-backdrop" id="case-study-modal-5">
+    <div class="glass-panel modal-card">
+      <button class="modal-close" aria-label="Close modal" type="button">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-body">
+        <div class="lang-en">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">HR Assistant Olena</h2>
+          <span class="modal-subtitle">Autonomous AI Recruiter & Interview Scheduler</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Project Overview</h3>
+              <p>A conversational recruitment AI agent. She interviews candidate applicants in Telegram, qualifies skills, scores portfolios, checks calendar availability, and books meeting slots on the HR manager's calendar.</p>
+              <h3>Key Features</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Conversational Screening:</strong> Conducts initial Q&A with candidates automatically.</li>
+                <li style="margin-bottom: 8px;"><strong>Skills Scoring:</strong> GPT-4 scores profiles against baseline job criteria.</li>
+                <li style="margin-bottom: 8px;"><strong>Calendar Booking:</strong> Queries Google Calendar API and lets users pick slots.</li>
+                <li style="margin-bottom: 8px;"><strong>Meet Links Generation:</strong> Auto-generates Google Meet links for booked calls.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Stack & Tools</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">OpenAI API</span>
+                <span class="skill-tag">Google Calendar</span>
+                <span class="skill-tag">Telegram API</span>
+              </div>
+              <h3>Impact Metric</h3>
+              <div class="impact-metric">
+                <span class="metric-num">~12h</span>
+                <span class="metric-lbl">saved in recruiting per week</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lang-uk">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">HR Assistant Olena</h2>
+          <span class="modal-subtitle">Автономний ШІ-рекрутер та планувальник співбесід</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Опис проєкту</h3>
+              <p>Діалоговий ШІ-агент для первинного рекрутингу. Бот під ім'ям «Олена» проводить співбесіду з кандидатами в Telegram, оцінює їхні відповіді та навички, звіряє розклад та бронює зустріч у календарі рекрутера.</p>
+              <h3>Основні можливості</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Первинне опитування:</strong> Автоматично збирає базову інформацію у формі чату.</li>
+                <li style="margin-bottom: 8px;"><strong>ШІ-оцінка резюме:</strong> Скринінг на відповідність ключовим вимогам вакансії.</li>
+                <li style="margin-bottom: 8px;"><strong>Бронювання часу:</strong> Показує вільні вікна та записує зустріч у Google-календар.</li>
+                <li style="margin-bottom: 8px;"><strong>Інтеграція зустрічей:</strong> Генерація та надсилання посилань на Google Meet.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Стек технологій</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">OpenAI API</span>
+                <span class="skill-tag">Google Calendar</span>
+                <span class="skill-tag">Telegram API</span>
+              </div>
+              <h3>Результат</h3>
+              <div class="impact-metric">
+                <span class="metric-num">~12 год</span>
+                <span class="metric-lbl">заощадженого часу HR на тиждень</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project 6 Modal -->
+  <div class="modal-backdrop" id="case-study-modal-6">
+    <div class="glass-panel modal-card">
+      <button class="modal-close" aria-label="Close modal" type="button">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-body">
+        <div class="lang-en">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">Photo-to-PDF Converter</h2>
+          <span class="modal-subtitle">Automated Image Enhancement & PDF Compilation</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Project Overview</h3>
+              <p>A document digitizing utility bot. It collects document page photos in Telegram, enhances contrast, aligns borders, performs OCR, and compiles pages into a single high-quality PDF.</p>
+              <h3>Key Features</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Contrast Enhancement:</strong> Automatically converts document photos to clean black and white text.</li>
+                <li style="margin-bottom: 8px;"><strong>PDF Compilation:</strong> Joins multiple binary images into a single A4 PDF.</li>
+                <li style="margin-bottom: 8px;"><strong>OCR Text Layer:</strong> Injects searchable text overlay for copy-paste support.</li>
+                <li style="margin-bottom: 8px;"><strong>No Adware:</strong> Completely clean output without ads, watermarks, or limits.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Stack & Tools</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">OCR Engine</span>
+                <span class="skill-tag">Binary Processing</span>
+                <span class="skill-tag">Telegram API</span>
+              </div>
+              <h3>Impact Metric</h3>
+              <div class="impact-metric">
+                <span class="metric-num">100%</span>
+                <span class="metric-lbl">free & clean of watermarks</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lang-uk">
+          <h2 style="font-size: 2rem; font-family: var(--font-heading); margin-bottom: 8px;">Photo-to-PDF Converter</h2>
+          <span class="modal-subtitle">Автоматичний конвертер зображень та збірка PDF</span>
+          <div class="modal-details-grid">
+            <div class="modal-details-text">
+              <h3>Опис проєкту</h3>
+              <p>Спеціалізований чат-бот для швидкого сканування. Він приймає фото сторінок документів, покращує їх яскравість та контраст, вирівнює перспективу, додає текстовий OCR-шар та експортує як єдиний PDF.</p>
+              <h3>Основні можливості</h3>
+              <ul style="margin-left: 20px; color: var(--text-secondary); line-height: 1.6;">
+                <li style="margin-bottom: 8px;"><strong>Обробка сканів:</strong> Підвищення контрасту та очищення тіней на фото.</li>
+                <li style="margin-bottom: 8px;"><strong>Збірка PDF:</strong> Склеювання кількох зображень у єдиний файл А4.</li>
+                <li style="margin-bottom: 8px;"><strong>OCR-шар:</strong> Дозволяє копіювати та шукати текст всередині готового PDF.</li>
+                <li style="margin-bottom: 8px;"><strong>Чистий результат:</strong> Жодних водяних знаків або лімітів на кількість сторінок.</li>
+              </ul>
+            </div>
+            <div class="modal-details-sidebar">
+              <h3>Стек технологій</h3>
+              <div class="skills-list" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="skill-tag">n8n</span>
+                <span class="skill-tag">OCR Engine</span>
+                <span class="skill-tag">Binary Processing</span>
+                <span class="skill-tag">Telegram API</span>
+              </div>
+              <h3>Результат</h3>
+              <div class="impact-metric">
+                <span class="metric-num">100%</span>
+                <span class="metric-lbl">безкоштовно та без водяних знаків</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Back to Top Button -->
+  <button id="back-to-top" class="back-to-top flex-center" aria-label="Back to top" type="button">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+  
   <!-- JS Code -->
   <script src="index.js"></script>
 </body>

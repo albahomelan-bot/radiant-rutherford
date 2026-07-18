@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectFilter();
   initContactForm();
   initScrollReveal();
+  initBackToTop();
 });
 
 /* --- THEME TOGGLE & PERSISTENCE --- */
@@ -286,39 +287,70 @@ function initLang() {
 
 /* --- CASE STUDY DETAIL MODAL --- */
 function initModal() {
-  const modal = document.getElementById('case-study-modal');
   const openBtns = document.querySelectorAll('.open-modal-btn');
-  const closeBtn = document.getElementById('modal-close-btn');
+  const closeBtns = document.querySelectorAll('.modal-close');
+  const modals = document.querySelectorAll('.modal-backdrop');
 
-  if (!modal || !closeBtn) return;
+  if (!openBtns.length) return;
 
   openBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
+      const modalId = btn.getAttribute('data-modal');
+      const targetModal = document.getElementById(modalId);
+      if (targetModal) {
+        targetModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
     });
   });
 
-  const closeModal = () => {
+  const closeModal = (modal) => {
     modal.classList.remove('active');
     document.body.style.overflow = '';
   };
 
-  closeBtn.addEventListener('click', closeModal);
-  
-  // Close on click outside card
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      closeModal();
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const modal = btn.closest('.modal-backdrop');
+      if (modal) closeModal(modal);
+    });
+  });
+
+  modals.forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal(modal);
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const activeModal = document.querySelector('.modal-backdrop.active');
+      if (activeModal) closeModal(activeModal);
+    }
+  });
+}
+
+/* --- BACK TO TOP BUTTON --- */
+function initBackToTop() {
+  const backToTopBtn = document.getElementById('back-to-top');
+  if (!backToTopBtn) return;
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      backToTopBtn.classList.add('visible');
+    } else {
+      backToTopBtn.classList.remove('visible');
     }
   });
 
-  // Close on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
-      closeModal();
-    }
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   });
 }
 

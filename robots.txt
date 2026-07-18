@@ -1,0 +1,19 @@
+# Разрешаем доступ роботам ChatGPT
+User-agent: GPTBot
+Allow: /
+
+# Разрешаем доступ роботам Claude
+User-agent: ClaudeBot
+Allow: /
+
+# Разрешаем доступ роботам Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Разрешаем доступ роботам Google (Gemini)
+User-agent: Google-Extended
+Allow: /
+
+# Разрешаем доступ всем остальным поисковикам
+User-agent: *
+Allow: /
