@@ -507,7 +507,15 @@
       ]
     },
     "Get Existing URLs": {
-      "main": []
+      "main": [
+        [
+          {
+            "node": "Extract Search URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Init Page State": {
       "main": [
