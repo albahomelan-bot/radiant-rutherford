@@ -70,7 +70,8 @@
     {
       "parameters": {
         "url": "https://raw.githubusercontent.com/albahomelan-bot/radiant-rutherford/main/century21-scraper/century21_sitemap.xml",
-        "responseFormat": "text",
+        "responseFormat": "file",
+        "outputBinaryPropertyName": "data",
         "options": {}
       },
       "id": "ad787c74-19d5-4b95-8e15-bb584f29b07f",
@@ -84,7 +85,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const sitemap = $json.data || $json.body || $input.first().json.data;\nconst urlBlockRegex = /<url>([\\s\\S]*?)<\\/url>/g;\nlet match;\nconst results = [];\n\n// Фільтруємо за останні 60 днів або з початку року\nconst dateLimit = new Date(\"2026-01-01T00:00:00Z\"); // Задано з початку року\n\nwhile ((match = urlBlockRegex.exec(sitemap)) !== null) {\n  const block = match[1];\n  const locMatch = block.match(/<loc>([^<]+)<\\/loc>/);\n  const lastmodMatch = block.match(/<lastmod>([^<]+)<\\/lastmod>/);\n  \n  if (locMatch) {\n    const url = locMatch[1];\n    const lastmod = lastmodMatch ? lastmodMatch[1] : null;\n    \n    if (url.toLowerCase().includes('durres') && url.includes('/property/')) {\n      let isRecent = true;\n      if (lastmod) {\n        const modDate = new Date(lastmod);\n        isRecent = modDate >= dateLimit;\n      }\n      if (isRecent) {\n        results.push({ url, lastmod });\n      }\n    }\n  }\n}\n\nreturn results.map(r => ({ json: r }));"
+        "jsCode": "// Зчитуємо бінарний файл з попередньої ноди та перетворюємо в текст\nlet sitemap = \"\";\ntry {\n  const binaryBuffer = await this.helpers.getBinaryDataBuffer(0, 'data');\n  sitemap = binaryBuffer.toString('utf-8');\n} catch (e) {\n  sitemap = \"\";\n}\n\nconst urlBlockRegex = /<url>([\\s\\S]*?)<\\/url>/g;\nlet match;\nconst results = [];\n\n// Фільтруємо за останні 60 днів або з початку року\nconst dateLimit = new Date(\"2026-01-01T00:00:00Z\"); // Задано з початку року\n\nwhile ((match = urlBlockRegex.exec(sitemap)) !== null) {\n  const block = match[1];\n  const locMatch = block.match(/<loc>([^<]+)<\\/loc>/);\n  const lastmodMatch = block.match(/<lastmod>([^<]+)<\\/lastmod>/);\n  \n  if (locMatch) {\n    const url = locMatch[1];\n    const lastmod = lastmodMatch ? lastmodMatch[1] : null;\n    \n    if (url.toLowerCase().includes('durres') && url.includes('/property/')) {\n      let isRecent = true;\n      if (lastmod) {\n        const modDate = new Date(lastmod);\n        isRecent = modDate >= dateLimit;\n      }\n      if (isRecent) {\n        results.push({ url, lastmod });\n      }\n    }\n  }\n}\n\nreturn results.map(r => ({ json: r }));"
       },
       "id": "c41faa51-39fa-4f9c-80c0-d04a874f9feb",
       "name": "Parse and Filter Sitemap",
@@ -496,6 +497,17 @@
         [
           {
             "node": "Wait 1s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1s": {
+      "main": [
+        [
+          {
+            "node": "Fetch Property Page",
             "type": "main",
             "index": 0
           }
