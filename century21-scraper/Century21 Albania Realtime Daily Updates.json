@@ -1,0 +1,684 @@
+{
+  "name": "Century21 Albania Realtime Daily Updates",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d05ee5b1-7c1a-4fc9-a2dd-218d586cb884",
+      "name": "On clicking 'Execute'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9,12,15,18 * * *"
+            }
+          ]
+        }
+      },
+      "id": "e43b8a1c-99b8-4e89-a2b1-56c7d2ea49bb",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        3000,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
+          "mode": "list",
+          "cachedResultName": "century21_scraper_workflow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Аркуш1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e582",
+      "name": "Get Existing URLs",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        3200,
+        260
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  page: 1,\n  stop: false,\n  newUrls: []\n};"
+      },
+      "id": "b83af7d4-b91c-43f6-9f4a-89a19c72df10",
+      "name": "Init Page State",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://www.century21albania.com/en/properties?city=Durr%C3%ABs&page={{ $json.page }}",
+        "responseFormat": "text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.9"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ad787c74-19d5-4b95-8e15-bb584f29b07f",
+      "name": "Fetch Search Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        3400,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $json.data || $json.body || \"\";\nlet existingUrls = [];\ntry {\n  const sheetData = $('Get Existing URLs').all();\n  existingUrls = sheetData.map(item => {\n    const urlKey = Object.keys(item.json)[0] || 'URL — посилання на об\\'єкт.';\n    return (item.json[urlKey] || '').toString().trim().toLowerCase();\n  });\n} catch (e) {\n  existingUrls = [];\n}\n\n// Extract all property links from the search page html\nconst propertyUrlRegex = /href=\"([^\"]*?\\/property\\/[^\"]*?\\.html)\"/g;\nlet match;\nconst pageUrls = [];\nwhile ((match = propertyUrlRegex.exec(html)) !== null) {\n  const url = match[1].trim();\n  if (!pageUrls.includes(url)) {\n    pageUrls.push(url);\n  }\n}\n\n// Filter out duplicates and check if we should stop\nconst state = $input.first().json;\nconst currentNewUrls = state.newUrls || [];\nlet stop = state.stop || false;\nlet newFoundOnThisPageCount = 0;\n\npageUrls.forEach(url => {\n  const normalizedUrl = url.toLowerCase();\n  if (!existingUrls.includes(normalizedUrl) && !currentNewUrls.includes(url)) {\n    currentNewUrls.push(url);\n    newFoundOnThisPageCount++;\n  }\n});\n\n// Stop if no properties found on the page or all of them are already in the sheet\nif (pageUrls.length === 0 || newFoundOnThisPageCount === 0 || state.page >= 50) {\n  stop = true;\n}\n\nreturn {\n  page: stop ? state.page : state.page + 1,\n  stop: stop,\n  newUrls: currentNewUrls\n};"
+      },
+      "id": "c41faa51-39fa-4f9c-80c0-d04a874f9feb",
+      "name": "Extract Search URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3600,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.stop }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "c85d7b51-789a-4fd2-89cc-03ad56788fbd",
+      "name": "Loop Decision",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3800,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const urls = $json.newUrls || [];\nreturn urls.map(url => ({ json: { url: url } }));"
+      },
+      "id": "ae5b9c21-f92d-41a3-b6d8-e7c8e9d3d0f1",
+      "name": "Convert to Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4000,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "e9aa667b-f7d7-49a6-84c3-92e5582fcfec",
+      "name": "Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        4200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "unit": "seconds"
+      },
+      "id": "85277e43-e080-4b5f-ae27-914f74cf916e",
+      "name": "Wait 1s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        4400,
+        100
+      ],
+      "webhookId": "73a630ea-0bec-4d28-862d-854af892253a"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "responseFormat": "text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.9"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1f0b449f-bd3c-4b77-9822-de2dfea47bfd",
+      "name": "Fetch Property Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        4600,
+        100
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "dataPropertyName": "data",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "title",
+              "cssSelector": "h1",
+              "returnArray": false
+            },
+            {
+              "key": "price",
+              "cssSelector": "h2.text-gold-shade-55",
+              "returnArray": false
+            },
+            {
+              "key": "property_id",
+              "cssSelector": "h6 span.text-gold-shade-55",
+              "returnArray": false
+            },
+            {
+              "key": "description",
+              "cssSelector": "p.text-grey-shade-40",
+              "returnArray": false
+            },
+            {
+              "key": "agent_phone",
+              "cssSelector": "a[href^=\"tel:\"]",
+              "attribute": "href",
+              "returnArray": false
+            },
+            {
+              "key": "agent_name_link",
+              "cssSelector": "a[href*=\"/agent/\"], a[href*=\"/agjentet/\"]",
+              "attribute": "href",
+              "returnArray": false
+            },
+            {
+              "key": "facilities",
+              "cssSelector": "p.paragraph-2",
+              "returnArray": true
+            }
+          ]
+        }
+      },
+      "id": "aa13836e-6abc-4299-9ebe-12ad38c159b4",
+      "name": "Parse HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1,
+      "position": [
+        4800,
+        100
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const htmlData = $input.first().json;\n\nconst getFirst = (val) => {\n  if (Array.isArray(val)) return val[0] || '';\n  return val || '';\n};\n\nconst title = getFirst(htmlData.title).trim();\nconst price = getFirst(htmlData.price).trim();\nconst description = getFirst(htmlData.description).trim();\nconst agentPhoneLink = getFirst(htmlData.agent_phone);\nconst agentNameLink = getFirst(htmlData.agent_name_link);\n\n// 1. Очищуємо телефон агента\nconst agentPhone = agentPhoneLink ? agentPhoneLink.replace('tel:', '').trim() : '';\n\n// 2. Витягуємо ім'я агента з посилання\nlet agentName = '';\nif (agentNameLink) {\n  const parts = agentNameLink.split('/');\n  const lastPart = parts[parts.length - 1];\n  const namePart = lastPart.replace('.html', '').replace(/^\\d+-/, '');\n  agentName = namePart.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');\n}\n\n// 3. Парсимо характеристики (підтримує англійську та албанську версії)\nconst facilities = htmlData.facilities || [];\nlet area = '';\nlet bedrooms = '';\nlet category = 'Sale';\n\nconst url = $('Split In Batches').item.json.url;\nif (url.toLowerCase().includes('qera') || url.toLowerCase().includes('qira') || url.toLowerCase().includes('rent')) {\n  category = 'Rent';\n}\n\nfacilities.forEach(f => {\n  const text = f.toLowerCase();\n  if (text.includes('m2') || text.includes('sip.') || text.includes('surface')) {\n    const cleanText = text.replace(/m2/g, '').replace(/m²/g, '');\n    area = cleanText.replace(/[^0-9]/g, '').trim() + ' m2';\n  }\n  if (text.includes('bedroom') || text.includes('dhomat') || text.includes('bed')) {\n    bedrooms = f.replace(/[^0-9]/g, '').trim();\n  }\n});\n\nreturn {\n  url,\n  title,\n  price,\n  category,\n  area,\n  bedrooms,\n  description,\n  agentName,\n  agentPhone,\n  lastModified: new Date().toISOString()\n};"
+      },
+      "id": "2b5252e5-e2d9-4d78-88d8-ed4ebf579ac7",
+      "name": "Clean & Format Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5000,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.title }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "e82d7b51-789a-4fd2-89cc-03ad56788fbc",
+      "name": "Filter Valid Leads",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        5200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
+          "mode": "list",
+          "cachedResultName": "century21_scraper_workflow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Аркуш1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "URL — посилання на об'єкт.": "={{ $json.url }}",
+            "Title — назва об'єкта.": "={{ $json.title }}",
+            "Price — ціна.": "={{ $json.price }}",
+            "Category — категорія (Sale або Rent).": "={{ $json.category }}",
+            "Area — площа (м²).": "={{ $json.area }}",
+            "Bedrooms — кількість спалень/кімнат.": "={{ $json.bedrooms }}",
+            "Description — опис об'єкта.": "={{ $json.description }}",
+            "Agent Name — ім'я агента.": "={{ $json.agentName }}",
+            "Agent Phone — телефон агента.": "={{ $json.agentPhone }}",
+            "Last Modified — дата останньої зміни об'єкта на сайті.": "={{ $json.lastModified }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "URL — посилання на об'єкт.",
+              "displayName": "URL — посилання на об'єкт.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title — назва об'єкта.",
+              "displayName": "Title — назва об'єкта.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Price — ціна.",
+              "displayName": "Price — ціна.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category — категорія (Sale або Rent).",
+              "displayName": "Category — категорія (Sale або Rent).",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Area — площа (м²).",
+              "displayName": "Area — площа (м²).",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Bedrooms — кількість спалень/кімнат.",
+              "displayName": "Bedrooms — кількість спалень/кімнат.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description — опис об'єкта.",
+              "displayName": "Description — опис об'єкта.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Agent Name — ім'я агента.",
+              "displayName": "Agent Name — ім'я агента.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Agent Phone — телефон агента.",
+              "displayName": "Agent Phone — телефон агента.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Modified — дата останньої зміни об'єкта на сайті.",
+              "displayName": "Last Modified — дата останньої зміни об'єкта на сайті.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e581",
+      "name": "Write to Google Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        5400,
+        40
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $node[\"Split In Batches\"].context.noItemsLeft }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "b8ee516e-7f63-4c28-967e-a44518ca6001",
+      "name": "Loop Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        5600,
+        100
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On clicking 'Execute'": {
+      "main": [
+        [
+          {
+            "node": "Get Existing URLs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Init Page State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Existing URLs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Init Page State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Existing URLs": {
+      "main": []
+    },
+    "Init Page State": {
+      "main": [
+        [
+          {
+            "node": "Fetch Search Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Search Page": {
+      "main": [
+        [
+          {
+            "node": "Extract Search URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Search URLs": {
+      "main": [
+        [
+          {
+            "node": "Loop Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Decision": {
+      "main": [
+        [
+          {
+            "node": "Convert to Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch Search Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Items": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [
+          {
+            "node": "Wait 1s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1s": {
+      "main": [
+        [
+          {
+            "node": "Fetch Property Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Property Page": {
+      "main": [
+        [
+          {
+            "node": "Parse HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse HTML": {
+      "main": [
+        [
+          {
+            "node": "Clean & Format Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean & Format Data": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid Leads": {
+      "main": [
+        [
+          {
+            "node": "Write to Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write to Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Check": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ae490c4c-d5f4-4968-89e6-0a29f7c235ae",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
+  },
+  "nodeGroups": [],
+  "id": "2CQqk5nGulQOvbfG",
+  "tags": []
+}
