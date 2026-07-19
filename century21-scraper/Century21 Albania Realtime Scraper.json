@@ -58,7 +58,7 @@
       "typeVersion": 4,
       "position": [
         3680,
-        180
+        260
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -79,34 +79,21 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        3880,
-        180
+        3680,
+        100
       ]
     },
     {
       "parameters": {
-        "jsCode": "// Зчитуємо бінарний файл з попередньої ноди та перетворюємо в текст\nlet sitemap = \"\";\ntry {\n  const binaryBuffer = await this.helpers.getBinaryDataBuffer(0, 'data');\n  sitemap = binaryBuffer.toString('utf-8');\n} catch (e) {\n  sitemap = \"\";\n}\n\nconst urlBlockRegex = /<url>([\\s\\S]*?)<\\/url>/g;\nlet match;\nconst results = [];\n\n// Фільтруємо за останні 60 днів або з початку року\nconst dateLimit = new Date(\"2026-01-01T00:00:00Z\"); // Задано з початку року\n\nwhile ((match = urlBlockRegex.exec(sitemap)) !== null) {\n  const block = match[1];\n  const locMatch = block.match(/<loc>([^<]+)<\\/loc>/);\n  const lastmodMatch = block.match(/<lastmod>([^<]+)<\\/lastmod>/);\n  \n  if (locMatch) {\n    const url = locMatch[1];\n    const lastmod = lastmodMatch ? lastmodMatch[1] : null;\n    \n    if (url.toLowerCase().includes('durres') && url.includes('/property/')) {\n      let isRecent = true;\n      if (lastmod) {\n        const modDate = new Date(lastmod);\n        isRecent = modDate >= dateLimit;\n      }\n      if (isRecent) {\n        results.push({ url, lastmod });\n      }\n    }\n  }\n}\n\nreturn results.map(r => ({ json: r }));"
+        "jsCode": "// 1. Зчитуємо бінарний файл sitemap з попередньої ноди та перетворюємо в текст\nlet sitemap = \"\";\ntry {\n  const binaryBuffer = await this.helpers.getBinaryDataBuffer(0, 'data');\n  sitemap = binaryBuffer.toString('utf-8');\n} catch (e) {\n  sitemap = \"\";\n}\n\n// 2. Зчитуємо вже існуючі URL з Google Таблиці\nlet existingUrls = [];\ntry {\n  const sheetData = $('Get Existing URLs').all();\n  existingUrls = sheetData.map(item => {\n    const urlKey = Object.keys(item.json)[0] || 'URL — посилання на об\\'єкт.';\n    return (item.json[urlKey] || '').toString().trim().toLowerCase();\n  });\n} catch (e) {\n  existingUrls = [];\n}\n\nconst urlBlockRegex = /<url>([\\s\\S]*?)<\\/url>/g;\nlet match;\nconst results = [];\n\n// Фільтруємо за останні 60 днів або з початку року\nconst dateLimit = new Date(\"2026-01-01T00:00:00Z\"); // Задано з початку року\n\nwhile ((match = urlBlockRegex.exec(sitemap)) !== null) {\n  const block = match[1];\n  const locMatch = block.match(/<loc>([^<]+)<\\/loc>/);\n  const lastmodMatch = block.match(/<lastmod>([^<]+)<\\/lastmod>/);\n  \n  if (locMatch) {\n    const url = locMatch[1];\n    const lastmod = lastmodMatch ? lastmodMatch[1] : null;\n    \n    if (url.toLowerCase().includes('durres') && url.includes('/property/')) {\n      const normalizedUrl = url.toString().trim().toLowerCase();\n      // Перевіряємо, чи немає цього посилання в таблиці\n      if (!existingUrls.includes(normalizedUrl)) {\n        let isRecent = true;\n        if (lastmod) {\n          const modDate = new Date(lastmod);\n          isRecent = modDate >= dateLimit;\n        }\n        if (isRecent) {\n          results.push({ url, lastmod });\n        }\n      }\n    }\n  }\n}\n\nreturn results.map(r => ({ json: r }));"
       },
       "id": "c41faa51-39fa-4f9c-80c0-d04a874f9feb",
       "name": "Parse and Filter Sitemap",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4080,
-        180
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "let existingUrls = [];\ntry {\n  // Зчитуємо всі URL, які вже є в Google Таблиці з ноди 'Get Existing URLs'\n  const sheetData = $('Get Existing URLs').all();\n  existingUrls = sheetData.map(item => {\n    // Беремо першу колонку таблиці (це наш URL)\n    const urlKey = Object.keys(item.json)[0] || 'URL — посилання на об\\'єкт.';\n    return (item.json[urlKey] || '').toString().trim().toLowerCase();\n  });\n} catch (e) {\n  existingUrls = [];\n}\n\n// Фільтруємо нові об'єкти, прибираючи дублікати\nconst newItems = $input.all().filter(item => {\n  const url = (item.json.url || '').toString().trim().toLowerCase();\n  return !existingUrls.includes(url);\n});\n\nreturn newItems;"
-      },
-      "id": "c41faa51-39fa-4f9c-80c0-d04a874f9fec",
-      "name": "Filter New URLs",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        4280,
-        180
+        3880,
+        100
       ]
     },
     {
@@ -119,8 +106,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 1,
       "position": [
-        4480,
-        180
+        4080,
+        100
       ]
     },
     {
@@ -132,8 +119,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1,
       "position": [
-        4680,
-        180
+        4280,
+        100
       ],
       "webhookId": "73a630ea-0bec-4d28-862d-854af892253a"
     },
@@ -165,8 +152,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        4880,
-        180
+        4480,
+        100
       ],
       "continueOnFail": true
     },
@@ -221,8 +208,8 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1,
       "position": [
-        5080,
-        180
+        4680,
+        100
       ],
       "continueOnFail": true
     },
@@ -235,8 +222,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        5280,
-        180
+        4880,
+        100
       ]
     },
     {
@@ -255,8 +242,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        5480,
-        180
+        5080,
+        100
       ]
     },
     {
@@ -393,8 +380,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        5680,
-        100
+        5280,
+        40
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -419,8 +406,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        5880,
-        180
+        5480,
+        100
       ]
     }
   ],
@@ -431,6 +418,11 @@
         [
           {
             "node": "Get Existing URLs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Cached Sitemap",
             "type": "main",
             "index": 0
           }
@@ -444,13 +436,7 @@
             "node": "Get Existing URLs",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Existing URLs": {
-      "main": [
-        [
+          },
           {
             "node": "Fetch Cached Sitemap",
             "type": "main",
@@ -474,17 +460,6 @@
       "main": [
         [
           {
-            "node": "Filter New URLs",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filter New URLs": {
-      "main": [
-        [
-          {
             "node": "Split In Batches",
             "type": "main",
             "index": 0
@@ -497,17 +472,6 @@
         [
           {
             "node": "Wait 1s",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait 1s": {
-      "main": [
-        [
-          {
-            "node": "Fetch Property Page",
             "type": "main",
             "index": 0
           }
