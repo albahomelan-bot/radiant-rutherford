@@ -84,14 +84,28 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Зчитуємо текст sitemap XML з Fetch Cached Sitemap\nlet sitemap = \"\";\ntry {\n  sitemap = $('Fetch Cached Sitemap').first().json.data || $('Fetch Cached Sitemap').first().json.body || \"\";\n} catch (e) {\n  sitemap = \"\";\n}\n\n// 2. Зчитуємо вже існуючі URL з Get Existing URLs\nlet existingUrls = [];\ntry {\n  const sheetData = $('Get Existing URLs').all();\n  existingUrls = sheetData.map(item => {\n    for (const val of Object.values(item.json)) {\n      const s = (val || '').toString().trim();\n      if (s.startsWith('http')) {\n        return s.toLowerCase();\n      }\n    }\n    return '';\n  }).filter(u => u.length > 0);\n} catch (e) {\n  existingUrls = [];\n}\n\nconst existingSet = new Set(existingUrls);\nconst urlBlockRegex = /<url>([\\s\\S]*?)<\\/url>/g;\nlet match;\nconst results = [];\nconst alreadyAdded = new Set();\n\nconst dateLimit = new Date(\"2026-01-01T00:00:00Z\");\n\nwhile ((match = urlBlockRegex.exec(sitemap)) !== null) {\n  const block = match[1];\n  const locMatch = block.match(/<loc>([^<]+)<\\/loc>/);\n  const lastmodMatch = block.match(/<lastmod>([^<]+)<\\/lastmod>/);\n  \n  if (locMatch) {\n    const url = locMatch[1];\n    const lastmod = lastmodMatch ? lastmodMatch[1] : null;\n    \n    if (url.toLowerCase().includes('durres') && url.includes('/property/')) {\n      const normalizedUrl = url.toString().trim().toLowerCase();\n      \n      if (!existingSet.has(normalizedUrl) && !alreadyAdded.has(normalizedUrl)) {\n        let isRecent = true;\n        if (lastmod) {\n          const modDate = new Date(lastmod);\n          isRecent = modDate >= dateLimit;\n        }\n        if (isRecent) {\n          results.push({ url, lastmod });\n          alreadyAdded.add(normalizedUrl);\n        }\n      }\n    }\n  }\n}\n\nreturn results.map(r => ({ json: r }));"
+        "mode": "chooseBranch",
+        "output": "input1"
+      },
+      "id": "e5b7b51e-789a-4fd2-89cc-03ad56788fbd",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        3880,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Зчитуємо текст sitemap XML з попередньої ноди (Merge)\nconst sitemap = $json.data || $json.body || $input.first().json.data || \"\";\n\n// 2. Зчитуємо вже існуючі URL з Get Existing URLs\nlet existingUrls = [];\ntry {\n  const sheetData = $('Get Existing URLs').all();\n  existingUrls = sheetData.map(item => {\n    for (const val of Object.values(item.json)) {\n      const s = (val || '').toString().trim();\n      if (s.startsWith('http')) {\n        return s.toLowerCase();\n      }\n    }\n    return '';\n  }).filter(u => u.length > 0);\n} catch (e) {\n  existingUrls = [];\n}\n\nconst existingSet = new Set(existingUrls);\nconst urlBlockRegex = /<url>([\\s\\S]*?)<\\/url>/g;\nlet match;\nconst results = [];\nconst alreadyAdded = new Set();\n\nconst dateLimit = new Date(\"2026-01-01T00:00:00Z\");\n\nwhile ((match = urlBlockRegex.exec(sitemap)) !== null) {\n  const block = match[1];\n  const locMatch = block.match(/<loc>([^<]+)<\\/loc>/);\n  const lastmodMatch = block.match(/<lastmod>([^<]+)<\\/lastmod>/);\n  \n  if (locMatch) {\n    const url = locMatch[1];\n    const lastmod = lastmodMatch ? lastmodMatch[1] : null;\n    \n    if (url.toLowerCase().includes('durres') && url.includes('/property/')) {\n      const normalizedUrl = url.toString().trim().toLowerCase();\n      \n      if (!existingSet.has(normalizedUrl) && !alreadyAdded.has(normalizedUrl)) {\n        let isRecent = true;\n        if (lastmod) {\n          const modDate = new Date(lastmod);\n          isRecent = modDate >= dateLimit;\n        }\n        if (isRecent) {\n          results.push({ url, lastmod });\n          alreadyAdded.add(normalizedUrl);\n        }\n      }\n    }\n  }\n}\n\nreturn results.map(r => ({ json: r }));"
       },
       "id": "c41faa51-39fa-4f9c-80c0-d04a874f9feb",
       "name": "Parse and Filter Sitemap",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3880,
+        4080,
         100
       ]
     },
@@ -105,7 +119,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 1,
       "position": [
-        4080,
+        4280,
         100
       ]
     },
@@ -118,7 +132,7 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1,
       "position": [
-        4280,
+        4480,
         100
       ],
       "webhookId": "73a630ea-0bec-4d28-862d-854af892253a"
@@ -151,7 +165,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        4480,
+        4680,
         100
       ],
       "continueOnFail": true
@@ -207,7 +221,7 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1,
       "position": [
-        4680,
+        4880,
         100
       ],
       "continueOnFail": true
@@ -221,7 +235,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4880,
+        5080,
         100
       ]
     },
@@ -241,7 +255,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        5080,
+        5280,
         100
       ]
     },
@@ -379,7 +393,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        5280,
+        5480,
         40
       ],
       "credentials": {
@@ -405,7 +419,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        5480,
+        5680,
         100
       ]
     }
@@ -448,14 +462,25 @@
       "main": [
         [
           {
-            "node": "Parse and Filter Sitemap",
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Fetch Cached Sitemap": {
+      "main": [
+        [
+          {
+            "node": "Merge",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Fetch Cached Sitemap": {
+    "Merge": {
       "main": [
         [
           {
@@ -579,7 +604,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "ae490c4c-d5f4-4968-89e6-0a29f7c235b1",
+  "versionId": "ae490c4c-d5f4-4968-89e6-0a29f7c235b3",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"

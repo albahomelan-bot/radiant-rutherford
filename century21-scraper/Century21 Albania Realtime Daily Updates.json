@@ -113,14 +113,28 @@
     },
     {
       "parameters": {
-        "jsCode": "const html = $json.data || $json.body || \"\";\n\n// ВИПРАВЛЕНИЙ КОД: шукаємо URL у будь-якому полі\nlet existingUrls = new Set();\ntry {\n  const sheetData = $('Get Existing URLs').all();\n  sheetData.forEach(item => {\n    for (const val of Object.values(item.json)) {\n      const s = (val || '').toString().trim();\n      if (s.startsWith('http')) {\n        existingUrls.add(s.toLowerCase());\n        break;\n      }\n    }\n  });\n} catch (e) {\n  existingUrls = new Set();\n}\n\n// Extract all property links from the search page html\nconst propertyUrlRegex = /href=\"([^\"]*?\\/property\\/[^\"]*?\\.html)\"/g;\nlet match;\nconst pageUrls = [];\nwhile ((match = propertyUrlRegex.exec(html)) !== null) {\n  const url = match[1].trim();\n  if (!pageUrls.includes(url)) {\n    pageUrls.push(url);\n  }\n}\n\n// Filter out duplicates and check if we should stop\nconst state = $input.first().json;\nconst currentNewUrls = state.newUrls || [];\nconst currentNewSet = new Set(currentNewUrls.map(u => u.toLowerCase()));\nlet stop = state.stop || false;\nlet newFoundOnThisPageCount = 0;\n\npageUrls.forEach(url => {\n  const normalizedUrl = url.toLowerCase();\n  if (!existingUrls.has(normalizedUrl) && !currentNewSet.has(normalizedUrl)) {\n    currentNewUrls.push(url);\n    currentNewSet.add(normalizedUrl);\n    newFoundOnThisPageCount++;\n  }\n});\n\n// Stop if no properties found on the page or all of them are already in the sheet\nif (pageUrls.length === 0 || newFoundOnThisPageCount === 0 || state.page >= 50) {\n  stop = true;\n}\n\nreturn {\n  page: stop ? state.page : state.page + 1,\n  stop: stop,\n  newUrls: currentNewUrls\n};"
+        "mode": "chooseBranch",
+        "output": "input1"
+      },
+      "id": "e5b7b51e-789a-4fd2-89cc-03ad56788fbd",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        3600,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $json.data || $json.body || \"\";\nconst state = $input.first().json;\n\nlet existingUrls = new Set();\ntry {\n  const sheetData = $('Get Existing URLs').all();\n  sheetData.forEach(item => {\n    for (const val of Object.values(item.json)) {\n      const s = (val || '').toString().trim();\n      if (s.startsWith('http')) {\n        existingUrls.add(s.toLowerCase());\n        break;\n      }\n    }\n  });\n} catch (e) {\n  existingUrls = new Set();\n}\n\n// Extract all property links from the search page html\nconst propertyUrlRegex = /href=\"([^\\\"\\(]*?\\/property\\/[^\\\"\\(]*?\\.html)\"/g;\nlet match;\nconst pageUrls = [];\nwhile ((match = propertyUrlRegex.exec(html)) !== null) {\n  const url = match[1].trim();\n  if (!pageUrls.includes(url)) {\n    pageUrls.push(url);\n  }\n}\n\n// Filter out duplicates and check if we should stop\nconst currentNewUrls = state.newUrls || [];\nconst currentNewSet = new Set(currentNewUrls.map(u => u.toLowerCase()));\nlet stop = state.stop || false;\nlet newFoundOnThisPageCount = 0;\n\npageUrls.forEach(url => {\n  const normalizedUrl = url.toLowerCase();\n  if (!existingUrls.has(normalizedUrl) && !currentNewSet.has(normalizedUrl)) {\n    currentNewUrls.push(url);\n    currentNewSet.add(normalizedUrl);\n    newFoundOnThisPageCount++;\n  }\n});\n\n// Stop if no properties found on the page or all of them are already in the sheet\nif (pageUrls.length === 0 || newFoundOnThisPageCount === 0 || state.page >= 50) {\n  stop = true;\n}\n\nreturn {\n  page: stop ? state.page : state.page + 1,\n  stop: stop,\n  newUrls: currentNewUrls\n};"
       },
       "id": "c41faa51-39fa-4f9c-80c0-d04a874f9feb",
       "name": "Extract Search URLs",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3600,
+        3800,
         100
       ]
     },
@@ -140,7 +154,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        3800,
+        4000,
         100
       ]
     },
@@ -153,7 +167,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4000,
+        4200,
         100
       ]
     },
@@ -167,7 +181,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 1,
       "position": [
-        4200,
+        4400,
         100
       ]
     },
@@ -180,7 +194,7 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1,
       "position": [
-        4400,
+        4600,
         100
       ],
       "webhookId": "73a630ea-0bec-4d28-862d-854af892253a"
@@ -213,7 +227,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
       "position": [
-        4600,
+        4800,
         100
       ],
       "continueOnFail": true
@@ -269,7 +283,7 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1,
       "position": [
-        4800,
+        5000,
         100
       ],
       "continueOnFail": true
@@ -283,7 +297,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        5000,
+        5200,
         100
       ]
     },
@@ -303,7 +317,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        5200,
+        5400,
         100
       ]
     },
@@ -441,7 +455,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        5400,
+        5600,
         40
       ],
       "credentials": {
@@ -467,7 +481,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        5600,
+        5800,
         100
       ]
     }
@@ -510,9 +524,9 @@
       "main": [
         [
           {
-            "node": "Extract Search URLs",
+            "node": "Merge",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -529,6 +543,17 @@
       ]
     },
     "Fetch Search Page": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
       "main": [
         [
           {
@@ -681,7 +706,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "ae490c4c-d5f4-4968-89e6-0a29f7c235ae",
+  "versionId": "ae490c4c-d5f4-4968-89e6-0a29f7c235af",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
