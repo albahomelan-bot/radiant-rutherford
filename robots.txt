@@ -17,3 +17,6 @@ Allow: /
 # Разрешаем доступ всем остальным поисковикам
 User-agent: *
 Allow: /
+
+Sitemap: https://deluxe-alba.netlify.app/sitemap.xml
+

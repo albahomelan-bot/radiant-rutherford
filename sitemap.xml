@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Главная страница -->
+  <url>
+    <loc>https://deluxe-alba.netlify.app/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Кейс: AI Social Media Assistant -->
+  <url>
+    <loc>https://deluxe-alba.netlify.app/case_study_social_media_assistant.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Кейс: Multi-Format Resume Parser -->
+  <url>
+    <loc>https://deluxe-alba.netlify.app/case_study_resume_parser.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Кейс: Telegram to OneDrive Logger -->
+  <url>
+    <loc>https://deluxe-alba.netlify.app/case_study_onedrive_logger.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Кейс: AI Financial Assistant -->
+  <url>
+    <loc>https://deluxe-alba.netlify.app/case_study_financial_assistant.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Кейс: HR Assistant Olena -->
+  <url>
+    <loc>https://deluxe-alba.netlify.app/case_study_hr_assistant.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Кейс: Photo-to-PDF Converter -->
+  <url>
+    <loc>https://deluxe-alba.netlify.app/case_study_photo_to_pdf.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
