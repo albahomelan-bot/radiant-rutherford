@@ -128,8 +128,7 @@ let filterState = {
   priceMin: null,
   priceMax: null,
   rooms: 'all',
-  areaMin: null,
-  areaMax: null,
+  propertyType: 'all',
   tagSeaView: false,
   tagFurnished: false,
   tagNewBuilding: false,
@@ -244,6 +243,7 @@ function setupEventListeners() {
   // Category & Rooms toggle chips inside Filters
   setupChips('categoryToggles', (val) => { filterState.category = val; });
   setupChips('roomsToggles', (val) => { filterState.rooms = val; });
+  setupChips('typeToggles', (val) => { filterState.propertyType = val; });
 
   // Apply & Reset filters
   applyFiltersBtn.addEventListener('click', applyFilters);
@@ -364,8 +364,6 @@ function applyFilters() {
   // Read inputs
   filterState.priceMin = parseInputNumber('priceMin');
   filterState.priceMax = parseInputNumber('priceMax');
-  filterState.areaMin = parseInputNumber('areaMin');
-  filterState.areaMax = parseInputNumber('areaMax');
   filterState.city = citySelect.value;
   
   filterState.tagSeaView = document.getElementById('tagSeaView').checked;
@@ -379,7 +377,7 @@ function applyFilters() {
   // Update UI style of filter button to active if any filters applied
   const isFiltered = filterState.category !== 'all' || filterState.city !== 'all' || 
                      filterState.priceMin || filterState.priceMax || filterState.rooms !== 'all' ||
-                     filterState.areaMin || filterState.areaMax || filterState.districts.length > 0 ||
+                     filterState.propertyType !== 'all' || filterState.districts.length > 0 ||
                      filterState.tagSeaView || filterState.tagFurnished || filterState.tagNewBuilding;
                      
   if (isFiltered) {
@@ -401,8 +399,7 @@ function resetFilters() {
     priceMin: null,
     priceMax: null,
     rooms: 'all',
-    areaMin: null,
-    areaMax: null,
+    propertyType: 'all',
     tagSeaView: false,
     tagFurnished: false,
     tagNewBuilding: false,
@@ -412,8 +409,6 @@ function resetFilters() {
   // Reset UI Inputs
   document.getElementById('priceMin').value = '';
   document.getElementById('priceMax').value = '';
-  document.getElementById('areaMin').value = '';
-  document.getElementById('areaMax').value = '';
   document.getElementById('tagSeaView').checked = false;
   document.getElementById('tagFurnished').checked = false;
   document.getElementById('tagNewBuilding').checked = false;
@@ -426,6 +421,7 @@ function resetFilters() {
   // Reset toggle chips
   resetChips('categoryToggles', 'all');
   resetChips('roomsToggles', 'all');
+  resetChips('typeToggles', 'all');
 
   filterBtn.classList.remove('active');
   closeFiltersDrawer();
@@ -545,10 +541,10 @@ function render() {
       }
     }
     
-    // Area
-    const numericArea = Number((item.area || '').replace(/[^0-9]/g, ''));
-    if (filterState.areaMin && numericArea < filterState.areaMin) return false;
-    if (filterState.areaMax && numericArea > filterState.areaMax) return false;
+    // Property Type
+    if (filterState.propertyType !== 'all' && item.type !== filterState.propertyType) {
+      return false;
+    }
 
     // Special Tags
     if (filterState.tagSeaView && !matchesSmartTag(item, 'seaView')) return false;

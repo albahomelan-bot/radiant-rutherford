@@ -12,7 +12,8 @@
     "lastModified": "2026-07-20T08:15:00.000Z",
     "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
     "city": "Durrës",
-    "district": "Plazh"
+    "district": "Plazh",
+    "type": "Apartment"
   },
   {
     "url": "https://www.century21albania.com/en/property/5842402/shitet-ambient-biznesi-ne-nje-nga-zonat-me-te-kerkuara-te-plazhit-durres-atlantic145385.html",
@@ -27,7 +28,8 @@
     "lastModified": "2026-07-20T08:15:00.000Z",
     "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80",
     "city": "Durrës",
-    "district": "Plazh"
+    "district": "Plazh",
+    "type": "Commercial"
   },
   {
     "url": "https://www.century21albania.com/en/property/5841564/apartament-1-1-per-shitje-ne-golem-perball-hotel-flower-pallat-i-ri-2025-roy145372.html",
@@ -42,7 +44,8 @@
     "lastModified": "2026-07-20T08:10:00.000Z",
     "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
     "city": "Durrës",
-    "district": "Golem"
+    "district": "Golem",
+    "type": "Apartment"
   },
   {
     "url": "https://www.century21albania.com/en/property/5839120/jepet-me-qira-apartament-luks-2-1-perball-detit-ne-vollga-durres.html",
@@ -57,7 +60,8 @@
     "lastModified": "2026-07-20T08:00:00.000Z",
     "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
     "city": "Durrës",
-    "district": "Vollga"
+    "district": "Vollga",
+    "type": "Apartment"
   },
   {
     "url": "https://www.century21albania.com/en/property/5840901/apartament-1-1-per-shitje-ne-qerret-zone-e-qete.html",
@@ -72,7 +76,8 @@
     "lastModified": "2026-07-20T07:30:00.000Z",
     "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
     "city": "Durrës",
-    "district": "Qerret"
+    "district": "Qerret",
+    "type": "Apartment"
   },
   {
     "url": "https://www.century21albania.com/en/property/5841002/jepet-me-qira-apartament1-1-modern-blloku-tirane.html",
@@ -87,7 +92,8 @@
     "lastModified": "2026-07-20T07:20:00.000Z",
     "image": "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=600&q=80",
     "city": "Tirana",
-    "district": "Blloku"
+    "district": "Blloku",
+    "type": "Apartment"
   },
   {
     "url": "https://www.century21albania.com/en/property/5842100/apartament-luks-3-1-shitet-prane-liqenit-te-tiranes.html",
@@ -102,6 +108,7 @@
     "lastModified": "2026-07-20T07:00:00.000Z",
     "image": "https://images.unsplash.com/photo-1545464693-f1798a373343?auto=format&fit=crop&w=600&q=80",
     "city": "Tirana",
-    "district": "Lake Park"
+    "district": "Lake Park",
+    "type": "Apartment"
   }
 ]

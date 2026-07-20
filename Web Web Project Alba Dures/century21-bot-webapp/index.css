@@ -453,6 +453,7 @@ body {
 .toggle-chips {
   display: flex;
   gap: 8px;
+  row-gap: 8px;
 }
 
 .toggle-chips .chip {

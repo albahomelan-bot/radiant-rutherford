@@ -104,12 +104,15 @@
             </div>
           </div>
 
-          <!-- Area Range -->
+          <!-- Property Type -->
           <div class="filter-group">
-            <label>Площа (м²)</label>
-            <div class="range-inputs">
-              <input type="number" id="areaMin" placeholder="Від 0">
-              <input type="number" id="areaMax" placeholder="До ∞">
+            <label>Тип об'єкта</label>
+            <div class="toggle-chips" id="typeToggles" style="flex-wrap: wrap;">
+              <button class="chip active" data-value="all">Будь-який</button>
+              <button class="chip" data-value="Apartment">🏢 Квартира</button>
+              <button class="chip" data-value="Villa">🏡 Вілла</button>
+              <button class="chip" data-value="Commercial">💼 Комерція</button>
+              <button class="chip" data-value="Land">🌳 Ділянка</button>
             </div>
           </div>
 
