@@ -35,4 +35,7 @@
   - Detail concrete steps of the process to provide reassurance.
   - Implement low-friction Call-to-Actions (CTAs) that make it easy for tired or busy users to take the first step.
 - **Tone**: Write in a "human-to-human" style. Plain, live language, zero fluff, highly structured and easy to scan.
+## Workflow & Deployment Constraints
 
+- **Local Development & Validation**: Always clone and modify repository folders locally first. Start a local server or verify local builds.
+- **Git Push / Deployment**: Never push changes directly to GitHub or deploy to Netlify without explicit user review and approval. Obtain Andrii's green light before executing any git push commands.
