@@ -115,28 +115,16 @@
     },
     {
       "parameters": {
-        "operation": "extractHtmlContent",
-        "dataPropertyName": "data",
-        "extractionValues": {
-          "values": [
-            {
-              "key": "image",
-              "cssSelector": "meta[property=\"og:image\"]",
-              "attribute": "content",
-              "returnArray": false
-            }
-          ]
-        }
+        "jsCode": "const url = $('Split In Batches').item.json[\"URL — посилання на об'єкт.\"];\nconst html = $('Fetch Property Page').item.json.data || $('Fetch Property Page').item.json.body || '';\nlet image = '';\nif (html) {\n  const ogImageRegex = /<meta\\s+property=[\"']og:image[\"']\\s+content=[\"']([^\"']+)[\"']/i;\n  const match = ogImageRegex.exec(html);\n  if (match) {\n    image = match[1];\n  }\n}\nreturn {\n  \"URL — посилання на об'єкт.\": url,\n  \"Image — посилання на фото.\": image\n};"
       },
       "id": "aa13836e-6abc-4299-9ebe-12ad38c159b4",
       "name": "Extract Image URL",
-      "type": "n8n-nodes-base.html",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         4220,
         100
-      ],
-      "continueOnFail": true
+      ]
     },
     {
       "parameters": {
@@ -155,14 +143,13 @@
           "cachedResultName": "Аркуш1",
           "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit#gid=0"
         },
+        "columnToMatchOn": "URL — посилання на об'єкт.",
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Image — посилання на фото.": "={{ $json.image || '' }}"
+            "Image — посилання на фото.": "={{ $json[\"Image — посилання на фото.\"] }}"
           },
-          "matchingColumns": [
-            "URL — посилання на об'єкт."
-          ],
+          "matchingColumns": [],
           "schema": [
             {
               "id": "URL — посилання на об'єкт.",
@@ -183,8 +170,7 @@
               "canBeUsedToMatch": true
             }
           ]
-        },
-        "columnToMatchOn": "URL — посилання на об'єкт."
+        }
       },
       "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e585",
       "name": "Update Sheet Row",
