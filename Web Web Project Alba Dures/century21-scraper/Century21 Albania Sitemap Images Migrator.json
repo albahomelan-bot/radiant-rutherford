@@ -115,7 +115,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const url = $('Split In Batches').item.json[\"URL — посилання на об'єкт.\"];\nconst html = $('Fetch Property Page').item.json.data || $('Fetch Property Page').item.json.body || '';\nlet image = '';\nif (html) {\n  const ogImageRegex = /<meta\\s+property=[\"']og:image[\"']\\s+content=[\"']([^\"']+)[\"']/i;\n  const match = ogImageRegex.exec(html);\n  if (match) {\n    image = match[1];\n  }\n}\nreturn {\n  \"URL — посилання на об'єкт.\": url,\n  \"Image — посилання на фото.\": image\n};"
+        "jsCode": "const item = $input.first().json;\nconst html = item.data || item.body || '';\nlet image = '';\nif (html) {\n  const ogImageRegex = /<meta\\s+property=[\"']og:image[\"']\\s+content=[\"']([^\"']+)[\"']/i;\n  const match = ogImageRegex.exec(html);\n  if (match) {\n    image = match[1];\n  }\n}\nreturn {\n  \"URL — посилання на об'єкт.\": item[\"URL — посилання на об'єкт.\"],\n  \"Image — посилання на фото.\": image\n};"
       },
       "id": "aa13836e-6abc-4299-9ebe-12ad38c159b4",
       "name": "Extract Image URL",
@@ -235,13 +235,13 @@
       "main": [
         [
           {
-            "node": "Split In Batches",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
+                "node": "Split In Batches",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
     "Split In Batches": {
       "main": [
         [
