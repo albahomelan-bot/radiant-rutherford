@@ -132,6 +132,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Scroll to Top Button Logic
+  const btnScrollTop = document.getElementById('btn-scroll-top');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      btnScrollTop.classList.add('show');
+    } else {
+      btnScrollTop.classList.remove('show');
+    }
+  });
+
+  btnScrollTop.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+
   // Initialize
   showStep(currentStep);
   updateProgress();
