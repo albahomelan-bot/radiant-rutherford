@@ -1,0 +1,136 @@
+{
+  "name": "Century21 Albania WebApp API",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "properties",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "e43b8a1c-99b8-4e89-a2b1-56c7d2ea49fa",
+      "name": "Webhook API Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        100
+      ],
+      "webhookId": "9b1fb28e-5b12-4c28-98e6-12a938c11ab6"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
+          "mode": "list",
+          "cachedResultName": "century21_scraper_workflow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Аркуш1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e582",
+      "name": "Read Google Sheet Database",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        3220,
+        100
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// District list mapping\nconst parseLocation = (url, title, desc) => {\n  const text = `${url} ${title} ${desc}`.toLowerCase();\n  \n  let city = 'Durrës';\n  if (text.includes('tirane') || text.includes('tirana') || text.includes('bllok') || text.includes('lake park')) {\n    city = 'Tirana';\n  }\n  \n  let district = 'Plazh';\n  if (city === 'Tirana') {\n    district = 'Center';\n    if (text.includes('bllok')) district = 'Blloku';\n    else if (text.includes('lake') || text.includes('liqen')) district = 'Lake Park';\n    else if (text.includes('don bosko')) district = 'Don Bosko';\n  } else {\n    if (text.includes('golem')) district = 'Golem';\n    else if (text.includes('qerret')) district = 'Qerret';\n    else if (text.includes('vollga')) district = 'Vollga';\n    else if (text.includes('mali i robit')) district = 'Mali i Robit';\n    else if (text.includes('hamallaj')) district = 'Hamallaj';\n    else if (text.includes('lalz')) district = 'Gjiri i Lalzit';\n    else if (text.includes('shkembi') || text.includes('kavaj')) district = 'Shkëmbi i Kavajës';\n  }\n  \n  return { city, district };\n};\n\nconst formatted = items.map(item => {\n  const row = item.json;\n  const url = row[\"URL — посилання на об'єкт.\"] || '';\n  const title = row[\"Title — назва об'єкта.\"] || '';\n  const desc = row[\"Description — опис об'єкта.\"] || '';\n  \n  const loc = parseLocation(url, title, desc);\n  \n  // Normalize category\n  const rawCategory = (row[\"Category — категорія (Sale або Rent).\"] || '').toLowerCase();\n  const category = rawCategory.includes('rent') || rawCategory.includes('оренда') ? 'Rent' : 'Sale';\n  \n  return {\n    url,\n    title,\n    price: row[\"Price — ціна.\"] || '0 €',\n    category,\n    area: row[\"Area — площа (м²).\"] || '0 m2',\n    bedrooms: row[\"Bedrooms — кількість спалень/кімнат.\"] || '0',\n    description: desc,\n    agentName: row[\"Agent Name — ім'я агента.\"] || 'Century 21',\n    agentPhone: row[\"Agent Phone — телефон агента.\"] || '',\n    lastModified: row[\"Last Modified — дата останньої зміни об'єкта на сайті.\"] || new Date().toISOString(),\n    image: row[\"Image — посилання на фото.\"] || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80',\n    city: loc.city,\n    district: loc.district\n  };\n});\n\nreturn formatted;"
+      },
+      "id": "2b5252e5-e2d9-4d78-88d8-ed4ebf579acb",
+      "name": "Parse & Format Properties",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3440,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($input.all().map(i => i.json)) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e586",
+      "name": "Respond WebApp JSON",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        3660,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook API Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read Google Sheet Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Google Sheet Database": {
+      "main": [
+        [
+          {
+            "node": "Parse & Format Properties",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Format Properties": {
+      "main": [
+        [
+          {
+            "node": "Respond WebApp JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  }
+}
