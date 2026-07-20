@@ -68,111 +68,6 @@
     },
     {
       "parameters": {
-        "jsCode": "return {\n  page: 1,\n  stop: false,\n  newUrls: []\n};"
-      },
-      "id": "b83af7d4-b91c-43f6-9f4a-89a19c72df10",
-      "name": "Init Page State",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3200,
-        100
-      ]
-    },
-    {
-      "parameters": {
-        "url": "=https://www.century21albania.com/en/properties?city=Durr%C3%ABs&page={{ $json.page }}",
-        "responseFormat": "text",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "User-Agent",
-              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            },
-            {
-              "name": "Accept",
-              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
-            },
-            {
-              "name": "Accept-Language",
-              "value": "en-US,en;q=0.9"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "ad787c74-19d5-4b95-8e15-bb584f29b07f",
-      "name": "Fetch Search Page",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [
-        3400,
-        100
-      ]
-    },
-    {
-      "parameters": {
-        "mode": "chooseBranch",
-        "output": "input1"
-      },
-      "id": "e5b7b51e-789a-4fd2-89cc-03ad56788fbd",
-      "name": "Merge",
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 2.1,
-      "position": [
-        3600,
-        100
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "const html = $json.data || $json.body || \"\";\nconst state = $input.first().json;\n\nlet existingUrls = new Set();\ntry {\n  const sheetData = $('Get Existing URLs').all();\n  sheetData.forEach(item => {\n    for (const val of Object.values(item.json)) {\n      const s = (val || '').toString().trim();\n      if (s.startsWith('http')) {\n        existingUrls.add(s.toLowerCase());\n        break;\n      }\n    }\n  });\n} catch (e) {\n  existingUrls = new Set();\n}\n\n// Extract all property links from the search page html\nconst propertyUrlRegex = /href=\"([^\\\"\\(]*?\\/property\\/[^\\\"\\(]*?\\.html)\"/g;\nlet match;\nconst pageUrls = [];\nwhile ((match = propertyUrlRegex.exec(html)) !== null) {\n  const url = match[1].trim();\n  if (!pageUrls.includes(url)) {\n    pageUrls.push(url);\n  }\n}\n\n// Filter out duplicates and check if we should stop\nconst currentNewUrls = state.newUrls || [];\nconst currentNewSet = new Set(currentNewUrls.map(u => u.toLowerCase()));\nlet stop = state.stop || false;\nlet newFoundOnThisPageCount = 0;\n\npageUrls.forEach(url => {\n  const normalizedUrl = url.toLowerCase();\n  if (!existingUrls.has(normalizedUrl) && !currentNewSet.has(normalizedUrl)) {\n    currentNewUrls.push(url);\n    currentNewSet.add(normalizedUrl);\n    newFoundOnThisPageCount++;\n  }\n});\n\n// Stop if no properties found on the page or all of them are already in the sheet\nif (pageUrls.length === 0 || newFoundOnThisPageCount === 0 || state.page >= 50) {\n  stop = true;\n}\n\nreturn {\n  page: stop ? state.page : state.page + 1,\n  stop: stop,\n  newUrls: currentNewUrls\n};"
-      },
-      "id": "c41faa51-39fa-4f9c-80c0-d04a874f9feb",
-      "name": "Extract Search URLs",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3800,
-        100
-      ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{ $json.stop }}",
-              "value2": true
-            }
-          ]
-        }
-      },
-      "id": "c85d7b51-789a-4fd2-89cc-03ad56788fbd",
-      "name": "Loop Decision",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        4000,
-        100
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "const urls = $json.newUrls || [];\nreturn urls.map(url => ({ json: { url: url } }));"
-      },
-      "id": "ae5b9c21-f92d-41a3-b6d8-e7c8e9d3d0f1",
-      "name": "Convert to Items",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        4200,
-        100
-      ]
-    },
-    {
-      "parameters": {
         "batchSize": 1,
         "options": {}
       },
@@ -481,9 +376,75 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        5800,
+        6000,
         100
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const existingUrls = new Set();\ntry {\n  const sheetData = $('Get Existing URLs').all();\n  sheetData.forEach(item => {\n    for (const val of Object.values(item.json)) {\n      const s = (val || '').toString().trim();\n      if (s.startsWith('http')) {\n        existingUrls.add(s.toLowerCase());\n        break;\n      }\n    }\n  });\n} catch (e) {\n  // Safe fallback\n}\n\nlet page = 1;\nlet stop = false;\nconst newUrls = [];\n\nwhile (page <= 50 && !stop) {\n  // Delay 5 seconds between search page fetches\n  if (page > 1) {\n    await new Promise(resolve => setTimeout(resolve, 5000));\n  }\n  \n  let html = '';\n  try {\n    const response = await $helpers.httpRequest({\n      url: `https://www.century21albania.com/en/properties?city=Durr%C3%ABs&page=${page}`,\n      method: 'GET',\n      headers: {\n        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',\n        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',\n        'Accept-Language': 'en-US,en;q=0.9'\n      }\n    });\n    html = response || '';\n  } catch (err) {\n    // If request fails (e.g. 429 or timeout), stop search loop\n    stop = true;\n    break;\n  }\n  \n  // Extract all property links from the search page html\n  const propertyUrlRegex = /href=\\\"([^\\\"]*?\\/property\\/[^\\\"]*?\\.html)\\\"/g;\n  let match;\n  const pageUrls = [];\n  while ((match = propertyUrlRegex.exec(html)) !== null) {\n    const url = match[1].trim();\n    if (!pageUrls.includes(url)) {\n      pageUrls.push(url);\n    }\n  }\n  \n  if (pageUrls.length === 0) {\n    stop = true;\n    break;\n  }\n  \n  let newFoundOnThisPageCount = 0;\n  pageUrls.forEach(url => {\n    const normalizedUrl = url.toLowerCase();\n    if (!existingUrls.has(normalizedUrl) && !newUrls.includes(url)) {\n      newUrls.push(url);\n      newFoundOnThisPageCount++;\n    }\n  });\n  \n  // Stop if all properties on this page are already scraped\n  if (newFoundOnThisPageCount === 0) {\n    stop = true;\n    break;\n  }\n  \n  page++;\n}\n\n// Convert the collected new URLs to n8n output items\nreturn newUrls.map(url => ({ json: { url } }));"
+      },
+      "id": "e43b8a1c-99b8-4e89-a2b1-56c7d2ea49ff",
+      "name": "Find New URLs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3400,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "-1002415361322",
+        "text": "=🆕 Додано новий об'єкт нерухомості!\n\n🏡 Назва: {{ $json.title }}\n💵 Ціна: {{ $json.price }}\n📏 Площа: {{ $json.area }}\n🛏 Спальні: {{ $json.bedrooms }}\n🔗 Посилання: {{ $json.url }}\n📅 Дата: {{ new Date($json.lastModified).toLocaleString('uk-UA', { timeZone: 'Europe/Kiev' }) }}\n\n📝 Опис:\n{{ $json.description.length > 250 ? $json.description.substring(0, 250) + '...' : $json.description }}",
+        "additionalFields": {}
+      },
+      "id": "a303ed1b-b108-47da-b948-72f8215e7894",
+      "name": "Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        5700,
+        100
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "pUTUWBgGKM4frqsu",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "e43b8a1c-99b8-4e89-a2b1-56c7d2ea49fa",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        3000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "-1002415361322",
+        "text": "=⚠️ Помилка у воркфлоу!\n\n📋 Назва: {{ $workflow.name }}\n🔴 Нода з помилкою: {{ $json.execution.error.node.name }}\n💬 Текст помилки: {{ $json.execution.error.message }}\n\n🆔 ID запуску: {{ $execution.id }}",
+        "additionalFields": {}
+      },
+      "id": "a303ed1b-b108-47da-b948-72f8215e7895",
+      "name": "Send Error Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3200,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "pUTUWBgGKM4frqsu",
+          "name": "Telegram account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -497,7 +458,7 @@
             "index": 0
           },
           {
-            "node": "Init Page State",
+            "node": "Find New URLs",
             "type": "main",
             "index": 0
           }
@@ -513,87 +474,14 @@
             "index": 0
           },
           {
-            "node": "Init Page State",
+            "node": "Find New URLs",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Existing URLs": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "Init Page State": {
-      "main": [
-        [
-          {
-            "node": "Fetch Search Page",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch Search Page": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Merge": {
-      "main": [
-        [
-          {
-            "node": "Extract Search URLs",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract Search URLs": {
-      "main": [
-        [
-          {
-            "node": "Loop Decision",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Decision": {
-      "main": [
-        [
-          {
-            "node": "Convert to Items",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Fetch Search Page",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Convert to Items": {
+    "Find New URLs": {
       "main": [
         [
           {
@@ -681,7 +569,7 @@
       "main": [
         [
           {
-            "node": "Loop Check",
+            "node": "Telegram Notification",
             "type": "main",
             "index": 0
           }
@@ -694,6 +582,28 @@
         [
           {
             "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Notification": {
+      "main": [
+        [
+          {
+            "node": "Loop Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send Error Telegram",
             "type": "main",
             "index": 0
           }
