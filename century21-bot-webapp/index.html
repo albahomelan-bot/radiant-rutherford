@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Century 21 Albania Catalog</title>
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Header Bar -->
+    <header class="app-header">
+      <div class="search-bar-container">
+        <input type="text" id="searchInput" placeholder="Пошук за назвою або описом...">
+        <button id="filterBtn" class="icon-btn">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+        </button>
+      </div>
+      
+      <!-- Top Navigation Tabs -->
+      <div class="nav-tabs">
+        <button id="tabCatalog" class="tab-link active">Каталог</button>
+        <button id="tabFavorites" class="tab-link">
+          Обране
+          <span id="favCount" class="badge">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Panel -->
+    <main class="app-content">
+      <!-- Grid Catalog Grid -->
+      <section id="catalogSection" class="catalog-grid"></section>
+      
+      <!-- Empty State -->
+      <div id="emptyState" class="empty-state hidden">
+        <div class="empty-icon">📂</div>
+        <h3>Нічого не знайдено</h3>
+        <p>Спробуйте змінити фільтри пошуку або скинути їх.</p>
+        <button id="resetFiltersLink" class="btn btn-secondary">Скинути всі фільтри</button>
+      </div>
+    </main>
+
+    <!-- Slide-out Filters Drawer -->
+    <div id="filtersDrawer" class="drawer hidden">
+      <div class="drawer-overlay"></div>
+      <div class="drawer-content">
+        <div class="drawer-header">
+          <h2>Налаштування пошуку</h2>
+          <button id="closeFiltersBtn" class="close-btn">&times;</button>
+        </div>
+        
+        <div class="drawer-body">
+          <!-- Type -->
+          <div class="filter-group">
+            <label>Тип угоди</label>
+            <div class="toggle-chips" id="categoryToggles">
+              <button class="chip active" data-value="all">Будь-який</button>
+              <button class="chip" data-value="Sale">Продаж</button>
+              <button class="chip" data-value="Rent">Оренда</button>
+            </div>
+          </div>
+
+          <!-- City -->
+          <div class="filter-group">
+            <label>Місто</label>
+            <select id="citySelect">
+              <option value="all">Всі міста</option>
+              <option value="Durrës">Durrës (Дуррес)</option>
+              <option value="Tirana">Tirana (Тирана)</option>
+            </select>
+          </div>
+
+          <!-- Districts -->
+          <div class="filter-group hidden" id="districtGroup">
+            <label>Райони / квартали</label>
+            <div class="districts-list" id="districtsList"></div>
+          </div>
+
+          <!-- Price Range -->
+          <div class="filter-group">
+            <label>Бюджет (€)</label>
+            <div class="range-inputs">
+              <input type="number" id="priceMin" placeholder="Від 0">
+              <input type="number" id="priceMax" placeholder="До ∞">
+            </div>
+          </div>
+
+          <!-- Rooms -->
+          <div class="filter-group">
+            <label>Кількість кімнат (спалень)</label>
+            <div class="toggle-chips" id="roomsToggles">
+              <button class="chip active" data-value="all">Будь-яка</button>
+              <button class="chip" data-value="1">1</button>
+              <button class="chip" data-value="2">2</button>
+              <button class="chip" data-value="3">3+</button>
+            </div>
+          </div>
+
+          <!-- Area Range -->
+          <div class="filter-group">
+            <label>Площа (м²)</label>
+            <div class="range-inputs">
+              <input type="number" id="areaMin" placeholder="Від 0">
+              <input type="number" id="areaMax" placeholder="До ∞">
+            </div>
+          </div>
+
+          <!-- Smart Filters -->
+          <div class="filter-group">
+            <label>Особливості</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="tagSeaView">
+                <span class="checkbox-custom"></span>
+                🌊 Панорамний вид на море
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="tagFurnished">
+                <span class="checkbox-custom"></span>
+                🛋️ Повністю мебльовано
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="tagNewBuilding">
+                <span class="checkbox-custom"></span>
+                🏗️ Нова будівля (2024-2025)
+              </label>
+            </div>
+          </div>
+
+          <!-- Sorting -->
+          <div class="filter-group">
+            <label>Сортування</label>
+            <select id="sortSelect">
+              <option value="newest">Сначала нові</option>
+              <option value="cheapest">Дешевші спочатку</option>
+              <option value="expensive">Дорожчі спочатку</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="drawer-footer">
+          <button id="resetFiltersBtn" class="btn btn-secondary">Очистити</button>
+          <button id="applyFiltersBtn" class="btn btn-primary">Зберегти</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide-in Property Detail Modal -->
+    <div id="detailModal" class="modal hidden">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header-actions">
+          <button id="backToCatalogBtn" class="modal-back-btn">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Назад
+          </button>
+          <button id="modalFavBtn" class="icon-btn fav-btn">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="detail-gallery">
+            <img id="detailImage" src="" alt="Property Image">
+            <div class="detail-category-badge" id="detailCategory">Sale</div>
+          </div>
+          
+          <div class="detail-info">
+            <div class="detail-meta-top">
+              <h1 id="detailTitle">Title</h1>
+              <div class="detail-price" id="detailPrice">0 €</div>
+            </div>
+
+            <div class="detail-location">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <span id="detailLocText">Location</span>
+            </div>
+
+            <div class="detail-chips">
+              <div class="detail-chip">
+                <span class="chip-icon">📏</span>
+                <span id="detailArea">0 m2</span>
+              </div>
+              <div class="detail-chip">
+                <span class="chip-icon">🛏</span>
+                <span id="detailBedrooms">0</span> кімн.
+              </div>
+            </div>
+
+            <div class="detail-divider"></div>
+
+            <div class="detail-section">
+              <h3>Опис об'єкта</h3>
+              <p id="detailDescription">Description text...</p>
+            </div>
+
+            <div class="detail-divider"></div>
+
+            <div class="detail-agent-card">
+              <div class="agent-avatar">🏢</div>
+              <div class="agent-info">
+                <div class="agent-title">Агент нерухомості</div>
+                <div class="agent-name" id="detailAgentName">Agent Name</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="inquiryBtn" class="btn btn-primary btn-block">🚀 Надіслати запит менеджеру</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden">Повідомлення відправлено!</div>
+  </div>
+
+  <!-- App Javascript -->
+  <script src="index.js"></script>
+</body>
+</html>

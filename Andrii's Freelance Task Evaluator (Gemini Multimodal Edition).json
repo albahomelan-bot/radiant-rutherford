@@ -1,0 +1,296 @@
+{
+  "name": "Andrii's Freelance Task Evaluator (Gemini Multimodal Edition)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "e9eb1ea9-78e4-44a1-937c-483067b33662",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        64
+      ],
+      "webhookId": "857153dd-bfb4-4a1a-a57f-39ae39dc536d",
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fallbackOutput": 1
+      },
+      "id": "8e42755c-5d03-46ac-a002-b72a82199c39",
+      "name": "Is Screenshot?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        512,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $node[\"Telegram Trigger\"].json.message.photo.slice(-1)[0].file_id }}",
+        "additionalFields": {}
+      },
+      "id": "20fb6845-fafe-4ffa-ba75-11e3a45d80bc",
+      "name": "Download Screenshot",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        688,
+        -48
+      ],
+      "webhookId": "651278c6-fe36-4066-a265-1c890cb9f4da",
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Extract all readable text from this screenshot of a job request. Return ONLY the raw text of the job description. Do not add any chat, prefix, or metadata."
+      },
+      "id": "727eadc8-549d-4ef1-bada-51db5cab2525",
+      "name": "Gemini Vision OCR",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        848,
+        -128
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "id": "c7a5cc18-f52d-404a-97cb-c9c88ded6065",
+      "name": "Gemini Model (OCR)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        912,
+        112
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9f227487-7aac-427f-9b05-34484de4d7a1",
+      "name": "Set Photo Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1184,
+        -144
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "892946f9-a7ad-49a3-9e52-fb92318cce68",
+      "name": "Set Raw Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.jobText }}"
+      },
+      "id": "35288ae5-4209-4fd4-9da7-c51b26a5fbad",
+      "name": "Gemini Evaluator Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1232,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "gemini-1.5-flash",
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "id": "9db8e8bd-cb58-45c3-b8c2-8f9a651bc640",
+      "name": "Gemini Model (Eval)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Telegram Trigger\"].json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "f4f2d45e-70fb-4722-8b21-642f41e06abe",
+      "name": "Send Assessment",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        64
+      ],
+      "webhookId": "a95a476e-ac63-4b19-b549-123337a123d4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Is Screenshot?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Screenshot?": {
+      "main": [
+        [
+          {
+            "node": "Set Raw Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download Screenshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Screenshot": {
+      "main": [
+        [
+          {
+            "node": "Gemini Vision OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Vision OCR": {
+      "main": [
+        [
+          {
+            "node": "Set Photo Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Photo Text": {
+      "main": [
+        [
+          {
+            "node": "Gemini Evaluator Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Raw Text": {
+      "main": [
+        [
+          {
+            "node": "Gemini Evaluator Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Evaluator Chain": {
+      "main": [
+        [
+          {
+            "node": "Send Assessment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (OCR)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Gemini Vision OCR",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (Eval)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Gemini Evaluator Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "cd74fbce-432d-4a9d-91a8-aae48ceb1b94",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
+  },
+  "nodeGroups": [],
+  "id": "xsH4teAwpi5mnicu",
+  "tags": []
+}

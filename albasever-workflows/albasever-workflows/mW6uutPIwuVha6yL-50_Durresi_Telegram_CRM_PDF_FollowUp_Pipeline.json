@@ -1,0 +1,132 @@
+{
+  "name": "50 Durresi Telegram-CRM-PDF-FollowUp-Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "telegram-inbound",
+        "options": {}
+      },
+      "id": "f8cb0864-6ab7-4f0d-933e-db5077e15390",
+      "name": "n8n Webhook (Telegram)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        -16
+      ],
+      "webhookId": "c3a31581-bcf8-4e08-85df-86fba3ad2020"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.message.text }}",
+              "value2": "/start_order"
+            }
+          ]
+        }
+      },
+      "id": "8e647280-a1d9-460f-952c-827524d58048",
+      "name": "Бизнес-логика (Ветвление)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": "Заказы",
+        "options": {}
+      },
+      "id": "ff48cef2-f95b-4c45-b740-4d50d27b8bee",
+      "name": "CRM / Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        32,
+        -176
+      ]
+    },
+    {
+      "parameters": {
+        "html": "<h1>Коммерческое предложение для {{ $json.body.message.from.first_name }}</h1><p>Спасибо за ваш запрос! Номер вашего заказа сохранен в системе.</p>"
+      },
+      "id": "e26c3ba2-0275-4ee4-901c-477d19f14959",
+      "name": "Генерация PDF",
+      "type": "n8n-nodes-base.htmlToPdf",
+      "typeVersion": 1,
+      "position": [
+        32,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "sales@company.com",
+        "toEmail": "customer@example.com",
+        "subject": "Ваше коммерческое предложение",
+        "html": "Здравствуйте! Во вложении ваше КП.",
+        "attachments": "data"
+      },
+      "id": "dca0574f-4081-4507-8ba7-11f35ee90ef4",
+      "name": "Email / SMS уведомление",
+      "type": "n8n-nodes-base.email",
+      "typeVersion": 1,
+      "position": [
+        272,
+        -16
+      ],
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "amount": 24
+      },
+      "id": "9b2eae43-9bd5-4137-a1d6-c7709005abcf",
+      "name": "Ожидание (Follow-up)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        272,
+        192
+      ],
+      "webhookId": "02c400f6-66f5-41d5-adc3-547942f8a5ff"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.body.message.from.id }}",
+        "text": "Здравствуйте! Вчера мы отправляли вам предложение. Удалось ли ознакомиться?",
+        "additionalFields": {}
+      },
+      "id": "a203ed1b-a108-47da-b948-72f8215e7893",
+      "name": "Напоминание в Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        496,
+        192
+      ],
+      "webhookId": "ff0ca552-67ac-442f-abc2-a6c9f4a5df48"
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": null
+}

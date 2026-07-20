@@ -1,0 +1,710 @@
+{
+  "name": "Threads Repacker & Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": "daily",
+          "hour": 9
+        },
+        "options": {
+          "timezone": "Europe/Kiev"
+        }
+      },
+      "id": "048dc681-0edb-44c9-9579-cc0aea955503",
+      "name": "Schedule Trigger (Local)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        -192
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": "daily",
+          "hour": 9
+        },
+        "options": {
+          "timezone": "America/New_York"
+        }
+      },
+      "id": "0196bc07-0bf9-4b6a-a94b-2e0117150a09",
+      "name": "Schedule Trigger (Western)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let sourceLanguage = 'en';\nlet url = 'https://www.reddit.com/r/saas/hot.rss';\n\ntry {\n  if ($node['Schedule Trigger (Local)']) {\n    sourceLanguage = 'local';\n    url = 'https://dou.ua/feed/';\n  }\n} catch (e) {\n}\n\nreturn [{\n  json: {\n    url: url,\n    sourceLanguage: sourceLanguage\n  }\n}];"
+      },
+      "id": "d1f50866-6e8e-4684-8fe3-a9354530a850",
+      "name": "Determine Feed URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fd19f9dd-93fa-4578-b2ea-b019c370273b",
+      "name": "Read RSS Feed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1328,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a9ddd9c1-ff89-4711-829e-55803d611d92",
+      "name": "Parse XML",
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const xmlData = $input.first().json;\nlet items = [];\n\nif (xmlData.rss && xmlData.rss.channel && xmlData.rss.channel.item) {\n  items = Array.isArray(xmlData.rss.channel.item) ? xmlData.rss.channel.item : [xmlData.rss.channel.item];\n} else if (xmlData.feed && xmlData.feed.entry) {\n  items = Array.isArray(xmlData.feed.entry) ? xmlData.feed.entry : [xmlData.feed.entry];\n}\n\nif (!items.length) {\n  return [{\n    json: {\n      title: 'Нет новых постов',\n      content: 'Не удалось распарсить RSS/Atom ленту.',\n      sourceLanguage: 'en'\n    }\n  }];\n}\n\nconst limit = Math.min(items.length, 5);\nconst randomIndex = Math.floor(Math.random() * limit);\nconst selectedItem = items[randomIndex];\n\nlet title = '';\nif (typeof selectedItem.title === 'string') {\n  title = selectedItem.title;\n} else if (selectedItem.title && selectedItem.title._value) {\n  title = selectedItem.title._value;\n} else if (selectedItem.title && selectedItem.title.$) {\n  title = selectedItem.title.$;\n}\n\nlet rawContent = '';\nconst contentSource = selectedItem.content || selectedItem.summary || selectedItem.description || '';\nif (typeof contentSource === 'string') {\n  rawContent = contentSource;\n} else if (contentSource._value) {\n  rawContent = contentSource._value;\n} else if (contentSource.$) {\n  rawContent = contentSource.$;\n}\n\nlet cleanContent = rawContent.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\n\nif (cleanContent.includes('submitted by')) {\n  cleanContent = cleanContent.split('submitted by')[0].trim();\n}\n\nconst sourceLanguage = $('Determine Feed URL').item.json.sourceLanguage;\n\nreturn [{\n  json: {\n    title: title || 'Без заголовка',\n    content: cleanContent || 'Без содержимого',\n    sourceLanguage: sourceLanguage\n  }\n}];"
+      },
+      "id": "0afd51fd-e2b9-4748-b968-9fd81de241d6",
+      "name": "Clean and Filter Post",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1728,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Repack this post:\nTitle: {{ $json.title }}\nContent: {{ $json.content }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an AI SMM Copywriting Assistant for Andrii Yatsechko (57 years old, former military serviceman, n8n Automation Specialist & AI Integrator).\n\nHere is Andrii's Professional Profile:\n- Core Skills: advanced n8n (Switch, If, JS Code, HTTP Requests, API integrations, Webhooks), OpenAI APIs (Whisper, GPTs, Dall-E), OpenRouter, LangChain concept, Telegram Bot API, Google Sheets API, OneDrive API, Instagram/Threads API (Late API/Zernio).\n- Key strengths: Military discipline, precision, high responsibility, strict testing, focus on actual data/numbers instead of fluff.\n\nYour task is to perform a Content Repack:\n1. Analyze the input viral post (structure, hook, thesis, and delivery mechanism).\n2. Repackage the content: change the original niche to 'n8n automation, AI integrations, or workflow development'.\n3. Apply Andrii's Profile: use his voice, experience, and terminology.\n4. Output format: Write in Ukrainian (or Russian if input is local and in Russian). Do not use corporate clichés like 'innovative', 'unparalleled', 'individual approach'. Write like a straight-talking, experienced tech specialist. Keep it under 500 characters so it fits a single Threads post.\n\nInput post to repack:\nTitle: {{ $json.title }}\nContent: {{ $json.content }}"
+            }
+          ]
+        }
+      },
+      "id": "88ef8db7-4a05-41aa-b8bc-26ba60f75095",
+      "name": "Gemini Repacker Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1952,
+        -112
+      ],
+      "settings": {
+        "executionErrorPolicy": "ignore"
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "af8aa5df-1383-422f-958f-07c53c726bcc",
+      "name": "Gemini Model (Shared)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1890,
+        60
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ !!$json.error || !$json.text }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "eaacf5f0-5cac-47a0-af0c-8145eccbcfe7",
+      "name": "Is Gemini Error?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2272,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Repack this post:\nTitle: {{ $node[\"Clean and Filter Post\"].json.title }}\nContent: {{ $node[\"Clean and Filter Post\"].json.content }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an AI SMM Copywriting Assistant for Andrii Yatsechko (57 years old, former military serviceman, n8n Automation Specialist & AI Integrator).\n\nHere is Andrii's Professional Profile:\n- Core Skills: advanced n8n (Switch, If, JS Code, HTTP Requests, API integrations, Webhooks), OpenAI APIs (Whisper, GPTs, Dall-E), OpenRouter, LangChain concept, Telegram Bot API, Google Sheets API, OneDrive API, Instagram/Threads API (Late API/Zernio).\n- Key strengths: Military discipline, precision, high responsibility, strict testing, focus on actual data/numbers instead of fluff.\n\nYour task is to perform a Content Repack:\n1. Analyze the input viral post (structure, hook, thesis, and delivery mechanism).\n2. Repackage the content: change the original niche to 'n8n automation, AI integrations, or workflow development'.\n3. Apply Andrii's Profile: use his voice, experience, and terminology.\n4. Output format: Write in Ukrainian (or Russian if input is local and in Russian). Do not use corporate clichés like 'innovative', 'unparalleled', 'individual approach'. Write like a straight-talking, experienced tech specialist. Keep it under 500 characters so it fits a single Threads post.\n\nInput post to repack:\nTitle: {{ $node[\"Clean and Filter Post\"].json.title }}\nContent: {{ $node[\"Clean and Filter Post\"].json.content }}"
+            }
+          ]
+        }
+      },
+      "id": "b82e3b11-c70f-4eec-9ede-9020f589e3b0",
+      "name": "OpenAI Fallback Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        2416,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "637754e6-ddc4-4b55-95c6-1cc3371901c8",
+      "name": "OpenAI Model (Shared)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2336,
+        180
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4XBA6U2hCe2dPkmn",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "7431843172",
+        "text": "=📋 **Новый реальный репак готов к проверке!**\n\n**Оригинал:** {{ $node[\"Clean and Filter Post\"].json.title }}\n**Язык источника:** {{ $node[\"Clean and Filter Post\"].json.sourceLanguage }}\n\n**Текст:**\n{{ $json.text }}\n\n*Выберите действие:*",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "replyMarkup": {
+            "inline_keyboard": {
+              "rows": [
+                {
+                  "row": {
+                    "buttons": [
+                      {
+                        "text": "✅ Опубликовать в канал",
+                        "additionalFields": {
+                          "callback_data": "approve"
+                        }
+                      },
+                      {
+                        "text": "🔄 Перегенерировать",
+                        "additionalFields": {
+                          "callback_data": "regenerate"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "id": "a92d5e99-7017-4f73-bca9-4a632eab68f1",
+      "name": "Send Telegram Approval",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3024,
+        -144
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Freelance Klients"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "id": "250a49b6-cd17-4152-894d-a4ac82127982",
+      "name": "Telegram Callback Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        240
+      ],
+      "webhookId": "9b12fe0a-dcb3-488b-a320-cd0cfab2cd0b",
+      "credentials": {
+        "telegramApi": {
+          "id": "8AMKgzqxhuWOdSwc",
+          "name": "Threads Repacker & Generator"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.callback_query.data }}",
+              "value2": "approve"
+            }
+          ]
+        }
+      },
+      "id": "74eda177-b4d5-4aab-9c2f-b65b752f1565",
+      "name": "Check Callback Action",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const cb = $input.first().json.callback_query;\nconst text = cb.message.text || '';\n\nlet actualPost = text;\nif (text.includes('**Текст:**')) {\n  actualPost = text.split('**Текст:**')[1];\n}\nif (actualPost.includes('*Выберите действие:*')) {\n  actualPost = actualPost.split('*Выберите действие:*')[0];\n}\nactualPost = actualPost.trim();\n\nreturn [{\n  json: {\n    text: actualPost,\n    chatId: cb.message.chat.id,\n    messageId: cb.message.message_id,\n    callbackQueryId: cb.id\n  }\n}];"
+      },
+      "id": "1361c1c0-1795-45a9-8615-4ba33d2acec7",
+      "name": "Extract Approved Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg",
+          "mode": "list",
+          "cachedResultName": "n8n_instagram_uploader",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1561149607,
+          "mode": "list",
+          "cachedResultName": "test 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg/edit#gid=1561149607"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ new Date().toISOString() }}",
+            "OriginalTitle": "Одобрено из Telegram",
+            "RepackedContent": "={{ $json.text }}",
+            "Status": "Approved"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "OriginalTitle",
+              "displayName": "OriginalTitle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "RepackedContent",
+              "displayName": "RepackedContent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "fa53de3e-60e9-4b01-94f2-661ce83990b0",
+      "name": "Write Approved to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1552,
+        192
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "-1001234567890",
+        "text": "={{ $node[\"Extract Approved Text\"].json.text }}",
+        "additionalFields": {}
+      },
+      "id": "50f031bd-6d41-457e-94db-39c2d1b41faa",
+      "name": "Post to Channel",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        192
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Freelance Klients"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "editMessageText",
+        "chatId": "={{ $node[\"Extract Approved Text\"].json.chatId }}",
+        "messageId": "={{ $node[\"Extract Approved Text\"].json.messageId }}",
+        "text": "=✅ **Опубликовано!**\n\nПост записан в Google Sheets и отправлен на ваш канал.\n\n**Текст:**\n{{ $node[\"Extract Approved Text\"].json.text }}",
+        "additionalFields": {}
+      },
+      "id": "e6c9a09e-4f35-49c9-bb24-35306c69acd7",
+      "name": "Confirm Approval in Bot",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1952,
+        192
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "8AMKgzqxhuWOdSwc",
+          "name": "Threads Repacker & Generator"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "editMessageText",
+        "chatId": "={{ $json.callback_query.message.chat.id }}",
+        "messageId": "={{ $json.callback_query.message.message_id }}",
+        "text": "🔄 **Запущена генерация нового варианта...**",
+        "additionalFields": {}
+      },
+      "id": "3907e2ef-ae05-46e8-856f-1632a9dca923",
+      "name": "Confirm Regeneration",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1360,
+        336
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "8AMKgzqxhuWOdSwc",
+          "name": "Threads Repacker & Generator"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "manual-trigger-repacker",
+      "name": "When clicking 'Test workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        928,
+        -350
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger (Local)": {
+      "main": [
+        [
+          {
+            "node": "Determine Feed URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger (Western)": {
+      "main": [
+        [
+          {
+            "node": "Determine Feed URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Determine Feed URL": {
+      "main": [
+        [
+          {
+            "node": "Read RSS Feed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read RSS Feed": {
+      "main": [
+        [
+          {
+            "node": "Parse XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse XML": {
+      "main": [
+        [
+          {
+            "node": "Clean and Filter Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean and Filter Post": {
+      "main": [
+        [
+          {
+            "node": "Gemini Repacker Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (Shared)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Gemini Repacker Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Repacker Chain": {
+      "main": [
+        [
+          {
+            "node": "Is Gemini Error?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Gemini Error?": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Fallback Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Telegram Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Model (Shared)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "OpenAI Fallback Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Fallback Chain": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Callback Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Callback Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Callback Action": {
+      "main": [
+        [
+          {
+            "node": "Extract Approved Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Confirm Regeneration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Approved Text": {
+      "main": [
+        [
+          {
+            "node": "Write Approved to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Approved to Sheets": {
+      "main": [
+        [
+          {
+            "node": "Post to Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Channel": {
+      "main": [
+        [
+          {
+            "node": "Confirm Approval in Bot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm Regeneration": {
+      "main": [
+        [
+          {
+            "node": "Determine Feed URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Test workflow'": {
+      "main": [
+        [
+          {
+            "node": "Determine Feed URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "xsH4teAwpi5mnicu",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "2d2376a1-abc5-40b2-ba97-7477bb04b361",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
+  },
+  "nodeGroups": [],
+  "id": "FRVqessXepxg97Z2",
+  "tags": []
+}

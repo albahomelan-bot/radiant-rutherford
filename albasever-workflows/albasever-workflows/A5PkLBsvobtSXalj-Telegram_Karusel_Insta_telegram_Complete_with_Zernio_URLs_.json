@@ -1,0 +1,552 @@
+{
+  "name": "Telegram Karusel Insta + telegram (Complete with Zernio URLs)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "2061ecbf-d662-4628-80be-6470d821c3d6",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1648,
+        272
+      ],
+      "webhookId": "9e982d4a-96a3-4f8f-85c8-5a70099d34b7",
+      "credentials": {
+        "telegramApi": {
+          "id": "zTvGl6r8PeICEUcP",
+          "name": "karuselebot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg",
+          "mode": "list",
+          "cachedResultName": "n8n_instagram_uploader",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Аркуш1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg/edit#gid=0"
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "1. `media_group_id` (текст)",
+              "fieldValue": "={{ $node[\"Parse Media Data1\"].json.media_group_id }}"
+            },
+            {
+              "fieldId": "2. `media_id` (текст)",
+              "fieldValue": "={{ $node[\"Parse Media Data1\"].json.message_id }}"
+            },
+            {
+              "fieldId": "3. media_url",
+              "fieldValue": "={{ $json.files[0].url }}"
+            },
+            {
+              "fieldId": "4. `caption` (текст)",
+              "fieldValue": "={{ $node[\"Parse Media Data1\"].json.caption }}"
+            },
+            {
+              "fieldId": "5. `timestamp` (дата/время)",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e931b044-b41f-4840-9a0d-179df6ca9d85",
+      "name": "Buffer Slide to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        -304,
+        368
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [],
+          "boolean": [
+            {
+              "value1": "={{ !!$node[\"Parse Media Data1\"].json.caption }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "8c7323ff-b7be-429d-b693-7db7c9688911",
+      "name": "Has Caption?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg",
+          "mode": "list",
+          "cachedResultName": "n8n_instagram_uploader.md",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Аркуш1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "1. `media_group_id` (текст)",
+              "lookupValue": "={{ $node[\"Parse Media Data1\"].json.media_group_id }}"
+            }
+          ]
+        },
+        "options": {
+          "returnAllMatches": "returnAllMatches"
+        }
+      },
+      "id": "5c5262a5-7785-4e12-985a-b3fbc405b9fe",
+      "name": "Get Album Slides",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        368,
+        368
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// 1. Умный поиск колонки ID для сортировки (ищем ключ, содержащий \"id\", но не \"group\" и не \"url\")\nconst idKey = Object.keys(items[0]?.json || {}).find(k => k.toLowerCase().includes('id') && !k.toLowerCase().includes('group') && !k.toLowerCase().includes('url')) || 'media_id';\n\n// Сортируем\nitems.sort((a, b) => Number(a.json[idKey] || 0) - Number(b.json[idKey] || 0));\n\n// 2. Умный поиск колонки с URL картинки (ищем ключ, содержащий \"url\")\nconst mediaItems = items.map(item => {\n  const urlKey = Object.keys(item.json).find(k => k.toLowerCase().includes('url'));\n  return {\n    type: \"image\",\n    url: urlKey ? item.json[urlKey] : \"\"\n  };\n});\n\n// 3. Умный поиск текста описания (caption)\nconst firstItem = items.find(item => {\n  const capKey = Object.keys(item.json).find(k => k.toLowerCase().includes('caption'));\n  return capKey && item.json[capKey] && item.json[capKey].toString().trim().length > 0;\n}) || items[0];\n\nconst capKey = Object.keys(firstItem.json).find(k => k.toLowerCase().includes('caption')) || 'caption';\nconst groupKey = Object.keys(firstItem.json).find(k => k.toLowerCase().includes('group')) || 'media_group_id';\n\nreturn [{\n  json: {\n    media_group_id: firstItem.json[groupKey],\n    caption: firstItem.json[capKey] || \"\",\n    mediaItems: mediaItems\n  }\n}];"
+      },
+      "id": "3903b6e9-a5f9-45e7-a259-ddfe98ee3df2",
+      "name": "Aggregate Slides",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg",
+          "mode": "list",
+          "cachedResultName": "n8n_instagram_uploader",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Аркуш1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ahm2I7kdMPhEzn2bypKFweTA5dVIsZrnFvtYcjGkICg/edit#gid=0"
+        },
+        "numberToDelete": 100
+      },
+      "id": "4e24a5bd-214e-4891-bd6f-48064ef0930f",
+      "name": "Clear Buffer Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        272
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $input.item.json.message;\nconst photo = msg.photo;\n\nreturn {\n  media_group_id: msg.media_group_id || \"\",\n  message_id: msg.message_id || 0,\n  caption: msg.caption || \"\",\n  file_id: photo ? photo[photo.length - 1].file_id : \"\"\n};"
+      },
+      "id": "c6a378db-2fb4-4d42-9688-9f30c719ea8f",
+      "name": "Parse Media Data1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1424,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "8fef66d3-ffba-4d63-9797-eac9a59055d4",
+      "name": "Download File1",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [
+        -1200,
+        272
+      ],
+      "webhookId": "e1712577-cbb5-4b53-846c-9da620c3464f",
+      "credentials": {
+        "telegramApi": {
+          "id": "zTvGl6r8PeICEUcP",
+          "name": "karuselebot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $node[\"Parse Media Data1\"].json.media_group_id }}",
+        "rules": {
+          "rules": [
+            {},
+            {
+              "operation": "notEqual",
+              "output": 1
+            }
+          ]
+        }
+      },
+      "id": "f535da3c-b027-4a26-bf08-e4d5656324cc",
+      "name": "Is Album?1",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -752,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zernio.com/api/v1/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "content",
+              "value": "={{ $node[\"Parse Media Data1\"].json.caption }}"
+            },
+            {
+              "name": "publishNow",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7c883af0-f62e-4fa8-89ef-97b6f20cffda",
+      "name": "Zernio Post Single1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -528,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-late.late",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        272
+      ],
+      "id": "1a8d32ff-dd50-4b4d-99c7-1b1d52bb0e89",
+      "name": "Upload media",
+      "credentials": {
+        "lateApi": {
+          "id": "yirxAC0mgpyumUCN",
+          "name": "Zernio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "=7431843172",
+        "text": "=Вже є в Instagram, карусель опублікована! 🎉\nНик: {{ $json.post.platforms[0].accountId.username }}\nПлатформа: {{ $json.post.platforms[0].platform }}\n\nТекст поста:\n{{ $json.post.content }}\n",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1040,
+        464
+      ],
+      "id": "8029b50e-e69b-43eb-accd-5bd96fea0fbc",
+      "name": "Send a text message",
+      "webhookId": "9d83622a-4192-45aa-983b-04780403ed20",
+      "credentials": {
+        "telegramApi": {
+          "id": "zTvGl6r8PeICEUcP",
+          "name": "karuselebot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zernio.com/api/v1/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk_a995ed58e0078cd2ef2e4b89fad0cbbd4fd31f00d279485fd9a4be5b0c42ff65"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"content\": $json.caption, \"publishNow\": true, \"platforms\": [ { \"platform\": \"instagram\", \"accountId\": \"6a3a9f835f7d1751ab61b5f8\" } ], \"mediaItems\": $json.mediaItems } }}",
+        "options": {}
+      },
+      "id": "91b185f3-cbbb-48ca-8eb1-491ecb9382f1",
+      "name": "Zernio Post Carousel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        816,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "amount": "={{ ($node[\"Parse Media Data1\"].json.message_id % 8) * 2 }}",
+        "unit": "seconds"
+      },
+      "id": "70c1c59e-a7f6-4826-a4a7-fd0457a27793",
+      "name": "Wait chess poriadok",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        368
+      ],
+      "webhookId": "20756eaf-48a2-472b-b436-f8ea0d4d1b9a"
+    },
+    {
+      "parameters": {
+        "amount": 25,
+        "unit": "seconds"
+      },
+      "id": "f4ef481d-b22a-4a12-92a6-4f38b9e4dd45",
+      "name": "Wait 25 Seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        144,
+        368
+      ],
+      "webhookId": "20756eaf-48a2-472b-b436-f8ea0d4d1b9a"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Media Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buffer Slide to Sheets": {
+      "main": [
+        [
+          {
+            "node": "Has Caption?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Caption?": {
+      "main": [
+        [
+          {
+            "node": "Wait 25 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Album Slides": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Slides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Slides": {
+      "main": [
+        [
+          {
+            "node": "Zernio Post Carousel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Media Data1": {
+      "main": [
+        [
+          {
+            "node": "Download File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File1": {
+      "main": [
+        [
+          {
+            "node": "Upload media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Album?1": {
+      "main": [
+        [
+          {
+            "node": "Zernio Post Single1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait chess poriadok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload media": {
+      "main": [
+        [
+          {
+            "node": "Is Album?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zernio Post Carousel": {
+      "main": [
+        [
+          {
+            "node": "Clear Buffer Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear Buffer Sheets": {
+      "main": [
+        []
+      ]
+    },
+    "Wait chess poriadok": {
+      "main": [
+        [
+          {
+            "node": "Buffer Slide to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 25 Seconds": {
+      "main": [
+        [
+          {
+            "node": "Get Album Slides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

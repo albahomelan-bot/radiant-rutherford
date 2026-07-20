@@ -1,0 +1,1490 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1040,
+        432
+      ],
+      "id": "a3c096a9-a750-4436-bfc7-71df31f056b9",
+      "name": "Telegram Trigger",
+      "webhookId": "ec4fe0bd-b481-4d7d-b90e-f8747b3805f7"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "45debffd-b513-468c-92c3-ed48d9a7e4ad",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "rightValue": 276845386,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "cf6dc364-e9c7-4bf8-b586-fa8b9efa8dd7",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "rightValue": -1002247067662,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -848,
+        432
+      ],
+      "id": "ddcbb0b0-5a61-408d-bb48-41f8d6015887",
+      "name": "Є доступ"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "У вас немає доступу",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -576,
+        608
+      ],
+      "id": "114c2cec-56ef-4180-bec4-1baf8c2c335c",
+      "name": "Заборонено",
+      "webhookId": "70d22967-62c4-4136-9a11-44d19b4bfb7f"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Все <u>працює</u>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "cfe659b0-6899-4882-95c0-acea8d840c3a",
+      "name": "Start",
+      "webhookId": "70d22967-62c4-4136-9a11-44d19b4bfb7f"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Готово. Пам'ять очищено",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        352,
+        144
+      ],
+      "id": "472f4177-b8f9-4c67-b1be-bc7345cbd60f",
+      "name": "Clear result",
+      "webhookId": "70d22967-62c4-4136-9a11-44d19b4bfb7f"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1232,
+        368
+      ],
+      "id": "6a7146f3-baea-4e16-ad76-51f7ab51f983",
+      "name": "Answer",
+      "webhookId": "70d22967-62c4-4136-9a11-44d19b4bfb7f"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    },
+                    "id": "56a1eada-9069-4c29-8fc6-4bb70b6fa460"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "start"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1583585e-fbf5-4a6b-a190-fa46a0be5f2f",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text.toLowerCase() }}",
+                    "rightValue": "/clear",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "clear"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d1a4ab1a-f290-494e-bef4-ffb5b4d8bbf6",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "/",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notStartsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Custom Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2b72f405-3881-4262-a91d-d26720c4c331",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "/add",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "add"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -592,
+        256
+      ],
+      "id": "efad54d8-7de5-4da9-9d8c-7ea5d07aee09",
+      "name": "Команди бота"
+    },
+    {
+      "parameters": {
+        "model": "deepseek/deepseek-chat-v3.1:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1824,
+        1360
+      ],
+      "id": "27740d73-b4d7-4894-80d9-eb0a29bcc27f",
+      "name": "DeepSeek"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5",
+          "mode": "list",
+          "cachedResultName": "gpt-5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        832,
+        864
+      ],
+      "id": "93a019b4-9535-4886-b703-8339d32c68b2",
+      "name": "OpenAI"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        288,
+        608
+      ],
+      "id": "1e3ab6e5-fcf7-476f-8864-9139c35a7ef5",
+      "name": "Typing...",
+      "webhookId": "d44f6440-73cb-461f-b9c8-ec46e2e2f3f5"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "uk"
+        }
+      },
+      "id": "076d3f6e-3251-4776-a179-f1707ca10658",
+      "name": "Speech to Text",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        240,
+        848
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Telegram Trigger').item.json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "b7d79f1e-ab8a-43db-84d2-4ce04b961c1a",
+      "name": "Get Voice File",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        64,
+        848
+      ],
+      "typeVersion": 1.1,
+      "webhookId": "87b93191-0b75-443d-bf8c-50f5202ab1c7"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2c45efd2-c648-473d-b594-cbcaf8dd5c33",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.voice }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        608
+      ],
+      "id": "4de77afc-9c08-4ed4-bf48-fff8fb676e3d",
+      "name": "Voice"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1fabbdaf-0eb8-4d0a-af52-b1ca3d231ccb",
+              "name": "text",
+              "value": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        608
+      ],
+      "id": "5708d4d1-16f4-450b-89ec-7a43a772c494",
+      "name": "Set mess text"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1fabbdaf-0eb8-4d0a-af52-b1ca3d231ccb",
+              "name": "text",
+              "value": "={{ $('Speech to Text').item.json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        848
+      ],
+      "id": "40e48ae5-5e64-454f-8b51-9fde97c70c40",
+      "name": "Set voice text"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "action": "upload_audio"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        848
+      ],
+      "id": "5050dc90-073e-4ada-9ae0-4ed9033aece2",
+      "name": "Donwloading...",
+      "webhookId": "8b207e07-a04d-42ee-9993-a49c621849f3"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        848
+      ],
+      "id": "53e144cc-53f2-4e65-88a6-a1d6aad5a426",
+      "name": "Writing...",
+      "webhookId": "2014fd79-8e1e-415d-9077-506d7f92457e"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=Роль: ти — копірайтер світового рівня\nЗадача: напиши пост для телеграм каналу\nКонтекст: на тему яка в повідомленні користувача\nФормат: простою мовою, короткими абзацами по 1-3 простих речення, без форматування, з кількома емодзі та - замість —"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        848,
+        608
+      ],
+      "id": "ec9d0bfd-c850-4343-a788-1c7921c222ca",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        880
+      ],
+      "id": "54abc296-3b21-480a-a130-93d523a99095",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "=-1002247067662",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1232,
+        736
+      ],
+      "id": "78c4b54c-3f05-4ef8-b6e3-30a6c20ccff2",
+      "name": "Post",
+      "webhookId": "70d22967-62c4-4136-9a11-44d19b4bfb7f"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        320
+      ],
+      "id": "8fba2799-0747-4579-8097-122c496c9f13",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "mode": "delete",
+        "deleteMode": "all"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        160
+      ],
+      "id": "b7097092-6351-4c8e-912c-b24dd19b6933",
+      "name": "Chat Memory Manager"
+    },
+    {
+      "parameters": {
+        "chatId": "-1002247067662",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1680,
+        1344
+      ],
+      "id": "c52accc4-f278-497b-b1fc-4942d22241fe",
+      "name": "Publish post to channel",
+      "webhookId": "35260cd8-f59e-4d97-a2de-fc2cb4ca26cc"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1C-xpqGgXg7pGqBIATGmCHFFMpEhCY5A5WvRqGQAr7Dc",
+          "mode": "list",
+          "cachedResultName": "Контент календар (мій)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1C-xpqGgXg7pGqBIATGmCHFFMpEhCY5A5WvRqGQAr7Dc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Аркуш1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1C-xpqGgXg7pGqBIATGmCHFFMpEhCY5A5WvRqGQAr7Dc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Дата": "={{ $json.cols[1] }}",
+            "Тема": "={{ $json.cols[2] }}",
+            "Опис": "={{ $json.cols[3] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Дата",
+              "displayName": "Дата",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Тема",
+              "displayName": "Тема",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Опис",
+              "displayName": "Опис",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        384
+      ],
+      "id": "39f33a0b-a762-4ef1-a1bd-a72cb0921607",
+      "name": "Append row in sheet"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Рядок додано",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        384
+      ],
+      "id": "69784dae-8a21-45a1-9879-af4b36570f32",
+      "name": "Done ",
+      "webhookId": "70d22967-62c4-4136-9a11-44d19b4bfb7f"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6dc1ba6f-4bd6-4912-add4-3341d4cf3084",
+              "name": "cols",
+              "value": "={{ $json.message.text.split('\\n') }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -288,
+        448
+      ],
+      "id": "b3ae3594-871c-4c91-8c76-709768f33d11",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1C-xpqGgXg7pGqBIATGmCHFFMpEhCY5A5WvRqGQAr7Dc",
+          "mode": "list",
+          "cachedResultName": "Контент календар (мій)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1C-xpqGgXg7pGqBIATGmCHFFMpEhCY5A5WvRqGQAr7Dc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Аркуш1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1C-xpqGgXg7pGqBIATGmCHFFMpEhCY5A5WvRqGQAr7Dc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Дата": "={{ $now.setLocale('uk-UA').setZone('Europe/Kyiv').format('dd MMMM yyyy HH:mm') }}",
+            "Тема": "={{ $('Extractor').item.json.output.topic }}",
+            "Опис": "={{ $('Extractor').item.json.output.desc }}",
+            "Посилання": "=https://t.me/c/2247067662/{{ $('Post').item.json.result.message_id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Дата",
+              "displayName": "Дата",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Тема",
+              "displayName": "Тема",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Опис",
+              "displayName": "Опис",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Посилання",
+              "displayName": "Посилання",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1808,
+        736
+      ],
+      "id": "ced50b97-3889-4e4f-bc87-984fb2cbd988",
+      "name": "Add item to calendar"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        928
+      ],
+      "id": "293d5cf2-f1d2-4068-9420-d8fc5e0b937b",
+      "name": "OpenAI mini"
+    },
+    {
+      "parameters": {
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "topic",
+              "description": "main topic of the post in one sentence",
+              "required": true
+            },
+            {
+              "name": "desc",
+              "description": "short description with main content goal and CTA"
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the social media post.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value.\nUse the source language for new fields"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        736
+      ],
+      "id": "cbb39607-6e34-4c13-a1a4-5db6264562b0",
+      "name": "Extractor"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Пост опубліковано\nПосилання: https://t.me/c/2247067662/{{ $('Post').item.json.result.message_id }}\n\nТема: {{ $('Extractor').item.json.output.topic }}\n\nОпис:\n<blockquote expandable>{{ $('Extractor').item.json.output.desc }}</blockquote>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2080,
+        736
+      ],
+      "id": "72ba9fb0-2b74-49fe-9a28-6bdf7b75313b",
+      "name": "Summary",
+      "webhookId": "70d22967-62c4-4136-9a11-44d19b4bfb7f"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1632,
+        560
+      ],
+      "id": "97348828-6325-4f84-84bb-d85b9c29e798",
+      "name": "OpenAI Model"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $('Image Agent').item.json.output }}",
+        "options": {
+          "size": "1024x1024"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2352,
+        368
+      ],
+      "id": "18602a06-a0bc-4778-979c-0f9c608efdc9",
+      "name": "Sora"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2576,
+        320
+      ],
+      "id": "31a4c094-1dc3-4649-a991-254c808d485b",
+      "name": "Send a photo message",
+      "webhookId": "49729249-18aa-4bfd-a767-e74dec6963b9"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2160,
+        368
+      ],
+      "id": "03bd78f1-0270-42f8-8fd8-94846609084f",
+      "name": "Preparing...",
+      "webhookId": "8b207e07-a04d-42ee-9993-a49c621849f3"
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        368
+      ],
+      "id": "1e4864bc-5e20-49e0-ac8e-2628b10050ea",
+      "name": "Generating...",
+      "webhookId": "8b207e07-a04d-42ee-9993-a49c621849f3"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=А тепер підготуємо ілюстрацію... \n<pre><code>{{ $('Image Agent').item.json.output }}</code></pre>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1952,
+        368
+      ],
+      "id": "2d09dc8b-b2a7-41ba-9697-8cbf7ccdc6d1",
+      "name": "Image Prompt",
+      "webhookId": "50b4a501-78f5-415e-bd7c-f00f5c0d6c28",
+      "alwaysOutputData": false,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "options": {
+          "systemMessage": "You are a image generation prompt engineer. \n\nUse the last user message text (AI post) for generate prompt for digital illustration with flat style. \n\nFinal prompt must be short, laconic and simple: just some person in suitable decorations\n\nReturn only task result without any comments. Prompt language: English"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1632,
+        368
+      ],
+      "id": "c7c31590-d734-47a2-b7be-9ddb2d27260e",
+      "name": "Image Agent"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload_photos",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('AI Agent').item.json.output }}"
+            },
+            {
+              "name": "platform[]",
+              "value": "instagram"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "photos[]",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "user",
+              "value": "oleksandr_ceo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4571b792-efda-41ae-94cc-0db5b82dd002",
+      "name": "Upload Video and Description to Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2576,
+        736
+      ],
+      "notesInFlow": true,
+      "typeVersion": 4.2,
+      "notes": "Generate in upload-post.com the token and add to the credentials in the header-> Authorization: Apikey (token here)"
+    },
+    {
+      "parameters": {
+        "url": "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2656,
+        1632
+      ],
+      "id": "ec68433d-1acc-4ce3-a764-deb0be073313",
+      "name": "HTTP Request1",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "50fea4bf-49c3-4fbf-96c8-8a4b133ba660",
+              "leftValue": "={{ $json.cc }}",
+              "rightValue": "USD",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        2880,
+        1632
+      ],
+      "id": "83a84ec4-3110-48f6-aac4-9140163cc475",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "042529be-8de3-47c9-baa0-ce5aa77c7534",
+              "name": "rate",
+              "value": "={{ 100*$json.rate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3072,
+        1632
+      ],
+      "id": "4899346f-b90a-440c-94da-00bcfd21ac95",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        2656,
+        1424
+      ],
+      "id": "229b4e9e-1af5-4b45-ba26-78a81d157320",
+      "name": "Webhook",
+      "webhookId": "dfbde7de-abd3-47d6-ab3f-6ce87bc1bee8"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"ok\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2928,
+        1424
+      ],
+      "id": "8dd4231d-9605-4f54-b8d6-bb7c5f48c81b",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "user": "oleksandr_ceo",
+        "platform": [
+          "instagram"
+        ],
+        "title": "={{ $('AI Agent').item.json.output }}",
+        "photos": "data"
+      },
+      "type": "n8n-nodes-upload-post.uploadPost",
+      "typeVersion": 1,
+      "position": [
+        2576,
+        544
+      ],
+      "id": "858232ce-cc89-4fbd-9f42-e6664c2bfea8",
+      "name": "Upload Post",
+      "credentials": {}
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Є доступ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Є доступ": {
+      "main": [
+        [
+          {
+            "node": "Команди бота",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Заборонено",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Команди бота": {
+      "main": [
+        [
+          {
+            "node": "Start",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Chat Memory Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Voice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typing...": {
+      "main": [
+        [
+          {
+            "node": "Set mess text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Speech to Text": {
+      "main": [
+        [
+          {
+            "node": "Writing...",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Voice File": {
+      "main": [
+        [
+          {
+            "node": "Speech to Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice": {
+      "main": [
+        [
+          {
+            "node": "Donwloading...",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Typing...",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Donwloading...": {
+      "main": [
+        [
+          {
+            "node": "Get Voice File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Writing...": {
+      "main": [
+        [
+          {
+            "node": "Set voice text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set mess text": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set voice text": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chat Memory Manager",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Memory Manager": {
+      "main": [
+        [
+          {
+            "node": "Clear result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer": {
+      "main": [
+        [
+          {
+            "node": "Generating...",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Done ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add item to calendar": {
+      "main": [
+        [
+          {
+            "node": "Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post": {
+      "main": [
+        [
+          {
+            "node": "Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extractor": {
+      "main": [
+        [
+          {
+            "node": "Add item to calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Image Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sora": {
+      "main": [
+        [
+          {
+            "node": "Send a photo message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparing...": {
+      "main": [
+        [
+          {
+            "node": "Sora",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generating...": {
+      "main": [
+        [
+          {
+            "node": "Image Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Prompt": {
+      "main": [
+        [
+          {
+            "node": "Preparing...",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Agent": {
+      "main": [
+        [
+          {
+            "node": "Image Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": null
+}

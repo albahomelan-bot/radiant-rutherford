@@ -1,0 +1,298 @@
+{
+  "name": "AI Food Diary & Calorie Tracker Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -280,
+        240
+      ],
+      "webhookId": "tg-food-diary-webhook",
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-diary-creds",
+          "name": "Telegram Diary Bot Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": "={{ $json.message.photo ? $json.message.photo[$json.message.photo.length - 1].file_id : \"\" }}",
+        "options": {}
+      },
+      "id": "telegram-download",
+      "name": "Download Food Photo",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -60,
+        240
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-diary-creds",
+          "name": "Telegram Diary Bot Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Изучи отправленное изображение еды и следующее описание от пользователя Андрея:\n\"{{ $('Telegram Trigger').item.json.message.caption || 'Без описания' }}\"\n\nРассчитай энергетическую ценность этой порции.\n\nВерни ответ СТРОГО в формате JSON со следующими полями (и больше ничего не пиши, никаких ```json, только чистый JSON):\n{\n  \"dishName\": \"Название блюда на русском языке (кратко)\",\n  \"calories\": 120, // Калории в ккал (целое число)\n  \"proteins\": 15.5, // Белки в граммах (число)\n  \"fats\": 8.2, // Жиры в граммах (число)\n  \"carbs\": 12.0, // Углеводы в граммах (число)\n  \"comment\": \"Короткий дружелюбный комментарий-анализ состава (1-2 предложения, например о балансе БЖУ или совете добавить зелени)\"\n}",
+        "systemMessage": "Ты — профессиональный ИИ-диетолог. Твоя задача — анализировать фотографии блюд и текстовые комментарии пользователя, рассчитывать калорийность и БЖВ (белки, жиры, углеводы) и выдавать результат строго в формате JSON без какого-либо лишнего текста.",
+        "options": {
+          "binaryData": true
+        }
+      },
+      "id": "ai-food-analyzer",
+      "name": "AI Food Analyzer",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        160,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "gemini-2.0-flash",
+        "options": {}
+      },
+      "id": "gemini-model-diary",
+      "name": "Gemini Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        200,
+        400
+      ],
+      "credentials": {
+        "googleGeminiApi": {
+          "id": "your-gemini-cred-id",
+          "name": "Google Gemini API Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $('AI Food Analyzer').first().json.text;\n\n// Очищаем markdown-разметку, если ШИ ее вернул\nconst cleanText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();\nconst data = JSON.parse(cleanText);\n\n// Текущее время в правильном часовом поясе\nconst dateStr = $now.setZone('Europe/Belgrade').toFormat('dd.MM.yyyy HH:mm');\n\nreturn {\n  date: dateStr,\n  dishName: data.dishName,\n  description: $('Telegram Trigger').item.json.message.caption || 'Без описания',\n  calories: data.calories,\n  proteins: data.proteins,\n  fats: data.fats,\n  carbs: data.carbs,\n  comment: data.comment\n};"
+      },
+      "id": "parse-ai-output",
+      "name": "Parse AI Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        380,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "your-google-sheet-id-here",
+          "mode": "list",
+          "cachedResultName": "Дневник питания AI"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Лист1",
+          "mode": "list",
+          "cachedResultName": "Лист1"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Дата": "={{ $json.date }}",
+            "Страва": "={{ $json.dishName }}",
+            "Опис інгредієнтів": "={{ $json.description }}",
+            "Калорії (ккал)": "={{ $json.calories }}",
+            "Білки (г)": "={{ $json.proteins }}",
+            "Жири (г)": "={{ $json.fats }}",
+            "Вуглеводи (г)": "={{ $json.carbs }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Дата",
+              "displayName": "Дата",
+              "required": false,
+              "default": "",
+              "type": "string",
+              "display": true
+            },
+            {
+              "id": "Страва",
+              "displayName": "Страва",
+              "required": false,
+              "default": "",
+              "type": "string",
+              "display": true
+            },
+            {
+              "id": "Опис інгредієнтів",
+              "displayName": "Опис інгредієнтів",
+              "required": false,
+              "default": "",
+              "type": "string",
+              "display": true
+            },
+            {
+              "id": "Калорії (ккал)",
+              "displayName": "Калорії (ккал)",
+              "required": false,
+              "default": "",
+              "type": "string",
+              "display": true
+            },
+            {
+              "id": "Білки (г)",
+              "displayName": "Білки (г)",
+              "required": false,
+              "default": "",
+              "type": "string",
+              "display": true
+            },
+            {
+              "id": "Жири (г)",
+              "displayName": "Жири (г)",
+              "required": false,
+              "default": "",
+              "type": "string",
+              "display": true
+            },
+            {
+              "id": "Вуглеводи (г)",
+              "displayName": "Вуглеводи (г)",
+              "required": false,
+              "default": "",
+              "type": "string",
+              "display": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "log-to-sheets",
+      "name": "Log to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        580,
+        240
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "your-google-sheets-cred-id",
+          "name": "Google Sheets Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=<b>🍽 Смачного, Андрію!</b>\n\nТвою страву пораховано та успішно записано до таблиці:\n\n🔹 <b>Страва:</b> {{ $json.dishName }}\n🔥 <b>Калорійність:</b> {{ $json.calories }} ккал\n\n🔹 <b>БЖВ (Білки/Жири/Вуглеводи):</b>\n• 🥩 <b>Білки:</b> {{ $json.proteins }} г\n• 🥑 <b>Жири:</b> {{ $json.fats }} г\n• 🌾 <b>Вуглеводи:</b> {{ $json.carbs }} г\n\n💡 <b>Аналіз від AI:</b> <i>{{ $json.comment }}</i>",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "telegram-response",
+      "name": "Send Telegram Feedback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        780,
+        240
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-diary-creds",
+          "name": "Telegram Diary Bot Credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download Food Photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Food Photo": {
+      "main": [
+        [
+          {
+            "node": "AI Food Analyzer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Food Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Parse AI Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Output": {
+      "main": [
+        [
+          {
+            "node": "Log to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log to Sheets": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Food Analyzer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

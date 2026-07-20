@@ -1,0 +1,419 @@
+{
+  "name": "Telegram Karusel Insta + telegram (Complete with Zernio URLs & JSON Body)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $input.item.json.message;\nconst photo = msg.photo;\n\nreturn {\n  media_group_id: msg.media_group_id || \"\",\n  message_id: msg.message_id || 0,\n  caption: msg.caption || \"\",\n  file_id: photo ? photo[photo.length - 1].file_id : \"\"\n};"
+      },
+      "id": "parse-media-data",
+      "name": "Parse Media Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [300, 300]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "fileId": "={{ $json.file_id }}"
+      },
+      "id": "download-file",
+      "name": "Download File",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "resource": "Media",
+        "operation": "Upload",
+        "inputMode": "Binary Input",
+        "binaryProperty": "data"
+      },
+      "id": "zernio-upload-media",
+      "name": "Zernio: Upload Media",
+      "type": "zernio.zernio",
+      "typeVersion": 1,
+      "position": [700, 300],
+      "credentials": {
+        "zernioApi": {
+          "id": "YOUR_ZERNIO_CREDENTIALS_ID"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "type": "string"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $node[\"Parse Media Data\"].json.media_group_id }}",
+                    "rightValue": "",
+                    "operator": "isEmpty"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameKeys": true,
+              "outputIndex": 0
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "type": "string"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $node[\"Parse Media Data\"].json.media_group_id }}",
+                    "rightValue": "",
+                    "operator": "isNotEmpty"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "outputIndex": 1
+            }
+          ]
+        }
+      },
+      "id": "switch-album",
+      "name": "Is Album?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [920, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zernio.com/api/v1/posts",
+        "sendHeaders": true,
+        "headersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_ZERNIO_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyContentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"content\": \"={{ $node[\\\"Parse Media Data\\\"].json.caption }}\",\n  \"publishNow\": true,\n  \"mediaItems\": [\n    {\n      \"type\": \"image\",\n      \"url\": \"={{ $node[\\\"Zernio: Upload Media\\\"].json.files[0].url }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "zernio-post-single",
+      "name": "Zernio Post Single",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1150, 180]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": "YOUR_GOOGLE_SHEET_ID",
+        "sheetName": "Temp_Carousel",
+        "options": {},
+        "dataTree": {
+          "values": [
+            {
+              "column": "media_group_id",
+              "value": "={{ $node[\"Parse Media Data\"].json.media_group_id }}"
+            },
+            {
+              "column": "message_id",
+              "value": "={{ $node[\"Parse Media Data\"].json.message_id }}"
+            },
+            {
+              "column": "media_url",
+              "value": "={{ $json.files[0].url }}"
+            },
+            {
+              "column": "caption",
+              "value": "={{ $node[\"Parse Media Data\"].json.caption }}"
+            },
+            {
+              "column": "timestamp",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "id": "google-sheets-append",
+      "name": "Buffer Slide to Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [1150, 420]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "type": "string"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $node[\"Parse Media Data\"].json.caption }}",
+              "rightValue": "",
+              "operator": "isNotEmpty"
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-has-caption",
+      "name": "Has Caption?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1380, 420]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "wait-node",
+      "name": "Wait 5 Seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1600, 400]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": "YOUR_GOOGLE_SHEET_ID",
+        "sheetName": "Temp_Carousel",
+        "filters": {
+          "conditions": [
+            {
+              "key": "media_group_id",
+              "value": "={{ $node[\"Parse Media Data\"].json.media_group_id }}",
+              "operator": "equal"
+            }
+          ]
+        }
+      },
+      "id": "google-sheets-read",
+      "name": "Get Album Slides",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [1820, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n// Сортировка по id / message_id (ищем ключ, содержащий \"id\", но не \"group\" и не \"url\")\nconst idKey = Object.keys(items[0]?.json || {}).find(k => k.toLowerCase().includes('id') && !k.toLowerCase().includes('group') && !k.toLowerCase().includes('url')) || 'media_id';\nitems.sort((a, b) => Number(a.json[idKey] || 0) - Number(b.json[idKey] || 0));\n\n// Собираем массив картинок с проверкой ключа ссылки\nconst mediaItems = items.map(item => {\n  const urlKey = Object.keys(item.json).find(k => k.toLowerCase().includes('url'));\n  return {\n    type: \"image\",\n    url: urlKey ? item.json[urlKey] : \"\"\n  };\n});\n\n// Поиск caption\nconst firstItem = items.find(item => {\n  const capKey = Object.keys(item.json).find(k => k.toLowerCase().includes('caption'));\n  return capKey && item.json[capKey] && item.json[capKey].toString().trim().length > 0;\n}) || items[0];\n\nconst capKey = Object.keys(firstItem.json).find(k => k.toLowerCase().includes('caption')) || 'caption';\nconst groupKey = Object.keys(firstItem.json).find(k => k.toLowerCase().includes('group')) || 'media_group_id';\n\nreturn [{\n  json: {\n    media_group_id: firstItem.json[groupKey],\n    caption: firstItem.json[capKey] || \"\",\n    mediaItems: mediaItems\n  }\n}];"
+      },
+      "id": "code-aggregate",
+      "name": "Aggregate Slides",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2040, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zernio.com/api/v1/posts",
+        "sendHeaders": true,
+        "headersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_ZERNIO_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyContentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"content\": \"={{ $json.caption }}\",\n  \"publishNow\": true,\n  \"mediaItems\": ={{ $json.mediaItems }}\n}",
+        "options": {}
+      },
+      "id": "zernio-post-carousel",
+      "name": "Zernio Post Carousel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [2260, 400]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": "YOUR_GOOGLE_SHEET_ID",
+        "sheetName": "Temp_Carousel",
+        "filters": {
+          "conditions": [
+            {
+              "key": "media_group_id",
+              "value": "={{ $node[\"Parse Media Data\"].json.media_group_id }}",
+              "operator": "equal"
+            }
+          ]
+        }
+      },
+      "id": "google-sheets-delete",
+      "name": "Clear Buffer Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [2480, 400]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Media Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Media Data": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Zernio: Upload Media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zernio: Upload Media": {
+      "main": [
+        [
+          {
+            "node": "Is Album?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Album?": {
+      "main": [
+        [
+          {
+            "node": "Zernio Post Single",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buffer Slide to Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buffer Slide to Sheets": {
+      "main": [
+        [
+          {
+            "node": "Has Caption?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Caption?": {
+      "main": [
+        [
+          {
+            "node": "Wait 5 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 Seconds": {
+      "main": [
+        [
+          {
+            "node": "Get Album Slides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Album Slides": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Slides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Slides": {
+      "main": [
+        [
+          {
+            "node": "Zernio Post Carousel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zernio Post Carousel": {
+      "main": [
+        [
+          {
+            "node": "Clear Buffer Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

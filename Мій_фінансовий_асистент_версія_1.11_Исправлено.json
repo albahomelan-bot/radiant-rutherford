@@ -1,0 +1,907 @@
+{
+  "name": "Мій фінансовий асистент версія 1.11 (Исправлено)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "id": "fac62a1d-e287-47ef-82bb-24badf60a4e0",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        288
+      ],
+      "webhookId": "967b2560-51e2-4532-9db1-0310ff1695a1",
+      "credentials": {
+        "telegramApi": {
+          "id": "qZBuPcKLta8Rab31",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ Object.keys($json.message).join(',') }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "16d24a4a-6acb-43cb-a3da-8448bd3dac41"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "68e55b4a-8fa9-4307-a0ee-3a835f09e026",
+                    "leftValue": "={{ Object.keys($json.message).join(',') }}",
+                    "rightValue": "voice",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "41630879-9cf9-4064-a1c5-44ce616cb4bf",
+                    "leftValue": "={{ Object.keys($json.message).join(',') }}",
+                    "rightValue": "document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "7fc7d851-dde5-4c52-a964-fd5a9281e378",
+                    "leftValue": "={{ Object.keys($json.message).join(',') }}",
+                    "rightValue": "photo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Foto"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "416866ea-7489-4945-a49e-3f2349a71916",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Ти — професійний фінансовий асистент та експерт із структурування даних. Проаналізуй вхідні дані про покупки (розпізнаний текст, транскрибація голосу або звіт Google Pay) і перетвори їх на масив об'єктів для бази даних.\n\nМОВИ ВВОДУ: вхідні дані можуть бути українською, російською АБО албанською мовою (наприклад, спілкування з місцевими продавцями чи кур'єрами в Албанії). Розумій усі три мови.\n\nВАЛЮТА: основна валюта вводу — албанський лек (Lek / ALL). Всі грошові поля (price_per_unit, total_lek) вказуй ТІЛЬКИ в леках. НЕ конвертуй у гривні чи євро — конвертацію робить система автоматично за актуальним курсом.\n\nПРАВИЛА ОБРОБКИ:\n1. Виправлення помилок: якщо користувач заплутався в цифрах і виправив себе (наприклад \"взяв 2 кг... ой, ні, 3 кг\"), пріоритет має фінальне виправлення. Завжди перераховуй: Кількість * Ціна = Сума.\n2. Google Pay (\"сліпий звіт\"): якщо вказано лише загальну суму та перелік товарів без детальних цін (наприклад \"Google Pay 450 леків: яблука, вода, морозиво\"), логічно розподіли суму між товарами (вода найдешевша, морозиво та фрукти дорожчі) так, щоб сума всіх позицій ТОЧНО дорівнювала загальній сумі.\n3. Якщо текст набрано помилково в іншій розкладці клавіатури — переклади на українську.\n\nФОРМАТУВАННЯ:\n- Назви товарів перекладай українською мовою.\n- Обов'язково додавай відповідний емодзі на початок назви (наприклад \"🍅 Помідори\", \"💧 Вода\").\n\nСУВОРА JSON-СХЕМА (обов'язково рівно ці ключі, нічого більше):\nПоверни JSON-масив об'єктів. Кожен об'єкт МАЄ містити рівно такі ключі:\n- \"product_name\": string — назва товару з емодзі\n- \"quantity\": number — кількість або вага\n- \"price_per_unit\": number — ціна за одиницю в леках\n- \"total_lek\": number — сума за позицію в леках (quantity * price_per_unit)\n\nПриклад коректної відповіді:\n[{\"product_name\":\"🍅 Помідори\",\"quantity\":2,\"price_per_unit\":150,\"total_lek\":300},{\"product_name\":\"💧 Вода\",\"quantity\":1,\"price_per_unit\":50,\"total_lek\":50}]\n\nВиведи ТІЛЬКИ чистий JSON-масив без markdown-розмітки (без ```json), без будь-яких пояснень до чи після.",
+              "role": "model"
+            },
+            {
+              "content": "={{ $('Telegram Trigger').item.json.message.text }}"
+            }
+          ]
+        },
+        "simplify": false,
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "a9179cca-1b81-4ed0-8427-d874f274b10e",
+      "name": "Message a model TXT",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        0
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Усі гілки зійшлись. Пропускаємо елементи далі.\nreturn $input.all();"
+      },
+      "id": "17c1e5f0-15f8-43c6-b44d-9fbd007e81b6",
+      "name": "Merge Branches",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        256
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Витягуємо ID голосового файлу з повідомлення Telegram\nconst msg = $('Telegram Trigger').item.json.message;\nconst fileId = msg && msg.voice ? msg.voice.file_id : null;\nreturn { json: { voice_file_id: fileId } };"
+      },
+      "id": "56c8f92b-a7bf-4c4b-a9cd-1a2af35e1f4b",
+      "name": "voice",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.voice_file_id }}",
+        "additionalFields": {}
+      },
+      "id": "9bd92278-e126-4743-acbe-4fb218d72a95",
+      "name": "Get a file voice",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        0
+      ],
+      "webhookId": "0e6d1776-ce16-48e3-a3f9-01ca7501f55f",
+      "alwaysOutputData": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "qZBuPcKLta8Rab31",
+          "name": "Telegram account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "ef09a061-e92b-4f5d-9700-16dafb7e5448",
+      "name": "Transcribe a recording",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        896,
+        192
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "4XBA6U2hCe2dPkmn",
+          "name": "OpenAI account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Ти — професійний фінансовий асистент та експерт із структурування даних. Проаналізуй вхідні дані про покупки (розпізнаний текст, транскрибація голосу або звіт Google Pay) і перетвори їх на масив об'єктів для бази даних.\n\nМОВИ ВВОДУ: вхідні дані можуть бути українською, російською АБО албанською мовою (наприклад, спілкування з місцевими продавцями чи кур'єрами в Албанії). Розумій усі три мови.\n\nВАЛЮТА: основна валюта вводу — албанський лек (Lek / ALL). Всі грошові поля (price_per_unit, total_lek) вказуй ТІЛЬКИ в леках. НЕ конвертуй у гривні чи євро — конвертацію робить система автоматично за актуальним курсом.\n\nПРАВИЛА ОБРОБКИ:\n1. Виправлення помилок: якщо користувач заплутався в цифрах і виправив себе (наприклад \"взяв 2 кг... ой, ні, 3 кг\"), пріоритет має фінальне виправлення. Завжди перераховуй: Кількість * Ціна = Сума.\n2. Google Pay (\"сліпий звіт\"): якщо вказано лише загальну суму та перелік товарів без детальних цін (наприклад \"Google Pay 450 леків: яблука, вода, морозиво\"), логічно розподіли суму між товарами (вода найдешевша, морозиво та фрукти дорожчі) так, щоб сума всіх позицій ТОЧНО дорівнювала загальній сумі.\n3. Якщо текст набрано помилково в іншій розкладці клавіатури — переклади на українську.\n\nФОРМАТУВАННЯ:\n- Назви товарів перекладай українською мовою.\n- Обов'язково додавай відповідний емодзі на початок назви (наприклад \"🍅 Помідори\", \"💧 Вода\").\n\nСУВОРА JSON-СХЕМА (обов'язково рівно ці ключі, нічого більше):\nПоверни JSON-масив об'єктів. Кожен об'єкт МАЄ містити рівно такі ключі:\n- \"product_name\": string — назва товарів з емодзі\n- \"quantity\": number — кількість або вага\n- \"price_per_unit\": number — ціна за одиницю в леках\n- \"total_lek\": number — сума за позицію в леках (quantity * price_per_unit)\n\nПриклад коректної відповіді:\n[{\"product_name\":\"🍅 Помідори\",\"quantity\":2,\"price_per_unit\":150,\"total_lek\":300},{\"product_name\":\"💧 Вода\",\"quantity\":1,\"price_per_unit\":50,\"total_lek\":50}]\n\nВиведи ТІЛЬКИ чистий JSON-масив без markdown-розмітки (без ```json), без будь-яких пояснень до чи після.",
+              "role": "model"
+            },
+            {
+              "content": "={{ $json.text }}"
+            }
+          ]
+        },
+        "simplify": false,
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "bda25df0-a8a6-4640-828b-5b90dc4a8f2c",
+      "name": "Message a model Voice",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        192
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $('Telegram Trigger').item.json.message;\nconst fileId = msg && msg.document ? msg.document.file_id : null;\nconst fileName = msg && msg.document ? msg.document.file_name : 'document.pdf';\nreturn { json: { pdf_file_id: fileId, file_name: fileName } };"
+      },
+      "id": "205bce18-a07f-4009-bd20-e7601ae82ef0",
+      "name": "Get PDF ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.pdf_file_id }}",
+        "additionalFields": {}
+      },
+      "id": "e933a444-2712-4315-a894-5aecdb2444cd",
+      "name": "Get a file PDF",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        528
+      ],
+      "webhookId": "0ae34a7d-8d5b-4c46-b963-591927c22a61",
+      "alwaysOutputData": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "qZBuPcKLta8Rab31",
+          "name": "Telegram account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "id": "cbf9aa41-273a-4fbd-9bd2-294e11db385a",
+      "name": "Extract from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Ти — професійний фінансовий асистент та експерт із структурування даних. Проаналізуй вхідні дані про покупки (розпізнаний текст, транскрибація голосу або звіт Google Pay) і перетвори їх на масив об'єктів для бази даних.\n\nМОВИ ВВОДУ: вхідні дані можуть бути українською, російською АБО албанською мовою (наприклад, спілкування з місцевими продавцями чи кур'єрами в Албанії). Розумій усі три мови.\n\nВАЛЮТА: основна валюта вводу — албанський лек (Lek / ALL). Всі грошові поля (price_per_unit, total_lek) вказуй ТІЛЬКИ в леках. НЕ конвертуй у гривні чи євро — конвертацію робить система автоматично за актуальним курсом.\n\nПРАВИЛА ОБРОБКИ:\n1. Виправлення помилок: якщо користувач заплутався в цифрах і виправив себе (наприклад \"взяв 2 кг... ой, ні, 3 кг\"), пріоритет має фінальне виправлення. Завжди перераховуй: Кількість * Ціна = Сума.\n2. Google Pay (\"сліпий звіт\"): якщо вказано лише загальну суму та перелік товарів без детальних цін (наприклад \"Google Pay 450 леків: яблука, вода, морозиво\"), логічно розподіли суму між товарами (вода найдешевша, морозиво та фрукти дорожчі) так, щоб сума всіх позицій ТОЧНО дорівнювала загальній сумі.\n3. Якщо текст набрано помилково в іншій розкладці клавіатури — переклади на українську.\n\nФОРМАТУВАННЯ:\n- Назви товарів перекладай українською мовою.\n- Обов'язково додавай відповідний емодзі на початок назви (наприклад \"🍅 Помідори\", \"💧 Вода\").\n\nСУВОРА JSON-СХЕМА (обов'язково рівно ці ключі, нічого більше):\nПоверни JSON-масив об'єктів. Кожен об'єкт МАЄ містити рівно такі ключі:\n- \"product_name\": string — назва товару з емодзі\n- \"quantity\": number — кількість або вага\n- \"price_per_unit\": number — ціна за одиницю в леках\n- \"total_lek\": number — сума за позицію в леках (quantity * price_per_unit)\n\nПриклад коректної відповіді:\n[{\"product_name\":\"🍅 Помідори\",\"quantity\":2,\"price_per_unit\":150,\"total_lek\":300},{\"product_name\":\"💧 Вода\",\"quantity\":1,\"price_per_unit\":50,\"total_lek\":50}]\n\nВиведи ТІЛЬКИ чистий JSON-масив без markdown-розмітки (без ```json), без будь-яких пояснень до чи після.",
+              "role": "model"
+            },
+            {
+              "content": "={{ $json.text }}"
+            }
+          ]
+        },
+        "simplify": false,
+        "jsonOutput": true,
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "748a4393-2a63-4ebd-962a-b949f0f67713",
+      "name": "Message a model PDF",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        384
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "Ти — професійний фінансовий асистент та експерт з розпізнавання чеків. Розпізнай прикріплений чек з албанського магазину і перетвори позиції на масив об'єктів для бази даних.\n\nВАЛЮТА: чек в албанських леках (ALL). Всі грошові поля вказуй ТІЛЬКИ в леках. НЕ конвертуй у гривні чи євро — це робить система автоматично за актуальним курсом.\n\nФОРМАТУВАННЯ:\n- Назви товарів перекладай українською мовою.\n- Додавай відповідний емодзі на початок назви (наприклад \"🍅 Помідори\", \"💧 Вода\").\n\nСУВОРА JSON-СХЕМА (обов'язково рівно ці ключі, нічого більше):\nПоверни JSON-масив об'єктів. Кожен об'єкт МАЄ містити рівно такі ключі:\n- \"product_name\": string — назва товару з емодзі\n- \"quantity\": number — кількість або вага\n- \"price_per_unit\": number — ціна за одиницю в леках\n- \"total_lek\": number — сума за позицію в леках\n\nПриклад коректної відповіді:\n[{\"product_name\":\"🍅 Помідори\",\"quantity\":2,\"price_per_unit\":150,\"total_lek\":300}]\n\nВиведи ТІЛЬКИ чистий JSON-масив без markdown-розмітки (без ```json), без будь-яких пояснень.",
+        "inputType": "binary",
+        "simplify": false,
+        "options": {}
+      },
+      "id": "37110807-3e4e-47cb-979a-cd7059f5fa6c",
+      "name": "Analyze an image",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1184,
+        576
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://open.er-api.com/v6/latest/ALL",
+        "options": {}
+      },
+      "id": "4551ca09-ef8c-426d-a632-afbabc795ac0",
+      "name": "Get Rates",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1696,
+        288
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- Unified handler for all branches (Text / Voice / PDF / Photo) ----\n// Live currency rates come from the Get Rates node (this node's direct input).\nconst rates = ($input.item.json.rates) || {};\nconst rateUah = Number(rates.UAH) || 0.55;      // UAH per 1 ALL (fallback)\nconst rateEur = Number(rates.EUR) || (1 / 94);  // EUR per 1 ALL (fallback)\n\n// Detect source type from the original Telegram message\nconst msg = ($('Telegram Trigger').item.json.message) || {};\nlet sourceType = 'Text / Google Pay';\nif (msg.voice) sourceType = 'Voice';\nelse if (msg.document) sourceType = 'Чек (PDF)';\nelse if (msg.photo) sourceType = 'Фото-чек';\n\n// Raw AI text comes from the merged Gemini output\nconst inp = ($('Merge Branches').item.json) || {};\nlet rawText = '';\nif (inp.candidates && inp.candidates[0] && inp.candidates[0].content && inp.candidates[0].content.parts && inp.candidates[0].content.parts[0] && typeof inp.candidates[0].content.parts[0].text === 'string') {\n  rawText = inp.candidates[0].content.parts[0].text;\n} else if (typeof inp.text === 'string') {\n  rawText = inp.text;\n} else if (typeof inp.content === 'string') {\n  rawText = inp.content;\n} else {\n  rawText = JSON.stringify(inp);\n}\nrawText = String(rawText).replace(/```json/gi, '').replace(/```/g, '').trim();\n\n// Parse JSON (with bracket-slice fallback)\nlet parsed;\ntry {\n  parsed = JSON.parse(rawText);\n} catch (e) {\n  const s = rawText.indexOf('[');\n  const en = rawText.lastIndexOf(']');\n  if (s !== -1 && en !== -1 && en > s) {\n    parsed = JSON.parse(rawText.substring(s, en + 1));\n  } else {\n    throw new Error('Не вдалося розпарсити JSON від ШІ. Сирий текст: ' + rawText);\n  }\n}\n\n// Normalise to array with flexible key fallbacks\nlet arr = Array.isArray(parsed)\n  ? parsed\n  : (parsed.items || parsed.products || parsed.goods || parsed['товары'] || parsed['покупки'] || [parsed]);\nif (!Array.isArray(arr) || arr.length === 0) {\n  throw new Error('Масив товарів порожній! Структура: ' + JSON.stringify(parsed));\n}\n\nconst nowStr = $now.format('dd-MM-yyyy HH:mm');\n\nreturn arr.map(it => {\n  const name = it.product_name || it.product || it.name || it['товар'] || 'Невідомий товар';\n  const qty = parseFloat(it.quantity) || parseFloat(it.amount) || parseFloat(it['кількість']) || 1;\n  const price = parseFloat(it.price_per_unit) || parseFloat(it.price) || parseFloat(it.unit_price) || 0;\n  const totalLek = parseFloat(it.total_lek) || parseFloat(it.total) || parseFloat(it.total_all) || (qty * price);\n  return {\n    json: {\n      date: nowStr,\n      source_type: sourceType,\n      product_name: name,\n      quantity: qty,\n      price_per_unit: price,\n      total_lek: totalLek,\n      total_uah: parseFloat((totalLek * rateUah).toFixed(2)),\n      total_eur: parseFloat((totalLek * rateEur).toFixed(2)),\n    },\n  };\n});"
+      },
+      "id": "8a390271-beb4-4220-83b6-24a5d135c2e4",
+      "name": "Розбір та конвертація",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1LD-DsVcLoZkUsZ8gcqoy1psL74y2p1XKnklFc2OY4x0",
+          "mode": "list",
+          "cachedResultName": "AlbaDurresBotPay",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LD-DsVcLoZkUsZ8gcqoy1psL74y2p1XKnklFc2OY4x0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Аркуш1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LD-DsVcLoZkUsZ8gcqoy1psL74y2p1XKnklFc2OY4x0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Дата": "={{ $json.date }}",
+            "Товар": "={{ $json.product_name }}",
+            "Кількість": "={{ $json.quantity }}",
+            "Ціна за од. (Lek)": "={{ $json.price_per_unit }}",
+            "Сума (Lek)": "={{ $json.total_lek }}",
+            "Сума (UAH)": "={{ $json.total_uah }}",
+            "Сума (EUR)": "={{ $json.total_eur }}",
+            "Джерело": "={{ $json.source_type }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Дата",
+              "displayName": "Дата",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Джерело",
+              "displayName": "Джерело",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Товар",
+              "displayName": "Товар",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Кількість",
+              "displayName": "Кількість",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ціна за од. (Lek)",
+              "displayName": "Ціна за од. (Lek)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Сума (Lek)",
+              "displayName": "Сума (Lek)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Сума (UAH)",
+              "displayName": "Сума (UAH)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Сума (EUR)",
+              "displayName": "Сума (EUR)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "03f005e1-9b7b-4cf3-a699-1803738e07cf",
+      "name": "Append row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2144,
+        288
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=✅ Додано до таблиці: {{ $('Розбір та конвертація').all().length }} позицій\n💰 Разом: {{ $('Розбір та конвертація').all().reduce((s, i) => s + Number(i.json.total_lek || 0), 0) }} Lek\n🇺🇦 ≈ {{ $('Розбір та конвертація').all().reduce((s, i) => s + Number(i.json.total_uah || 0), 0).toFixed(2) }} UAH\n🇪🇺 ≈ {{ $('Розбір та конвертація').all().reduce((s, i) => s + Number(i.json.total_eur || 0), 0).toFixed(2) }} EUR\n🧾 Джерело: {{ $('Розбір та конвертація').first().json.source_type }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "ca081cb3-dbcb-4356-bc58-eb1a056e1006",
+      "name": "Done",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2368,
+        288
+      ],
+      "webhookId": "4ade7ad3-acac-43ff-9162-435af2bd3056",
+      "executeOnce": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "qZBuPcKLta8Rab31",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "a2b8ac70-d2cd-450a-8a63-52985deca4b8",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "=7431843172",
+        "text": "=🔥 Мени дуже прикро але:\n🔥 Все пропало у \"Мій фінансовий асистент\"\n🤏 Node :{{ $json.execution.lastNodeExecuted }}\n‼️ Error : {{ $json.execution.error.message }}\n🥸 WorkFlow :{{ $json.workflow.name }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "3e042b3c-a1db-4179-881b-79a10522dced",
+      "name": "Send a text message1",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        -16
+      ],
+      "webhookId": "79c0eef4-a429-48c3-a5cc-f01311aa28bc",
+      "credentials": {
+        "telegramApi": {
+          "id": "qZBuPcKLta8Rab31",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 708278375,
+          "message": {
+            "message_id": 256,
+            "from": {
+              "id": 7431843172,
+              "is_bot": false,
+              "first_name": "Andrii Alba. 🐾 🥠",
+              "last_name": "Хтось Ка",
+              "username": "albaRoyalQ",
+              "language_code": "ru",
+              "is_premium": true
+            },
+            "chat": {
+              "id": 7431843172,
+              "first_name": "Andrii Alba. 🐾 🥠",
+              "last_name": "Хтось Ка",
+              "username": "albaRoyalQ",
+              "type": "private"
+            },
+            "date": 1784220961,
+            "text": "квартира 250 евро"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Message a model TXT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "voice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get PDF ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model TXT": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Branches": {
+      "main": [
+        [
+          {
+            "node": "Get Rates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "voice": {
+      "main": [
+        [
+          {
+            "node": "Get a file voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file voice": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Message a model Voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model Voice": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get PDF ID": {
+      "main": [
+        [
+          {
+            "node": "Get a file PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file PDF": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Message a model PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model PDF": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Rates": {
+      "main": [
+        [
+          {
+            "node": "Розбір та конвертація",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Розбір та конвертація": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Done",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "80IWwKWUlVCL8TF9",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "5df67bdf-48c6-4f28-84a8-69cea694c361",
+  "meta": {
+    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
+  },
+  "nodeGroups": [],
+  "id": "80IWwKWUlVCL8TF9",
+  "tags": [
+    {
+      "name": "бот",
+      "id": "9dpCs3ktqDCCufZe",
+      "updatedAt": "2026-07-16T05:44:01.542Z",
+      "createdAt": "2026-07-16T05:44:01.542Z"
+    },
+    {
+      "name": "фынанси",
+      "id": "NNgRrNRnb3GEXYiy",
+      "updatedAt": "2026-07-16T05:44:06.945Z",
+      "createdAt": "2026-07-16T05:44:06.945Z"
+    },
+    {
+      "name": "асист",
+      "id": "fYElvP6QclFEBLvH",
+      "updatedAt": "2026-07-16T05:43:58.736Z",
+      "createdAt": "2026-07-16T05:43:58.736Z"
+    }
+  ]
+}

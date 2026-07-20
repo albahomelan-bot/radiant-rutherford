@@ -1,0 +1,618 @@
+{
+  "name": "download Word to text",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "Label_8420718128641712412"
+          ]
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "903e86e8-9817-4414-b91a-7748d04fafe0",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -48,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gmail кладе ВСІ вкладення в ОДИН елемент (item) під бінарними ключами\n// attachment_0, attachment_1, attachment_2 ...\n// Тут ми розкладаємо їх на ОКРЕМІ items — по одному файлу в кожному,\n// щоб далі Switch міг обробити кожен файл незалежно.\n// Режим \"Run Once for All Items\" — бо тільки він дозволяє повернути\n// БІЛЬШЕ елементів, ніж прийшло на вхід (1 лист -> N файлів).\nconst results = [];\nfor (const item of $input.all()) {\n  const binary = item.binary || {};\n  for (const key of Object.keys(binary)) {\n    const file = binary[key];\n    const fileName = file.fileName || \"\";\n    let ext = file.fileExtension || \"\";\n    if (!ext && fileName.includes(\".\")) ext = fileName.split(\".\").pop();\n    ext = String(ext).toLowerCase();\n    results.push({\n      json: { fileName, fileExtension: ext, mimeType: file.mimeType || \"\", sourceProperty: key },\n      binary: { data: file },\n    });\n  }\n}\nreturn results;"
+      },
+      "id": "f5c278e2-70e1-4b15-a289-8838865b6a71",
+      "name": "Split Attachments",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fileExtension }}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "552d2627-1454-403c-a8fd-848144344b24"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fileExtension }}",
+                    "rightValue": "docx",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "72050259-1dae-4aae-b6bf-beecc99fa441"
+                  },
+                  {
+                    "leftValue": "={{ $json.fileExtension }}",
+                    "rightValue": "doc",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f07164ba-6a21-4832-9089-a435e7212fa5"
+                  }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "DOCX"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.fileExtension }}",
+                    "rightValue": "jpg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "7e374c1a-756b-46f2-bfae-fa1ce77bc863"
+                  },
+                  {
+                    "leftValue": "={{ $json.fileExtension }}",
+                    "rightValue": "jpeg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9ac9c747-0609-400a-866d-6f1eaca6b427"
+                  },
+                  {
+                    "leftValue": "={{ $json.fileExtension }}",
+                    "rightValue": "png",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2b4a6741-418c-460b-b748-a749e011e5f1"
+                  }
+                ],
+                "combinator": "or"
+              },
+              "renameOutput": true,
+              "outputKey": "Image"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "id": "daa34a28-e710-4b99-a2a7-acc30d566a8d",
+      "name": "Route by File Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {
+          "joinPages": true
+        }
+      },
+      "id": "29747a2e-fd81-46c9-9fa4-02fdc29f61c8",
+      "name": "Extract PDF",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        1296,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cvtext-pdf",
+              "name": "cvText",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1707a768-407e-4a8f-a441-781a52ce73ff",
+      "name": "cvText PDF",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1504,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Усі гілки зійшлись, бо на виході кожної — ОДНАКОВЕ поле cvText.\n// Тому збірка тривіальна: нічого перетворювати не треба,\n// просто пропускаємо елементи далі.\nreturn $input.all();"
+      },
+      "id": "57d9015c-343d-40f8-98bd-eae4c9ee3d52",
+      "name": "Merge Branches",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1744,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// DOCX — це насправді ZIP-архів. Щоб нода Compression його розпакувала,\n// перейменовуємо бінарне вкладення на .zip (змінюємо лише метадані,\n// самі байти файлу не чіпаємо).\nconst item = $input.item;\nconst bin = item.binary && item.binary.data;\nif (bin) {\n  const base = (bin.fileName || \"file\").replace(/\\.[^.]+$/, \"\");\n  bin.fileName = base + \".zip\";\n  bin.fileExtension = \"zip\";\n  bin.mimeType = \"application/zip\";\n}\nreturn item;"
+      },
+      "id": "f5a06e23-e76e-4d73-9bb9-c8e5aab54ed5",
+      "name": "Rename to Zip",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        416
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5175c170-80b5-492f-902d-7714c8db8e02",
+      "name": "Decompress Docx",
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        848,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Розпакований DOCX містить багато файлів (file_0, file_1, ...).\n// Текст резюме лежить у word/document.xml — знаходимо саме його\n// і віддаємо далі як бінарне поле \"data\".\nconst item = $input.item;\nconst binary = item.binary || {};\nlet picked = null;\nfor (const key of Object.keys(binary)) {\n  const f = binary[key];\n  const name = f.fileName || \"\";\n  const isDoc = name === \"word/document.xml\" || name.endsWith(\"/document.xml\") || name === \"document.xml\";\n  if (isDoc && !name.includes(\".rels\")) { picked = f; break; }\n}\nif (!picked) throw new Error(\"document.xml не знайдено у розпакованому DOCX\");\nreturn { json: { picked: \"word/document.xml\" }, binary: { data: picked } };"
+      },
+      "id": "c1f25c09-b679-437e-8dc9-f50254928c26",
+      "name": "Pick document.xml",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "xml",
+        "options": {}
+      },
+      "id": "8f5f46d2-b45f-47fb-8c57-efa633f5165f",
+      "name": "Extract Docx XML",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        1296,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// УВАГА (для студентів): у цій версії n8n нода Extract from File (XML)\n// віддає СИРИЙ XML-РЯДОК у json.data, а не готовий обʼєкт.\n// Тому текст резюме дістаємо прямо з тегів <w:t>, а абзаци беремо з <w:p>.\nconst raw = $input.item.json.data;\nfunction stripDecode(s) {\n  return s.replace(/<[^>]+>/g, \"\")\n    .replace(/&amp;/g, \"&\").replace(/&lt;/g, \"<\").replace(/&gt;/g, \">\")\n    .replace(/&quot;/g, String.fromCharCode(34)).replace(/&apos;/g, String.fromCharCode(39))\n    .replace(/&#(\\d+);/g, (m, n) => String.fromCharCode(parseInt(n, 10)));\n}\nfunction fromXmlString(xml) {\n  const paras = xml.split(/<\\/w:p>/);\n  const lines = [];\n  for (const p of paras) {\n    const ts = p.match(/<w:t[^>]*>[\\s\\S]*?<\\/w:t>/g) || [];\n    if (!ts.length) continue;\n    const line = ts.map((t) => stripDecode(t)).join(\"\");\n    if (line.trim()) lines.push(line.trim());\n  }\n  return lines.join(\"\\n\");\n}\nlet cvText = \"\";\nif (typeof raw === \"string\") {\n  cvText = fromXmlString(raw);\n} else if (raw && typeof raw === \"object\") {\n  // запасний варіант: якщо XML колись прийде вже обʼєктом — зберемо всі w:t\n  const texts = [];\n  const visit = (v) => {\n    if (v === null || v === undefined) return;\n    if (Array.isArray(v)) { v.forEach(visit); return; }\n    if (typeof v === \"object\") {\n      for (const [k, val] of Object.entries(v)) {\n        const local = k.includes(\":\") ? k.split(\":\").pop() : k;\n        if (local === \"t\") texts.push(typeof val === \"string\" ? val : ((val && (val[\"#text\"] || val[\"_\"])) || \"\"));\n        else visit(val);\n      }\n    }\n  };\n  visit(raw);\n  cvText = texts.join(\" \").replace(/\\s+/g, \" \").trim();\n}\nreturn { json: { cvText } };"
+      },
+      "id": "cde6299f-faf9-4196-9598-d5cdbf1f8236",
+      "name": "Clean Docx Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "gpt-4o"
+        },
+        "text": "Витягни весь текст із цього зображення. Поверни тільки текст, без коментарів.",
+        "inputType": "base64",
+        "options": {
+          "detail": "auto",
+          "maxTokens": 1024
+        }
+      },
+      "id": "6812e995-7cc7-4765-8acb-25ee51d931b0",
+      "name": "OpenAI Vision OCR",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        1296,
+        608
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4XBA6U2hCe2dPkmn",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cvtext-image",
+              "name": "cvText",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "381a16cc-33cb-494c-9f9f-f5ee0f6f9416",
+      "name": "cvText Image",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Ось витягнутий текст резюме:\n{{ $json.cvText }}",
+        "options": {
+          "systemMessage": "Ти асистент, який обробляє текст резюме кандидата. Це демо-заглушка для ефіру — далі тут була б звичайна обробка (аналіз, підсумок, скоринг)."
+        }
+      },
+      "id": "3df9864d-7e7a-4f92-8cc2-aafbc1a93c5c",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1968,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "e73c0d37-4203-4bb2-ad85-3d4a185e8e2f",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2048,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "content": "ДЕМО: кілька вкладень різних форматів -> усі обробляються.\n\n1) Split Attachments розкладає файли на окремі елементи\n2) Switch визначає тип кожного\n3) PDF — нативна нода; DOCX — через zip+XML; Image — через OpenAI Vision\n4) усі гілки кладуть текст в ОДНАКОВЕ поле cvText -> злиття тривіальне.\n\nГоловна думка: секрет складання — однакове поле на виході всіх гілок.",
+        "height": 200,
+        "width": 696,
+        "color": 4
+      },
+      "id": "d081eac6-5b32-4877-8bae-8195e3b9ab40",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "content": "PDF — нативно (Extract from File)",
+        "height": 138,
+        "width": 420,
+        "color": 5
+      },
+      "id": "2b6cfc78-40d0-456c-a3a2-73e2411a7c2f",
+      "name": "PDF note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "content": "DOCX — zip + XML (без зовнішніх сервісів): rename .zip -> Decompress -> pick document.xml -> Extract XML -> зібрати текст із <w:t>",
+        "height": 126,
+        "width": 690,
+        "color": 7
+      },
+      "id": "fea416f4-ba4e-4458-a3d0-933e0997bc68",
+      "name": "DOCX note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "content": "Image — OpenAI Vision (image/analyze). Потрібен OpenAI credential.",
+        "height": 154,
+        "width": 532,
+        "color": 6
+      },
+      "id": "daa6d7d8-cb42-430c-bbbb-f8e42066d574",
+      "name": "Image note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        672,
+        -96
+      ]
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Split Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Attachments": {
+      "main": [
+        [
+          {
+            "node": "Route by File Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by File Type": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rename to Zip",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI Vision OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PDF": {
+      "main": [
+        [
+          {
+            "node": "cvText PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cvText PDF": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Branches": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename to Zip": {
+      "main": [
+        [
+          {
+            "node": "Decompress Docx",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decompress Docx": {
+      "main": [
+        [
+          {
+            "node": "Pick document.xml",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick document.xml": {
+      "main": [
+        [
+          {
+            "node": "Extract Docx XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Docx XML": {
+      "main": [
+        [
+          {
+            "node": "Clean Docx Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Docx Text": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Vision OCR": {
+      "main": [
+        [
+          {
+            "node": "cvText Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cvText Image": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": null
+}

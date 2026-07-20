@@ -1,0 +1,168 @@
+{
+  "name": "Photo-Telegram-PDF",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -480,
+        -128
+      ],
+      "id": "bfc27ca6-e41e-43db-af62-8bca9d597dee",
+      "name": "Telegram Trigger",
+      "webhookId": "3d5c6906-3ee4-4293-b4c0-03ab2fce8193",
+      "credentials": {
+        "telegramApi": {
+          "id": "pFzGkq0ba4Rgd1lC",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let rawText = $input.item.json.candidates[0].content.parts[0].text;\n\n// Очищаем от markdown-маркеров\nrawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();\n\n// Превращаем в чистый JSON-объект\nconst cleanJson = JSON.parse(rawText);\n\nreturn { json: cleanJson };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -48
+      ],
+      "id": "3fe8fb0c-3b13-49c4-b4b5-b5c15dbe0cce",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "Ты — профессиональный переводчик и специалист по обработке данных.\n\nЗадача: Пожалуйста, распознай прикрепленный чек из албанского магазина, переведи его структуру и позиции на русский (или украинский) язык и подготовь структурированную таблицу для последующего сохранения в PDF.\n\nУсловия конвертации валюты:\n\nВалюта чека: Албанский лек (ALL).\n\nВалюта для конвертации: Украинская гривна (UAH).\n\nКурс для расчета: 1 лек = 0.55 грн.\n\nЧто нужно сделать:\n\nИнформация о магазине: Распознай и укажи название магазина, адрес (если есть) и дату/время покупки.\n\nТаблица покупок: Создай таблицу со следующими колонками:\n\n№ (Номер позиции)\n\nНаименование товара на албанском\n\nПеревод товара (на русский/украинский)\n\nКоличество / Вес\n\nЦена за единицу (в леках)\n\nИтоговая стоимость позиции (в леках)\n\nИтоговая стоимость позиции (в грн) — рассчитай по курсу 0.55\n\nИтоги: Внизу таблицы выведи:\n\nОбщую сумму чека в леках (из оригинального чека).\n\nОбщую сумму в гривнах (пересчитанную по курсу).\n\nОтвет давай в формате только JSON, ничого лишнего\nНикаких \"\"```json\\n{\\n  \", \"```json\\n\", \"\\n```\"\n\" в начале или конце документа, тольлко чистый JSON",
+        "inputType": "binary",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        -16
+      ],
+      "id": "e07d3c9d-7c21-4d12-8cf1-6b1f04f7b434",
+      "name": "Analyze an image1",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "notesInFlow": false,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "database",
+        "databaseId": {
+          "__rl": true,
+          "value": "d3de72a5-6672-82df-b0d8-014512d331ec",
+          "mode": "list",
+          "cachedResultName": "People",
+          "cachedResultUrl": "https://app.notion.com/p/d3de72a5667282dfb0d8014512d331ec"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        336,
+        -48
+      ],
+      "id": "f88c6dd2-0de8-4237-9a8e-2d4088020d0c",
+      "name": "Get a database",
+      "credentials": {
+        "notionOAuth2Api": {
+          "id": "eJINUWFhk02YxYuv",
+          "name": "Notion OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -224
+      ],
+      "id": "f8b0f015-c547-4702-9fe9-78bed80ad53f",
+      "name": "Limit"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Get a database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

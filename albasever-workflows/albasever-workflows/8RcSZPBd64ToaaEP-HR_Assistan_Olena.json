@@ -1,0 +1,260 @@
+{
+  "name": "HR Assistan Olena",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -624,
+        -144
+      ],
+      "id": "fefe3386-2789-419c-b434-630d034729d9",
+      "name": "When chat message received",
+      "webhookId": "40caf55d-0655-4b40-bcb6-663fc6606e3a"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Ти — асистент IT-рекрутера в продуктовій компанії.\nДопомагаєш оцінювати кандидатів на технічні позиції.\n \nЗАДАЧА:\nОцінюй надіслане CV на відповідність позиції\nSenior Python Developer. Для кожного CV давай\nоцінку від 1 до 10 і коротке пояснення.\n \nКРИТЕРІЇ ОЦІНКИ:\n- Досвід з Python: 5+ років → 8-10 балів\n- 3-5 років → 5-7 балів\n- Менше 3 років → 1-4 бали\n- Production-досвід обов'язковий для оцінки 6+\n- Реальні комерційні проекти, не курси чи pet-проекти\n- Знання SQL та хоча б однієї cloud-платформи — плюс\n- Досвід з мікросервісами або великими навантаженнями — плюс\n \nФОРМАТ ВІДПОВІДІ:\nВідповідь повертай тільки у форматі JSON:\n{\n  \"name\": \"ім'я кандидата з CV\",\n  \"email\": \"email якщо вказано, інакше null\",\n  \"score\": число від 1 до 10,\n  \"comment\": \"коротке пояснення оцінки (1-2 речення)\"\n}\n \nБез додаткового тексту до або після JSON.\nБез 'Ось моя оцінка:'. Без пояснень в чаті.\nТільки JSON.\n \nЕСКАЛАЦІЯ:\nЯкщо CV занадто короткий, незрозумілий, не містить\nтехнічної інформації, або ти не можеш чітко оцінити:\n- Постав \"score\": 0\n- У \"comment\" напиши: \"needs_review: \" + коротко чого не вистачає\n \nПРИКЛАДИ ВИХОДУ:\n{\"name\":\"Іван Петренко\",\"email\":\"ivan@gmail.com\",\"score\":8,\n \"comment\":\"6 років Python, FastAPI, реальний production\"}\n{\"name\":\"Невідомо\",\"email\":null,\"score\":0,\n \"comment\":\"needs_review: CV занадто короткий, немає досвіду\"}\n \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -400,
+        -144
+      ],
+      "id": "9cc06c71-9296-4f4d-9056-3064930c253e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -496,
+        32
+      ],
+      "id": "b7b47932-160e-49bc-bd69-c15b70afd181",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "yhRWNuywMckbYfbz",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst parsedItems = items.map((item) => {\n  const output = JSON.parse(item?.json?.output);\n  return { json: output };\n});\nreturn parsedItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        -144
+      ],
+      "id": "94cfb95a-4cd8-46b3-be4e-d75884e8110c",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"name\": \"ім'я кандидата з CV\",\n  \"email\": \"email якщо вказано, інакше null\",\n  \"score\": 10,\n  \"comment\": \"коротке пояснення оцінки (1-2 речення)\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        32
+      ],
+      "id": "efb77b5e-8faf-4e6f-9ebe-c710dab48cca",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Rny7wu7Z9OTcav4S-mHE6hDQxNdZmwVuZLm_8r17-o0",
+          "mode": "list",
+          "cachedResultName": "HR Assistant Olena",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Rny7wu7Z9OTcav4S-mHE6hDQxNdZmwVuZLm_8r17-o0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "кандидати",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Rny7wu7Z9OTcav4S-mHE6hDQxNdZmwVuZLm_8r17-o0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Ім'я": "={{ $json.name }}",
+            "почта": "={{ $json.email }}",
+            "оцінка ": "={{ $json.score }}",
+            "коментарі": "={{ $json.comment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Ім'я",
+              "displayName": "Ім'я",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "почта",
+              "displayName": "почта",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "оцінка ",
+              "displayName": "оцінка ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "коментарі",
+              "displayName": "коментарі",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        160,
+        -144
+      ],
+      "id": "a1630122-f799-4278-bfc5-a35fe0229620",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openrouter/free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        64
+      ],
+      "id": "27d4f66c-e06d-4fd9-b96d-e0c8caa275cf",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Vmqdm5q0hlF7udpF",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        []
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

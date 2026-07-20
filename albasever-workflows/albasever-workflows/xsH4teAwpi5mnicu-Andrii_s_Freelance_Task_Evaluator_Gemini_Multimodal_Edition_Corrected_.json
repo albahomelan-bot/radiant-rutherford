@@ -1,0 +1,459 @@
+{
+  "name": "Andrii's Freelance Task Evaluator (Gemini Multimodal Edition) (Corrected)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "c2f7f0bc-02dd-452a-acec-7331c2547101",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        4800,
+        688
+      ],
+      "webhookId": "8349832a-b504-4abd-bd46-8b9fd3155b91",
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalizes the Telegram trigger payload and checks for image files or documents\nreturn $input.all().map(item => {\n  const msg = item.json.message || item.json.edited_message || item.json.channel_post || {};\n  const hasPhoto = !!(msg.photo || msg.document);\n  return {\n    json: {\n      isScreenshot: hasPhoto,\n      message: msg\n    }\n  };\n});"
+      },
+      "id": "0cb16965-7765-4b7b-8cad-91cea1a1a7ae",
+      "name": "Normalize Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5008,
+        688
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isScreenshot }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "a54b87d6-316f-4575-b31b-5ff88d48f840",
+      "name": "Is Screenshot?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        5216,
+        688
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo ? $json.message.photo.slice(-1)[0].file_id : $json.message.document.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "c2690a40-91cd-4a2c-a6f2-4c1b8f324bfd",
+      "name": "Download Screenshot",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        5392,
+        544
+      ],
+      "webhookId": "a8f1fd2f-18dd-4080-b53a-ecfcfbd4ba4d",
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {
+          "temperature": 0.15
+        }
+      },
+      "id": "54f5044b-3a0a-4f77-adab-9a8ad92afc29",
+      "name": "Gemini Model (Shared)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        5952,
+        928
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "95e40896-1617-4c12-a036-516fcce218b8",
+              "name": "content.parts[0].text",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c2d4fca3-3463-49f5-b28c-f560f98c99bc",
+      "name": "Set Photo Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5872,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "78af7ce4-399c-45c8-904e-a9fa213118c2",
+              "name": "message.text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "998caf3e-5a4f-429d-9869-1b540087e495",
+      "name": "Set Raw Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5408,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.content.parts[0].text }}{{ $json.message.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an AI Evaluator for Andrii Yatsechko (57 years old, former military serviceman, n8n Automation Specialist & AI Integrator).\n\nHere is Andrii's Professional Profile:\n- Core Skills: advanced n8n (Switch, If, JS Code, HTTP Requests, API integrations, Webhooks), OpenAI APIs (Whisper, GPTs, Dall-E), OpenRouter, LangChain concept (memoryBufferWindow), Telegram Bot API, Google Sheets API, OneDrive API, Instagram/Threads API (Late API/Zernio).\n- Experience: 1+ years. Built a fully functional AI SMM Assistant, a Multi-Format Resume Parser (renaming docx to zip and parsing XML via JS), and a OneDrive Task Logger.\n- Key strengths: Military discipline, precision, high responsibility, strict testing.\n\nAnalyze the incoming freelance job request and evaluate it against Andrii's profile.\nCalculate and output ONLY the following concise fields:\n1. 📋 **Проєкт:** (Extremely short 1-sentence title/summary of the task)\n2. 📊 **Складність:** (Легка / Середня / Висока - strictly NO explanation or reasoning)\n3. 🎯 **Успих:** (Percentage from 0% to 100%)\n4. ⏱️ **Час:** (Expected time to complete, e.g., 2 дні)\n5. ⚖️ **Вердикт:** (Підходить / Не підходит)\n6. 📚 **Вивчити:** (1-3 key terms/nodes if needed, else 'Н��чого')\n\nRules:\n- Be extremely brief. Do NOT output any preamble, intro, explanations, reasoning, or conclusions. Just print the 6 bullet points.\n- Strictly limit the size of your answer (under 50 words total).\n\nProvide the output in Ukrainian (or Russian if the input is in Russian). Keep it professional, honest, and objective."
+            }
+          ]
+        }
+      },
+      "id": "c577eb09-f510-4b7d-be52-9a78d8660776",
+      "name": "Gemini Evaluator Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        5696,
+        752
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize Payload\"].json.message.chat.id }}",
+        "text": "={{ $json.plainText[0] }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "570db3a2-b704-4dbf-8ec6-91c828e563d1",
+      "name": "Send Assessment",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        6416,
+        880
+      ],
+      "webhookId": "b811fe60-ee4c-4f04-b350-56768bfba250",
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst plainText = items.map((item) => item.json.text.replace(/<[^>]*>?/gm, \"\"));\nreturn { plainText };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6128,
+        800
+      ],
+      "id": "5bf6debd-0c1c-431b-8d8c-8fc8ad96a29d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        5648,
+        464
+      ],
+      "id": "7d6ac134-9958-4533-af1d-d34f9e0d2d8b",
+      "name": "Analyze an image",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.content.parts[0].text }}{{ $json.message.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an AI Evaluator for Andrii Yatsechko (57 years old, former military serviceman, n8n Automation Specialist & AI Integrator).\n\nHere is Andrii's Professional Profile:\n- Core Skills: advanced n8n (Switch, If, JS Code, HTTP Requests, API integrations, Webhooks), OpenAI APIs (Whisper, GPTs, Dall-E), OpenRouter, LangChain concept (memoryBufferWindow), Telegram Bot API, Google Sheets API, OneDrive API, Instagram/Threads API (Late API/Zernio).\n- Experience: 1+ years. Built a fully functional AI SMM Assistant, a Multi-Format Resume Parser (renaming docx to zip and parsing XML via JS), and a OneDrive Task Logger.\n- Key strengths: Military discipline, precision, high responsibility, strict testing.\n\nAnalyze the incoming freelance job request and evaluate it against Andrii's profile.\nCalculate and output ONLY the following concise fields:\n1. 📋 **Проєкт:** (Extremely short 1-sentence title/summary of the task)\n2. 📊 **Складність:** (Легка / Середня / Висока - strictly NO explanation or reasoning)\n3. 🎯 **Успих:** (Percentage from 0% to 100%)\n4. ⏱️ **Час:** (Expected time to complete, e.g., 2 дні)\n5. ⚖️ **Вердикт:** (Підходить / Не підходит)\n6. 📚 **Вивчити:** (1-3 key terms/nodes if needed, else 'Нічого')\n\nRules:\n- Be extremely brief. Do NOT output any preamble, intro, explanations, reasoning, or conclusions. Just print the 6 bullet points.\n- Strictly limit the size of your answer (under 50 words total).\n\nProvide the output in Ukrainian (or Russian if the input is in Russian). Keep it professional, honest, and objective."
+            }
+          ]
+        }
+      },
+      "id": "29ac1c73-db8a-46a2-ac3a-ecebd3c674bd",
+      "name": "Gemini Evaluator Chain1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        6160,
+        352
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        4848,
+        432
+      ],
+      "id": "4376ba5a-30e0-4ed9-b739-16500c740d6d",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "=7431843172",
+        "text": "=🔥 Мени дуже прикро але:\n🔥 Все пропало у Andrii's Freelance Task Evaluator\n🤏 Node : {{ $workflow.name }}\n‼️ Error : {{ $json.execution.error.message }}\n🥸 WorkFlow : {{ $json.execution.lastNodeExecuted }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        5072,
+        432
+      ],
+      "id": "3b67a3dd-752a-4d5e-80e4-fa2cafc6dbbf",
+      "name": "Send a text message1",
+      "webhookId": "a5ff39da-abeb-4819-9a25-bd09b623d1bc",
+      "credentials": {
+        "telegramApi": {
+          "id": "qZBuPcKLta8Rab31",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Payload": {
+      "main": [
+        [
+          {
+            "node": "Is Screenshot?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Screenshot?": {
+      "main": [
+        [
+          {
+            "node": "Download Screenshot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Raw Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Screenshot": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Photo Text": {
+      "main": [
+        [
+          {
+            "node": "Gemini Evaluator Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Raw Text": {
+      "main": [
+        [
+          {
+            "node": "Gemini Evaluator Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Evaluator Chain": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (Shared)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Gemini Evaluator Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Gemini Evaluator Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send Assessment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image": {
+      "main": [
+        [
+          {
+            "node": "Set Photo Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Evaluator Chain1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

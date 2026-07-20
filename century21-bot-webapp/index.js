@@ -1,0 +1,703 @@
+// Fallback mock database in case local fetch fails due to CORS (file:// protocol)
+const FALLBACK_PROPERTIES = [
+  {
+    "url": "https://www.century21albania.com/en/property/5842405/shitet-2-1-me-pamje-deti-plazh-rrota-kuqe-atlantic145387.html",
+    "title": "Apartment 2+1 for sale with stunning sea view, Rrota e Kuqe, Durres",
+    "price": "125,000 €",
+    "category": "Sale",
+    "area": "98 m2",
+    "bedrooms": "2",
+    "description": "Premium apartment 2+1 for sale in one of the best areas of Durres, near Rrota e Kuqe. Located on the 6th floor of a new building with elevator. Features a spacious living room, two bedrooms, a bathroom, and a balcony with an amazing frontal sea view. Fully furnished with high-quality modern furniture, air conditioning in every room. Perfect for living or investment.",
+    "agentName": "Enea Atlantic",
+    "agentPhone": "+355691234567",
+    "lastModified": "2026-07-20T08:15:00.000Z",
+    "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
+    "city": "Durrës",
+    "district": "Plazh"
+  },
+  {
+    "url": "https://www.century21albania.com/en/property/5842402/shitet-ambient-biznesi-ne-nje-nga-zonat-me-te-kerkuara-te-plazhit-durres-atlantic145385.html",
+    "title": "Commercial space on the beachfront for sale, Durres Plazh",
+    "price": "240,000 €",
+    "category": "Sale",
+    "area": "120 m2",
+    "bedrooms": "0",
+    "description": "Excellent commercial space for sale located directly on the beach front / promenade of Durres Plazh. Ground floor with large glass windows offering maximum visibility and access. Ideal for cafe, restaurant, office, or shop. Brand new building construction (2024). Outstanding investment opportunity with high ROI.",
+    "agentName": "Enea Atlantic",
+    "agentPhone": "+355691234567",
+    "lastModified": "2026-07-20T08:15:00.000Z",
+    "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80",
+    "city": "Durrës",
+    "district": "Plazh"
+  },
+  {
+    "url": "https://www.century21albania.com/en/property/5841564/apartament-1-1-per-shitje-ne-golem-perball-hotel-flower-pallat-i-ri-2025-roy145372.html",
+    "title": "Modern Apartment 1+1 for sale in Golem, near Hotel Flower",
+    "price": "68,000 €",
+    "category": "Sale",
+    "area": "64 m2",
+    "bedrooms": "1",
+    "description": "Cozy and modern apartment 1+1 for sale in Golem, situated in a highly preferred residential and touristic zone. Located on the 3rd floor of a brand new building (completed in 2025) with elevator. Front sea view from the balcony. Fully furnished with new modern furniture, household appliances, and luxury interior design. Just 150 meters from the sandy beach.",
+    "agentName": "Roy Durres",
+    "agentPhone": "+355697654321",
+    "lastModified": "2026-07-20T08:10:00.000Z",
+    "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
+    "city": "Durrës",
+    "district": "Golem"
+  },
+  {
+    "url": "https://www.century21albania.com/en/property/5839120/jepet-me-qira-apartament-luks-2-1-perball-detit-ne-vollga-durres.html",
+    "title": "Luxury Apartment 2+1 for rent with sea view, Vollga, Durres",
+    "price": "800 €",
+    "category": "Rent",
+    "area": "110 m2",
+    "bedrooms": "2",
+    "description": "Luxury apartment 2+1 available for long-term rent in the most premium waterfront area of Durres - Vollga. Located on the 5th floor of a high-quality building. Frontal panoramic sea views from the large terrace. Custom modern design, high-end Italian furniture, central heating/cooling system, fully equipped kitchen. Under floor parking space included.",
+    "agentName": "Kristi Durres",
+    "agentPhone": "+355693334445",
+    "lastModified": "2026-07-20T08:00:00.000Z",
+    "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
+    "city": "Durrës",
+    "district": "Vollga"
+  },
+  {
+    "url": "https://www.century21albania.com/en/property/5840901/apartament-1-1-per-shitje-ne-qerret-zone-e-qete.html",
+    "title": "Apartment 1+1 for sale in Qerret in a quiet pine forest zone",
+    "price": "59,000 €",
+    "category": "Sale",
+    "area": "58 m2",
+    "bedrooms": "1",
+    "description": "Lovely 1+1 apartment for sale in Qerret, Durres, located in a quiet green zone surrounded by pine trees. Located on the 2nd floor, only 5 minutes walking distance from the sea. The apartment is unfurnished, giving you the freedom to design it as you wish. Brand new construction. Perfect holiday home or rental investment.",
+    "agentName": "Roy Durres",
+    "agentPhone": "+355697654321",
+    "lastModified": "2026-07-20T07:30:00.000Z",
+    "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
+    "city": "Durrës",
+    "district": "Qerret"
+  },
+  {
+    "url": "https://www.century21albania.com/en/property/5841002/jepet-me-qira-apartament1-1-modern-blloku-tirane.html",
+    "title": "Modern 1+1 apartment for rent in Bllok, Tirana center",
+    "price": "600 €",
+    "category": "Rent",
+    "area": "62 m2",
+    "bedrooms": "1",
+    "description": "Cozy and fully furnished 1+1 apartment for rent in the most famous district of Tirana - Bllok. Located on the 4th floor of a well-maintained building with elevator. Features a modern living room, bedroom, bathroom, and balcony. High-quality appliances, air conditioning, fiber-optic internet. Excellent city center location close to all restaurants and shops.",
+    "agentName": "Alban Tirana",
+    "agentPhone": "+355691112223",
+    "lastModified": "2026-07-20T07:20:00.000Z",
+    "image": "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=600&q=80",
+    "city": "Tirana",
+    "district": "Blloku"
+  },
+  {
+    "url": "https://www.century21albania.com/en/property/5842100/apartament-luks-3-1-shitet-prane-liqenit-te-tiranes.html",
+    "title": "Premium 3+1 Apartment for sale near Tirana Lake Park",
+    "price": "310,000 €",
+    "category": "Sale",
+    "area": "145 m2",
+    "bedrooms": "3",
+    "description": "Stunning luxury 3+1 apartment for sale near the Grand Park of Tirana Lake. Premium location in a brand new high-end residential complex. Spacious layout: large open-plan living and dining area, master bedroom with en-suite bathroom and walk-in closet, two children bedrooms, second bathroom, and a large terrace. Fully furnished with custom designed furniture, smart home automation, and floor heating.",
+    "agentName": "Kristi Tirana",
+    "agentPhone": "+355693334445",
+    "lastModified": "2026-07-20T07:00:00.000Z",
+    "image": "https://images.unsplash.com/photo-1545464693-f1798a373343?auto=format&fit=crop&w=600&q=80",
+    "city": "Tirana",
+    "district": "Lake Park"
+  }
+];
+
+// District Mapping based on City
+const CITY_DISTRICTS = {
+  "Durrës": ["Qerret", "Golem", "Mali i Robit", "Plazh", "Spitali", "Shkëmbi i Kavajës", "Plazh Hekurudha", "Hamallaj", "Gjiri i Lalzit", "Vollga", "Rruga Adria"],
+  "Tirana": ["Blloku", "Lake Park", "Don Bosko", "Ali Demi", "Komuna e Parisit", "Selite"]
+};
+
+// Global App State
+let listings = [];
+let favorites = [];
+let currentActiveTab = 'catalog';
+let activeProperty = null;
+
+// Filters State
+let filterState = {
+  searchQuery: '',
+  category: 'all',
+  city: 'all',
+  districts: [],
+  priceMin: null,
+  priceMax: null,
+  rooms: 'all',
+  areaMin: null,
+  areaMax: null,
+  tagSeaView: false,
+  tagFurnished: false,
+  tagNewBuilding: false,
+  sortBy: 'newest'
+};
+
+// Telegram WebApp Initialization
+const tg = window.Telegram ? window.Telegram.WebApp : null;
+if (tg) {
+  tg.ready();
+  tg.expand();
+}
+
+// Elements
+const catalogSection = document.getElementById('catalogSection');
+const emptyState = document.getElementById('emptyState');
+const favCount = document.getElementById('favCount');
+const searchInput = document.getElementById('searchInput');
+const filterBtn = document.getElementById('filterBtn');
+
+const tabCatalog = document.getElementById('tabCatalog');
+const tabFavorites = document.getElementById('tabFavorites');
+
+// Drawer & Modal Elements
+const filtersDrawer = document.getElementById('filtersDrawer');
+const closeFiltersBtn = document.getElementById('closeFiltersBtn');
+const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+const resetFiltersLink = document.getElementById('resetFiltersLink');
+
+const citySelect = document.getElementById('citySelect');
+const districtGroup = document.getElementById('districtGroup');
+const districtsList = document.getElementById('districtsList');
+
+const detailModal = document.getElementById('detailModal');
+const backToCatalogBtn = document.getElementById('backToCatalogBtn');
+const modalFavBtn = document.getElementById('modalFavBtn');
+const inquiryBtn = document.getElementById('inquiryBtn');
+const toast = document.getElementById('toast');
+
+// Initialize App
+async function init() {
+  // Load Favorites from LocalStorage
+  try {
+    const savedFavs = localStorage.getItem('c21_favorites');
+    favorites = savedFavs ? JSON.parse(savedFavs) : [];
+  } catch (e) {
+    favorites = [];
+  }
+  updateFavCount();
+
+  // Try to load listings from file, fallback to embedded data
+  try {
+    const response = await fetch('properties_mock.json');
+    if (response.ok) {
+      listings = await response.json();
+    } else {
+      listings = FALLBACK_PROPERTIES;
+    }
+  } catch (e) {
+    listings = FALLBACK_PROPERTIES;
+  }
+
+  // Setup Event Listeners
+  setupEventListeners();
+  
+  // Parse URL Parameters (allows deep-linking filters from n8n bot NLP queries)
+  parseUrlParams();
+
+  // Render initial catalog
+  render();
+}
+
+// Setup Event Listeners
+function setupEventListeners() {
+  // Tab Switching
+  tabCatalog.addEventListener('click', () => switchTab('catalog'));
+  tabFavorites.addEventListener('click', () => switchTab('favorites'));
+
+  // Search input change
+  searchInput.addEventListener('input', (e) => {
+    filterState.searchQuery = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  // Filter Drawer Toggle
+  filterBtn.addEventListener('click', openFiltersDrawer);
+  closeFiltersBtn.addEventListener('click', closeFiltersDrawer);
+  document.querySelector('.drawer-overlay').addEventListener('click', closeFiltersDrawer);
+
+  // City change inside Filters -> dynamically update Districts list
+  citySelect.addEventListener('change', (e) => {
+    updateDistrictsOptions(e.target.value);
+  });
+
+  // Category & Rooms toggle chips inside Filters
+  setupChips('categoryToggles', (val) => { filterState.category = val; });
+  setupChips('roomsToggles', (val) => { filterState.rooms = val; });
+
+  // Apply & Reset filters
+  applyFiltersBtn.addEventListener('click', applyFilters);
+  resetFiltersBtn.addEventListener('click', resetFilters);
+  resetFiltersLink.addEventListener('click', () => {
+    resetFilters();
+    render();
+  });
+
+  // Detail Modal Actions
+  backToCatalogBtn.addEventListener('click', closeDetailModal);
+  document.querySelector('.modal-overlay').addEventListener('click', closeDetailModal);
+  
+  modalFavBtn.addEventListener('click', () => {
+    if (activeProperty) {
+      toggleFavorite(activeProperty.url);
+      updateModalFavBtnState(activeProperty.url);
+      render();
+    }
+  });
+
+  inquiryBtn.addEventListener('click', sendInquiryToManager);
+}
+
+// Switch between Catalog & Favorites tabs
+function switchTab(tab) {
+  currentActiveTab = tab;
+  if (tab === 'catalog') {
+    tabCatalog.classList.add('active');
+    tabFavorites.classList.remove('active');
+  } else {
+    tabCatalog.classList.remove('active');
+    tabFavorites.classList.add('active');
+  }
+  render();
+}
+
+// Set up UI toggle chips click logic
+function setupChips(containerId, callback) {
+  const container = document.getElementById(containerId);
+  const chips = container.querySelectorAll('.chip');
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      callback(chip.dataset.value);
+    });
+  });
+}
+
+// Open/Close slide drawers
+function openFiltersDrawer() {
+  filtersDrawer.classList.add('active');
+  filtersDrawer.classList.remove('hidden');
+}
+
+function closeFiltersDrawer() {
+  filtersDrawer.classList.remove('active');
+  setTimeout(() => {
+    if (!filtersDrawer.classList.contains('active')) {
+      filtersDrawer.classList.add('hidden');
+    }
+  }, 300);
+}
+
+// Dynamically update districts checklist based on selected city
+function updateDistrictsOptions(city) {
+  districtsList.innerHTML = '';
+  if (city === 'all' || !CITY_DISTRICTS[city]) {
+    districtGroup.classList.add('hidden');
+    filterState.districts = [];
+    return;
+  }
+
+  districtGroup.classList.remove('hidden');
+  const list = CITY_DISTRICTS[city];
+  list.forEach(district => {
+    const label = document.createElement('label');
+    label.className = 'checkbox-label';
+    
+    const isChecked = filterState.districts.includes(district);
+    
+    label.innerHTML = `
+      <input type="checkbox" value="${district}" ${isChecked ? 'checked' : ''}>
+      <span class="checkbox-custom"></span>
+      ${district}
+    `;
+    
+    label.querySelector('input').addEventListener('change', (e) => {
+      if (e.target.checked) {
+        if (!filterState.districts.includes(district)) filterState.districts.push(district);
+      } else {
+        filterState.districts = filterState.districts.filter(d => d !== district);
+      }
+    });
+    
+    districtsList.appendChild(label);
+  });
+}
+
+// Apply chosen filters
+function applyFilters() {
+  // Read inputs
+  filterState.priceMin = parseInputNumber('priceMin');
+  filterState.priceMax = parseInputNumber('priceMax');
+  filterState.areaMin = parseInputNumber('areaMin');
+  filterState.areaMax = parseInputNumber('areaMax');
+  filterState.city = citySelect.value;
+  
+  filterState.tagSeaView = document.getElementById('tagSeaView').checked;
+  filterState.tagFurnished = document.getElementById('tagFurnished').checked;
+  filterState.tagNewBuilding = document.getElementById('tagNewBuilding').checked;
+  
+  filterState.sortBy = document.getElementById('sortSelect').value;
+
+  closeFiltersDrawer();
+  
+  // Update UI style of filter button to active if any filters applied
+  const isFiltered = filterState.category !== 'all' || filterState.city !== 'all' || 
+                     filterState.priceMin || filterState.priceMax || filterState.rooms !== 'all' ||
+                     filterState.areaMin || filterState.areaMax || filterState.districts.length > 0 ||
+                     filterState.tagSeaView || filterState.tagFurnished || filterState.tagNewBuilding;
+                     
+  if (isFiltered) {
+    filterBtn.classList.add('active');
+  } else {
+    filterBtn.classList.remove('active');
+  }
+
+  render();
+}
+
+// Reset filters to default state
+function resetFilters() {
+  filterState = {
+    searchQuery: searchInput.value.toLowerCase(),
+    category: 'all',
+    city: 'all',
+    districts: [],
+    priceMin: null,
+    priceMax: null,
+    rooms: 'all',
+    areaMin: null,
+    areaMax: null,
+    tagSeaView: false,
+    tagFurnished: false,
+    tagNewBuilding: false,
+    sortBy: 'newest'
+  };
+
+  // Reset UI Inputs
+  document.getElementById('priceMin').value = '';
+  document.getElementById('priceMax').value = '';
+  document.getElementById('areaMin').value = '';
+  document.getElementById('areaMax').value = '';
+  document.getElementById('tagSeaView').checked = false;
+  document.getElementById('tagFurnished').checked = false;
+  document.getElementById('tagNewBuilding').checked = false;
+  
+  citySelect.value = 'all';
+  updateDistrictsOptions('all');
+
+  document.getElementById('sortSelect').value = 'newest';
+
+  // Reset toggle chips
+  resetChips('categoryToggles', 'all');
+  resetChips('roomsToggles', 'all');
+
+  filterBtn.classList.remove('active');
+  closeFiltersDrawer();
+}
+
+// Utility to reset active class on toggle chips
+function resetChips(containerId, defaultValue) {
+  const container = document.getElementById(containerId);
+  const chips = container.querySelectorAll('.chip');
+  chips.forEach(chip => {
+    if (chip.dataset.value === defaultValue) {
+      chip.classList.add('active');
+    } else {
+      chip.classList.remove('active');
+    }
+  });
+}
+
+// Helper to safely parse inputs
+function parseInputNumber(id) {
+  const val = document.getElementById(id).value;
+  return val === '' ? null : Number(val);
+}
+
+// Check URL search parameters (deep-linking NLP queries)
+function parseUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  
+  if (params.has('category')) {
+    filterState.category = params.get('category');
+    resetChips('categoryToggles', filterState.category);
+  }
+  if (params.has('city')) {
+    filterState.city = params.get('city');
+    citySelect.value = filterState.city;
+    updateDistrictsOptions(filterState.city);
+  }
+  if (params.has('rooms')) {
+    filterState.rooms = params.get('rooms');
+    resetChips('roomsToggles', filterState.rooms);
+  }
+  if (params.has('priceMax')) {
+    filterState.priceMax = Number(params.get('priceMax'));
+    document.getElementById('priceMax').value = filterState.priceMax;
+  }
+  if (params.has('priceMin')) {
+    filterState.priceMin = Number(params.get('priceMin'));
+    document.getElementById('priceMin').value = filterState.priceMin;
+  }
+  
+  const isFiltered = filterState.category !== 'all' || filterState.city !== 'all' || filterState.rooms !== 'all' || filterState.priceMax || filterState.priceMin;
+  if (isFiltered) {
+    filterBtn.classList.add('active');
+  }
+}
+
+// Smart keyword matching function for special tags
+function matchesSmartTag(property, tagType) {
+  const desc = (property.description || '').toLowerCase();
+  const title = (property.title || '').toLowerCase();
+  const text = title + ' ' + desc;
+
+  if (tagType === 'seaView') {
+    return text.includes('sea view') || text.includes('pamje nga deti') || text.includes('вид на море') || text.includes('front line') || text.includes('beach');
+  }
+  if (tagType === 'furnished') {
+    return text.includes('furnished') || text.includes('i mobiluar') || text.includes('мебльован') || text.includes('обставлен');
+  }
+  if (tagType === 'newBuilding') {
+    return text.includes('new building') || text.includes('pallat i ri') || text.includes('completed in 202') || text.includes('construction 202') || text.includes('будівля 202');
+  }
+  return true;
+}
+
+// Render Listings Grid
+function render() {
+  catalogSection.innerHTML = '';
+  
+  // 1. Filter listings
+  let filtered = listings.filter(item => {
+    // Search bar matching
+    if (filterState.searchQuery) {
+      const title = (item.title || '').toLowerCase();
+      const desc = (item.description || '').toLowerCase();
+      if (!title.includes(filterState.searchQuery) && !desc.includes(filterState.searchQuery)) {
+        return false;
+      }
+    }
+    
+    // Category (Sale/Rent)
+    if (filterState.category !== 'all' && item.category !== filterState.category) {
+      return false;
+    }
+    
+    // City
+    if (filterState.city !== 'all' && item.city !== filterState.city) {
+      return false;
+    }
+    
+    // Districts
+    if (filterState.districts.length > 0 && !filterState.districts.includes(item.district)) {
+      return false;
+    }
+    
+    // Price
+    const numericPrice = Number((item.price || '').replace(/[^0-9]/g, ''));
+    if (filterState.priceMin && numericPrice < filterState.priceMin) return false;
+    if (filterState.priceMax && numericPrice > filterState.priceMax) return false;
+    
+    // Rooms
+    if (filterState.rooms !== 'all') {
+      const itemRooms = Number(item.bedrooms || 0);
+      if (filterState.rooms === '3+') {
+        if (itemRooms < 3) return false;
+      } else {
+        if (itemRooms !== Number(filterState.rooms)) return false;
+      }
+    }
+    
+    // Area
+    const numericArea = Number((item.area || '').replace(/[^0-9]/g, ''));
+    if (filterState.areaMin && numericArea < filterState.areaMin) return false;
+    if (filterState.areaMax && numericArea > filterState.areaMax) return false;
+
+    // Special Tags
+    if (filterState.tagSeaView && !matchesSmartTag(item, 'seaView')) return false;
+    if (filterState.tagFurnished && !matchesSmartTag(item, 'furnished')) return false;
+    if (filterState.tagNewBuilding && !matchesSmartTag(item, 'newBuilding')) return false;
+
+    return true;
+  });
+
+  // If Favourites tab is active, only show liked items
+  if (currentActiveTab === 'favorites') {
+    filtered = filtered.filter(item => favorites.includes(item.url));
+  }
+
+  // 2. Sort listings
+  filtered.sort((a, b) => {
+    const priceA = Number((a.price || '').replace(/[^0-9]/g, ''));
+    const priceB = Number((b.price || '').replace(/[^0-9]/g, ''));
+    
+    if (filterState.sortBy === 'cheapest') {
+      return priceA - priceB;
+    }
+    if (filterState.sortBy === 'expensive') {
+      return priceB - priceA;
+    }
+    // Default: newest first
+    return new Date(b.lastModified) - new Date(a.lastModified);
+  });
+
+  // 3. Render items
+  if (filtered.length === 0) {
+    emptyState.classList.remove('hidden');
+    catalogSection.classList.add('hidden');
+    return;
+  }
+
+  emptyState.classList.add('hidden');
+  catalogSection.classList.remove('hidden');
+
+  filtered.forEach(item => {
+    const isFav = favorites.includes(item.url);
+    const card = document.createElement('div');
+    card.className = 'property-card';
+    
+    card.innerHTML = `
+      <div class="card-image-wrapper">
+        <img src="${item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=400&q=80'}" alt="${item.title}">
+        <div class="card-category-badge ${item.category.toLowerCase()}">${item.category === 'Sale' ? 'Продаж' : 'Оренда'}</div>
+        <button class="card-fav-btn ${isFav ? 'active' : ''}">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
+      </div>
+      <div class="card-details">
+        <div class="card-price">${item.price}</div>
+        <div class="card-title">${item.title}</div>
+        <div class="card-location">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          ${item.city}, ${item.district}
+        </div>
+        <div class="card-stats">
+          <div class="card-stat">📏 ${item.area}</div>
+          <div class="card-stat">🛏 ${item.bedrooms} кімн.</div>
+        </div>
+      </div>
+    `;
+
+    // Click on Favourites button inside card
+    const favBtn = card.querySelector('.card-fav-btn');
+    favBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFavorite(item.url);
+      favBtn.classList.toggle('active');
+      render();
+    });
+
+    // Click on Card opens Detailed Modal
+    card.addEventListener('click', () => {
+      openDetailModal(item);
+    });
+
+    catalogSection.appendChild(card);
+  });
+}
+
+// Toggle Favorites item state in localStorage
+function toggleFavorite(url) {
+  if (favorites.includes(url)) {
+    favorites = favorites.filter(f => f !== url);
+  } else {
+    favorites.push(url);
+  }
+  localStorage.setItem('c21_favorites', JSON.stringify(favorites));
+  updateFavCount();
+}
+
+function updateFavCount() {
+  favCount.textContent = favorites.length;
+}
+
+// Detailed View Modal Actions
+function openDetailModal(item) {
+  activeProperty = item;
+  
+  document.getElementById('detailImage').src = item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80';
+  document.getElementById('detailCategory').textContent = item.category === 'Sale' ? 'Продаж' : 'Оренда';
+  document.getElementById('detailTitle').textContent = item.title;
+  document.getElementById('detailPrice').textContent = item.price;
+  document.getElementById('detailLocText').textContent = `${item.city}, ${item.district}`;
+  document.getElementById('detailArea').textContent = item.area;
+  document.getElementById('detailBedrooms').textContent = item.bedrooms;
+  document.getElementById('detailDescription').textContent = item.description;
+  document.getElementById('detailAgentName').textContent = item.agentName;
+  
+  updateModalFavBtnState(item.url);
+
+  detailModal.classList.add('active');
+  detailModal.classList.remove('hidden');
+}
+
+function closeDetailModal() {
+  detailModal.classList.remove('active');
+  setTimeout(() => {
+    if (!detailModal.classList.contains('active')) {
+      detailModal.classList.add('hidden');
+    }
+  }, 350);
+  activeProperty = null;
+}
+
+function updateModalFavBtnState(url) {
+  if (favorites.includes(url)) {
+    modalFavBtn.classList.add('active');
+  } else {
+    modalFavBtn.classList.remove('active');
+  }
+}
+
+// Send inquiry details back to n8n Telegram Bot
+function sendInquiryToManager() {
+  if (!activeProperty) return;
+
+  const leadData = {
+    action: "property_inquiry",
+    property: {
+      url: activeProperty.url,
+      title: activeProperty.title,
+      price: activeProperty.price,
+      city: activeProperty.city,
+      district: activeProperty.district,
+      agentName: activeProperty.agentName,
+      agentPhone: activeProperty.agentPhone
+    }
+  };
+
+  // If running inside Telegram, send data back to Bot
+  if (tg) {
+    tg.sendData(JSON.stringify(leadData));
+    showToast("Запит надіслано в чат-бот!");
+    setTimeout(() => {
+      tg.close();
+    }, 1500);
+  } else {
+    // Web browser simulation fallback
+    console.log("WebApp sendData to bot:", leadData);
+    showToast("Успішно! (Симуляція для браузера)");
+  }
+}
+
+// Display float notification toast
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.remove('hidden');
+  toast.style.opacity = 1;
+  setTimeout(() => {
+    toast.style.opacity = 0;
+    setTimeout(() => {
+      toast.classList.add('hidden');
+    }, 300);
+  }, 2000);
+}
+
+// Run app init
+window.addEventListener('DOMContentLoaded', init);

@@ -1,0 +1,329 @@
+{
+  "name": "Andrii's Freelance Task Evaluator (Gemini Multimodal Edition)",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "c1a0d3fb-b31f-4fb0-8425-3bb61b31e511",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        2480,
+        480
+      ],
+      "webhookId": "94dbef4b-c491-4780-9a23-57b649e564b2",
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalizes the Telegram trigger payload and checks for image files or documents\nreturn $input.all().map(item => {\n  const msg = item.json.message || item.json.edited_message || item.json.channel_post || {};\n  const hasPhoto = !!(msg.photo || msg.document);\n  return {\n    json: {\n      isScreenshot: hasPhoto,\n      message: msg\n    }\n  };\n});"
+      },
+      "id": "3e2f4ddb-47af-4ecd-9e11-a020f721d9c3",
+      "name": "Normalize Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2688,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isScreenshot }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "067001a1-3a09-4c12-babf-5376f85ce539",
+      "name": "Is Screenshot?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2896,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo ? $json.message.photo.slice(-1)[0].file_id : $json.message.document.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "dcdcb001-2d7b-49b8-8dc3-3a5b03595622",
+      "name": "Download Screenshot",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3088,
+        368
+      ],
+      "webhookId": "7f7c0219-687c-4362-8041-42f32ac54d7e",
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "options": {}
+      },
+      "id": "345675c8-7210-42c1-ba8d-30bec786bc4b",
+      "name": "Gemini Analysis Photo",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        3280,
+        368
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {
+          "temperature": 0.15
+        }
+      },
+      "id": "b20f1eae-709f-4bb0-a49e-804e2e590615",
+      "name": "Gemini Model (Shared)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        3392,
+        656
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2yFhltLxLKvABL0i",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d6e441e5-0ee1-4efa-9542-dee9d26efa66",
+              "name": "content.parts[0].text",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9bdc5b8d-ad33-4625-8610-a83404e5f017",
+      "name": "Set Photo Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3456,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "beee17b6-2947-49cc-a2f8-9078e8b527fc",
+      "name": "Set Raw Text",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3088,
+        576
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.content.parts[0].text }}"
+      },
+      "id": "e69f50dd-2553-4fb7-b662-faba3c9ecc82",
+      "name": "Gemini Evaluator Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        3808,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Normalize Payload\"].json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "bcd5006f-af73-436a-8f9d-6e58f2a18a08",
+      "name": "Send Assessment",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3744,
+        688
+      ],
+      "webhookId": "a02ddd43-1e86-49ed-bc01-46f73fe1129e",
+      "credentials": {
+        "telegramApi": {
+          "id": "DWbclm7F5Tff5qaP",
+          "name": "Telegram account 4"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalize Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Payload": {
+      "main": [
+        [
+          {
+            "node": "Is Screenshot?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Screenshot?": {
+      "main": [
+        [
+          {
+            "node": "Download Screenshot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Raw Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Screenshot": {
+      "main": [
+        [
+          {
+            "node": "Gemini Analysis Photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Analysis Photo": {
+      "main": [
+        [
+          {
+            "node": "Set Photo Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Photo Text": {
+      "main": [
+        [
+          {
+            "node": "Gemini Evaluator Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Raw Text": {
+      "main": [
+        [
+          {
+            "node": "Gemini Evaluator Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Evaluator Chain": {
+      "main": [
+        [
+          {
+            "node": "Send Assessment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model (Shared)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Gemini Evaluator Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "6f52e24a-e788-422b-8126-d3150b3fe353",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
+  },
+  "nodeGroups": [],
+  "id": "xsH4teAwpi5mnicu",
+  "tags": []
+}
