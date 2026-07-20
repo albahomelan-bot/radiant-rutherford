@@ -409,8 +409,7 @@
       ],
       "credentials": {
         "telegramApi": {
-          "id": "pUTUWBgGKM4frqsu",
-          "name": "Telegram account"
+          "name": "Century21 Scraper Bot"
         }
       }
     },
@@ -441,8 +440,7 @@
       ],
       "credentials": {
         "telegramApi": {
-          "id": "pUTUWBgGKM4frqsu",
-          "name": "Telegram account"
+          "name": "Century21 Scraper Bot"
         }
       }
     }
