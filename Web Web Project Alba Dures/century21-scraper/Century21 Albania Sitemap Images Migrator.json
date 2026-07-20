@@ -1,0 +1,340 @@
+const fs = require('fs');
+const path = 'C:\\Users\\Admin\\Documents\\antigravity\\radiant-rutherford\\Web Web Project Alba Dures\\century21-scraper\\Century21 Albania Sitemap Images Migrator.json';
+
+try {
+    const migratorWorkflow = {
+      "name": "Century21 Albania Sitemap Images Migrator",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "d05ee5b1-7c1a-4fc9-a2dd-218d586cb884",
+          "name": "On clicking 'Execute'",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            3000,
+            100
+          ]
+        },
+        {
+          "parameters": {
+            "operation": "read",
+            "documentId": {
+              "__rl": true,
+              "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
+              "mode": "list",
+              "cachedResultName": "century21_scraper_workflow",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "gid=0",
+              "mode": "list",
+              "cachedResultName": "Аркуш1",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit#gid=0"
+            },
+            "options": {}
+          },
+          "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e582",
+          "name": "Get Existing Rows",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4,
+          "position": [
+            3200,
+            100
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "5WhpEtEGzugSOYEM",
+              "name": "Google Sheets OAuth2 API"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "jsCode": "const items = $input.all();\n// Filter out rows that ALREADY have an image to prevent unnecessary requests on rerun\nreturn items.filter(item => {\n  const img = item.json[\"Image — посилання на фото.\"];\n  return !img || img.trim() === '';\n});"
+          },
+          "id": "2b5252e5-e2d9-4d78-88d8-ed4ebf579aca",
+          "name": "Filter Unprocessed",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [
+            3400,
+            100
+          ]
+        },
+        {
+          "parameters": {
+            "batchSize": 1,
+            "options": {}
+          },
+          "id": "e9aa667b-f7d7-49a6-84c3-92e5582fcfec",
+          "name": "Split In Batches",
+          "type": "n8n-nodes-base.splitInBatches",
+          "typeVersion": 1,
+          "position": [
+            3620,
+            100
+          ]
+        },
+        {
+          "parameters": {
+            "amount": 2,
+            "unit": "seconds"
+          },
+          "id": "85277e43-e080-4b5f-ae27-914f74cf916e",
+          "name": "Wait 2s",
+          "type": "n8n-nodes-base.wait",
+          "typeVersion": 1,
+          "position": [
+            3820,
+            100
+          ],
+          "webhookId": "73a630ea-0bec-4d28-862d-854af892253a"
+        },
+        {
+          "parameters": {
+            "url": "={{ $json[\"URL — посилання на об'єкт.\"] }}",
+            "responseFormat": "text",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "User-Agent",
+                  "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "1f0b449f-bd3c-4b77-9822-de2dfea47bfd",
+          "name": "Fetch Property Page",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.1,
+          "position": [
+            4020,
+            100
+          ],
+          "continueOnFail": true
+        },
+        {
+          "parameters": {
+            "operation": "extractHtmlContent",
+            "dataPropertyName": "data",
+            "extractionValues": {
+              "values": [
+                {
+                  "key": "image",
+                  "cssSelector": "meta[property=\"og:image\"]",
+                  "attribute": "content",
+                  "returnArray": false
+                }
+              ]
+            }
+          },
+          "id": "aa13836e-6abc-4299-9ebe-12ad38c159b4",
+          "name": "Extract Image URL",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1,
+          "position": [
+            4220,
+            100
+          ],
+          "continueOnFail": true
+        },
+        {
+          "parameters": {
+            "operation": "update",
+            "documentId": {
+              "__rl": true,
+              "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
+              "mode": "list",
+              "cachedResultName": "century21_scraper_workflow",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit?usp=drivesdk"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "gid=0",
+              "mode": "list",
+              "cachedResultName": "Аркуш1",
+              "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit#gid=0"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "Image — посилання на фото.": "={{ $json.image || '' }}"
+              },
+              "matchingColumns": [
+                "URL — посилання на об'єкт."
+              ],
+              "schema": [
+                {
+                  "id": "URL — посилання на об'єкт.",
+                  "displayName": "URL — посилання на об'єкт.",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                },
+                {
+                  "id": "Image — посилання на фото.",
+                  "displayName": "Image — посилання на фото.",
+                  "required": false,
+                  "defaultMatch": false,
+                  "display": true,
+                  "type": "string",
+                  "canBeUsedToMatch": true
+                }
+              ]
+            }
+          },
+          "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e585",
+          "name": "Update Sheet Row",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4,
+          "position": [
+            4420,
+            100
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "5WhpEtEGzugSOYEM",
+              "name": "Google Sheets OAuth2 API"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "boolean": [
+                {
+                  "value1": "={{ $node[\"Split In Batches\"].context[\"noItemsLeft\"] }}",
+                  "value2": true
+                }
+              ]
+            }
+          },
+          "id": "e82d7b51-789a-4fd2-89cc-03ad56788fc0",
+          "name": "Loop Check",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 1,
+          "position": [
+            4620,
+            100
+          ]
+        }
+      ],
+      "connections": {
+        "On clicking 'Execute'": {
+          "main": [
+            [
+              {
+                "node": "Get Existing Rows",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Get Existing Rows": {
+          "main": [
+            [
+              {
+                "node": "Filter Unprocessed",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Filter Unprocessed": {
+          "main": [
+            [
+              {
+                "node": "Split In Batches",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Split In Batches": {
+          "main": [
+            [
+              {
+                "node": "Wait 2s",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Wait 2s": {
+          "main": [
+            [
+              {
+                "node": "Fetch Property Page",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Fetch Property Page": {
+          "main": [
+            [
+              {
+                "node": "Extract Image URL",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Extract Image URL": {
+          "main": [
+            [
+              {
+                "node": "Update Sheet Row",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Update Sheet Row": {
+          "main": [
+            [
+              {
+                "node": "Loop Check",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Loop Check": {
+          "main": [
+            [],
+            [
+              {
+                "node": "Split In Batches",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1",
+        "binaryMode": "separate"
+      }
+    };
+    
+    fs.writeFileSync(path, JSON.stringify(migratorWorkflow, null, 2), 'utf8');
+    console.log("Successfully created Sitemap Images Migrator n8n workflow.");
+} catch (e) {
+    console.error("Error creating migrator workflow: " + e.message);
+}
