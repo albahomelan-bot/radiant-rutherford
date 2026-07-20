@@ -1,0 +1,38 @@
+# robots.txt для рекрутингового сайта вебкам-студии в Батуми
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+
+# Разрешаем ИИ-поисковикам сканировать сайт для вывода в Perplexity, ChatGPT Search, Gemini
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Блокируем ботов-анализаторов, чтобы конкуренты не парсили структуру и ключевые слова
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: Rogerbot
+Disallow: /
+
+Sitemap: https://webcamstudio.top/sitemap.xml
