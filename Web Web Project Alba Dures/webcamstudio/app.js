@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Принудительный сброс скролла наверх при перезагрузке страницы
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
+
   const steps = document.querySelectorAll('.quiz-step');
   const progressBar = document.querySelector('.progress-bar');
   const btnPrev = document.querySelector('.btn-prev');
