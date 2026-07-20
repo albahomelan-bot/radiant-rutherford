@@ -181,16 +181,32 @@ async function init() {
   }
   updateFavCount();
 
-  // Try to load listings from file, fallback to embedded data
-  try {
-    const response = await fetch('properties_mock.json');
-    if (response.ok) {
-      listings = await response.json();
-    } else {
-      listings = FALLBACK_PROPERTIES;
+  // Try to load listings from live API, fallback to local file, fallback to embedded data
+  let loaded = false;
+  const urlParams = new URLSearchParams(window.location.search);
+  const customApiUrl = urlParams.get('api_url');
+  const apiUrls = [];
+  if (customApiUrl) apiUrls.push(customApiUrl);
+  apiUrls.push('https://albasever.app.n8n.cloud/webhook/properties');
+  apiUrls.push('properties_mock.json');
+
+  for (const url of apiUrls) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        listings = await response.json();
+        loaded = true;
+        console.log(`Loaded listings successfully from: ${url}`);
+        break;
+      }
+    } catch (e) {
+      console.warn(`Failed to fetch from ${url}:`, e.message);
     }
-  } catch (e) {
+  }
+
+  if (!loaded) {
     listings = FALLBACK_PROPERTIES;
+    console.log('Loaded listings from embedded fallback data');
   }
 
   // Setup Event Listeners
