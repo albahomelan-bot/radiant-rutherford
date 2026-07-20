@@ -266,6 +266,21 @@ function setupEventListeners() {
   });
 
   inquiryBtn.addEventListener('click', sendInquiryToManager);
+
+  // Realtime Translation Buttons Actions
+  const translateBtns = document.querySelectorAll('.translate-btn');
+  translateBtns.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!activeProperty) return;
+      const targetLang = btn.dataset.lang;
+      
+      // Update UI active state
+      translateBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      await translatePropertyDetails(activeProperty, targetLang);
+    });
+  });
 }
 
 // Switch between Catalog & Favorites tabs
@@ -648,6 +663,7 @@ function openDetailModal(item) {
   document.getElementById('detailAgentName').textContent = item.agentName;
   
   updateModalFavBtnState(item.url);
+  resetTranslateButtons();
 
   detailModal.classList.add('active');
   detailModal.classList.remove('hidden');
@@ -700,6 +716,85 @@ function sendInquiryToManager() {
     console.log("WebApp sendData to bot:", leadData);
     showToast("Успішно! (Симуляція для браузера)");
   }
+}
+
+// Global Translation Memory Cache
+let translationCache = {};
+
+// Translate Property Title & Description
+async function translatePropertyDetails(property, lang) {
+  const titleEl = document.getElementById('detailTitle');
+  const descEl = document.getElementById('detailDescription');
+  const loaderEl = document.getElementById('translateLoader');
+  
+  const originalTitle = property.title;
+  const originalDesc = property.description;
+  
+  if (lang === 'sq') {
+    titleEl.textContent = originalTitle;
+    descEl.textContent = originalDesc;
+    return;
+  }
+  
+  // Check memory cache
+  if (translationCache[property.url] && translationCache[property.url][lang]) {
+    const cached = translationCache[property.url][lang];
+    titleEl.textContent = cached.title;
+    descEl.textContent = cached.description;
+    return;
+  }
+  
+  // Show loader overlay
+  loaderEl.classList.remove('hidden');
+  
+  try {
+    const [translatedTitle, translatedDesc] = await Promise.all([
+      fetchGoogleTranslate(originalTitle, lang),
+      fetchGoogleTranslate(originalDesc, lang)
+    ]);
+    
+    // Save to cache
+    if (!translationCache[property.url]) {
+      translationCache[property.url] = {};
+    }
+    translationCache[property.url][lang] = {
+      title: translatedTitle,
+      description: translatedDesc
+    };
+    
+    titleEl.textContent = translatedTitle;
+    descEl.textContent = translatedDesc;
+  } catch (e) {
+    console.error("Translation error:", e);
+    showToast("Помилка завантаження перекладу");
+    titleEl.textContent = originalTitle;
+    descEl.textContent = originalDesc;
+    resetTranslateButtons();
+  } finally {
+    loaderEl.classList.add('hidden');
+  }
+}
+
+// Free Google Translation API Fetcher
+async function fetchGoogleTranslate(text, toLang) {
+  if (!text || text.trim() === '') return '';
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${toLang}&dt=t&q=${encodeURIComponent(text)}`;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Translation API failed");
+  const data = await response.json();
+  return data[0].map(item => item[0]).join('');
+}
+
+// Reset translate flags state to Sq (Albanian)
+function resetTranslateButtons() {
+  const translateBtns = document.querySelectorAll('.translate-btn');
+  translateBtns.forEach(btn => {
+    if (btn.dataset.lang === 'sq') {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
 }
 
 // Display float notification toast

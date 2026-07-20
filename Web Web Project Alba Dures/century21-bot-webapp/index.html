@@ -198,8 +198,22 @@
             <div class="detail-divider"></div>
 
             <div class="detail-section">
-              <h3>Опис об'єкта</h3>
-              <p id="detailDescription">Description text...</p>
+              <div class="detail-section-header">
+                <h3>Опис об'єкта</h3>
+                <div class="translate-bar">
+                  <button class="translate-btn active" data-lang="sq">🇦🇱 Sq</button>
+                  <button class="translate-btn" data-lang="en">🇬🇧 En</button>
+                  <button class="translate-btn" data-lang="uk">🇺🇦 Uk</button>
+                  <button class="translate-btn" data-lang="ru">🇷🇺 Ru</button>
+                </div>
+              </div>
+              <div class="description-wrapper" style="position: relative; min-height: 80px;">
+                <p id="detailDescription">Description text...</p>
+                <div id="translateLoader" class="translate-loader hidden">
+                  <span class="spinner"></span>
+                  Переклад...
+                </div>
+              </div>
             </div>
 
             <div class="detail-divider"></div>
