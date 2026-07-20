@@ -183,7 +183,8 @@
               "canBeUsedToMatch": true
             }
           ]
-        }
+        },
+        "columnToMatchOn": "URL — посилання на об'єкт."
       },
       "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e585",
       "name": "Update Sheet Row",
@@ -230,9 +231,9 @@
             "type": "main",
             "index": 0
           }
-            ]
-          ]
-        },
+        ]
+      ]
+    },
     "Get Existing Rows": {
       "main": [
         [
@@ -241,9 +242,9 @@
             "type": "main",
             "index": 0
           }
-            ]
-          ]
-        },
+        ]
+      ]
+    },
     "Filter Unprocessed": {
       "main": [
         [
@@ -252,9 +253,9 @@
             "type": "main",
             "index": 0
           }
-            ]
-          ]
-        },
+        ]
+      ]
+    },
     "Split In Batches": {
       "main": [
         [
@@ -263,9 +264,9 @@
             "type": "main",
             "index": 0
           }
-            ]
-          ]
-        },
+        ]
+      ]
+    },
     "Wait 2s": {
       "main": [
         [
@@ -274,9 +275,9 @@
             "type": "main",
             "index": 0
           }
-            ]
-          ]
-        },
+        ]
+      ]
+    },
     "Fetch Property Page": {
       "main": [
         [
@@ -285,9 +286,9 @@
             "type": "main",
             "index": 0
           }
-            ]
-          ]
-        },
+        ]
+      ]
+    },
     "Extract Image URL": {
       "main": [
         [
@@ -296,9 +297,9 @@
             "type": "main",
             "index": 0
           }
-            ]
-          ]
-        },
+        ]
+      ]
+    },
     "Update Sheet Row": {
       "main": [
         [
@@ -307,9 +308,9 @@
             "type": "main",
             "index": 0
           }
-            ]
-          ]
-        },
+        ]
+      ]
+    },
     "Loop Check": {
       "main": [
         [],
@@ -319,9 +320,9 @@
             "type": "main",
             "index": 0
           }
-            ]
-          ]
-        }
+        ]
+      ]
+    }
   },
   "settings": {
     "executionOrder": "v1",
