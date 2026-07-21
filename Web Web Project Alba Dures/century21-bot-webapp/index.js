@@ -179,6 +179,31 @@ async function init() {
   if (isOnboarded === 'true') {
     onboardingOverlay.classList.add('hidden');
     mainInterface.classList.remove('blur-effect');
+  } else {
+    // Setup onboarding language and greetings
+    let defaultLang = localStorage.getItem('c21_lang');
+    if (!defaultLang && tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+      const tgLang = tg.initDataUnsafe.user.language_code;
+      if (tgLang) {
+        if (tgLang.startsWith('uk') || tgLang.startsWith('ua')) defaultLang = 'uk';
+        else if (tgLang.startsWith('ru')) defaultLang = 'ru';
+        else if (tgLang.startsWith('sq')) defaultLang = 'sq';
+        else defaultLang = 'en';
+      }
+    }
+    if (!defaultLang) defaultLang = 'uk'; // Default language
+
+    // Select the correct flag button state
+    const onboardingLangBtns = document.querySelectorAll('.onboarding-lang-btn');
+    onboardingLangBtns.forEach(btn => {
+      if (btn.dataset.lang === defaultLang) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    translateOnboarding(defaultLang);
   }
 
   // Load Favorites from LocalStorage
@@ -786,7 +811,14 @@ function sendInquiryToManager() {
       district: activeProperty.district,
       agentName: activeProperty.agentName,
       agentPhone: activeProperty.agentPhone
-    }
+    },
+    user: tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? {
+      id: tg.initDataUnsafe.user.id,
+      firstName: tg.initDataUnsafe.user.first_name || '',
+      lastName: tg.initDataUnsafe.user.last_name || '',
+      username: tg.initDataUnsafe.user.username || '',
+      languageCode: tg.initDataUnsafe.user.language_code || ''
+    } : null
   };
 
   // If running inside Telegram, send data back to Bot
@@ -896,8 +928,11 @@ function showToast(message) {
 }
 
 // Pre-defined static translations for Onboarding Screen
+// Pre-defined static translations for Onboarding Screen
 const ONBOARDING_TRANSLATIONS = {
   uk: {
+    welcome: "Вітаємо, {name}!",
+    welcomeDefault: "Century 21 Albania",
     subtitle: "Ваш персональний AI-помічник з пошуку найкращої нерухомості в Дурресі та Тирані.",
     f1Title: "Розумний пошук",
     f1Desc: "Шукайте будь-якою мовою (UA, EN, SQ, RU) — бот перекладає на льоту.",
@@ -910,6 +945,8 @@ const ONBOARDING_TRANSLATIONS = {
     btn: "🚀 Почати пошук"
   },
   en: {
+    welcome: "Welcome, {name}!",
+    welcomeDefault: "Century 21 Albania",
     subtitle: "Your personal AI assistant for finding the best real estate in Durrës and Tirana.",
     f1Title: "Smart Search",
     f1Desc: "Search in any language (UA, EN, SQ, RU) — the bot translates on the fly.",
@@ -922,6 +959,8 @@ const ONBOARDING_TRANSLATIONS = {
     btn: "🚀 Start Search"
   },
   sq: {
+    welcome: "Përshëndetje, {name}!",
+    welcomeDefault: "Century 21 Albania",
     subtitle: "Asistenti juaj personal AI për gjetjen e pronave më të mira në Durrës dhe Tiranë.",
     f1Title: "Kërkim inteligjent",
     f1Desc: "Kërkoni në çdo gjuhë (UA, EN, SQ, RU) — boti përkthen në fluturim.",
@@ -934,6 +973,8 @@ const ONBOARDING_TRANSLATIONS = {
     btn: "🚀 Fillo Kërkimin"
   },
   ru: {
+    welcome: "Привет, {name}!",
+    welcomeDefault: "Century 21 Albania",
     subtitle: "Ваш персональный AI-помощник по поиску лучшей недвижимости в Дурресе и Тиране.",
     f1Title: "Умный поиск",
     f1Desc: "Ищите на любом языке (UA, EN, SQ, RU) — бот переводит на лету.",
@@ -942,7 +983,7 @@ const ONBOARDING_TRANSLATIONS = {
     f3Title: "Умные теги",
     f3Desc: "Мгновенно находите варианты с видом на море или с мебелью.",
     f4Title: "Список избранного",
-    f4Desc: "Сохраняйте лучшие квартиры и отправляйте запрос в один клик.",
+    f4Desc: "Сохраняйте лучшие квартиры и отправляйте запрос в один кл`ик.",
     btn: "🚀 Начать поиск"
   }
 };
@@ -954,6 +995,13 @@ async function translateOnboarding(lang) {
   try {
     const data = ONBOARDING_TRANSLATIONS[lang];
     if (data) {
+      // Auto-replace name placeholder if Telegram first_name is available
+      let welcomeTitle = data.welcomeDefault;
+      if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) {
+        welcomeTitle = data.welcome.replace('{name}', tg.initDataUnsafe.user.first_name);
+      }
+      
+      document.getElementById('onboardingTitle').textContent = welcomeTitle;
       document.getElementById('onboardingSubtitle').textContent = data.subtitle;
       document.getElementById('onboardingF1Title').textContent = data.f1Title;
       document.getElementById('onboardingF1Desc').textContent = data.f1Desc;
@@ -964,6 +1012,9 @@ async function translateOnboarding(lang) {
       document.getElementById('onboardingF4Title').textContent = data.f4Title;
       document.getElementById('onboardingF4Desc').textContent = data.f4Desc;
       document.getElementById('startSearchBtn').textContent = data.btn;
+      
+      // Save chosen language to storage
+      localStorage.setItem('c21_lang', lang);
     }
   } catch (e) {
     console.error("Error setting onboarding text language:", e);
