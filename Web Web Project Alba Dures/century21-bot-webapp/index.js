@@ -122,6 +122,7 @@ let activeProperty = null;
 // Filters State
 let filterState = {
   searchQuery: '',
+  translatedQueries: [],
   category: 'all',
   city: 'all',
   districts: [],
@@ -224,10 +225,51 @@ function setupEventListeners() {
   tabCatalog.addEventListener('click', () => switchTab('catalog'));
   tabFavorites.addEventListener('click', () => switchTab('favorites'));
 
-  // Search input change
+  // Search input change with smart translation debounce
+  let searchTimeout = null;
   searchInput.addEventListener('input', (e) => {
-    filterState.searchQuery = e.target.value.trim().toLowerCase();
-    render();
+    const val = e.target.value.trim().toLowerCase();
+    
+    // Clear previous timeout
+    if (searchTimeout) clearTimeout(searchTimeout);
+    
+    if (val === '') {
+      filterState.searchQuery = '';
+      filterState.translatedQueries = [];
+      render();
+      return;
+    }
+    
+    // Check if contains Cyrillic characters (Ukrainian / Russian)
+    const hasCyrillic = /[а-яА-ЯёЁіІїЇєЄґҐ]/.test(val);
+    if (hasCyrillic) {
+      // Debounce translation (400ms) to prevent excessive API requests
+      searchTimeout = setTimeout(async () => {
+        try {
+          const [enTrans, sqTrans] = await Promise.all([
+            fetchGoogleTranslate(val, 'en'),
+            fetchGoogleTranslate(val, 'sq')
+          ]);
+          filterState.searchQuery = val;
+          filterState.translatedQueries = [
+            val, 
+            enTrans.toLowerCase(), 
+            sqTrans.toLowerCase()
+          ];
+          console.log("Translated search query to:", filterState.translatedQueries);
+          render();
+        } catch (err) {
+          console.error("Search query translation error:", err);
+          filterState.searchQuery = val;
+          filterState.translatedQueries = [val];
+          render();
+        }
+      }, 400);
+    } else {
+      filterState.searchQuery = val;
+      filterState.translatedQueries = [val];
+      render();
+    }
   });
 
   // Filter Drawer Toggle
@@ -393,6 +435,7 @@ function applyFilters() {
 function resetFilters() {
   filterState = {
     searchQuery: searchInput.value.toLowerCase(),
+    translatedQueries: [],
     category: 'all',
     city: 'all',
     districts: [],
@@ -502,13 +545,17 @@ function render() {
   
   // 1. Filter listings
   let filtered = listings.filter(item => {
-    // Search bar matching
+    // Search bar matching (smart multi-lingual match)
     if (filterState.searchQuery) {
       const title = (item.title || '').toLowerCase();
       const desc = (item.description || '').toLowerCase();
-      if (!title.includes(filterState.searchQuery) && !desc.includes(filterState.searchQuery)) {
-        return false;
-      }
+      
+      const isMatch = filterState.translatedQueries.some(term => {
+        if (!term) return false;
+        return title.includes(term) || desc.includes(term);
+      });
+      
+      if (!isMatch) return false;
     }
     
     // Category (Sale/Rent)
