@@ -15,7 +15,8 @@
 </head>
 <body>
   <div id="app">
-    <!-- Header Bar -->
+    <div id="mainInterface" class="main-interface blur-effect">
+      <!-- Header Bar -->
     <header class="app-header">
       <div class="search-bar-container">
         <input type="text" id="searchInput" placeholder="Пошук за назвою або описом...">
@@ -239,6 +240,49 @@
 
     <!-- Notification Toast -->
     <div id="toast" class="toast hidden">Повідомлення відправлено!</div>
+    </div> <!-- Close mainInterface -->
+
+    <!-- Welcome/Onboarding Overlay Screen -->
+    <div id="onboardingOverlay" class="onboarding-overlay">
+      <div class="onboarding-card">
+        <div class="onboarding-logo">🏢</div>
+        <h2>Century 21 Albania</h2>
+        <p class="onboarding-subtitle">Ваш персональний AI-помічник з пошуку найкращої нерухомості в Дурресі та Тирані.</p>
+        
+        <div class="onboarding-features">
+          <div class="onboarding-feature">
+            <span class="feature-icon">🔍</span>
+            <div class="feature-text">
+              <h4>Розумний пошук</h4>
+              <p>Шукайте будь-якою мовою (UA, EN, SQ, RU) — бот перекладає на льоту.</p>
+            </div>
+          </div>
+          <div class="onboarding-feature">
+            <span class="feature-icon">⚙️</span>
+            <div class="feature-text">
+              <h4>Гнучкі фільтри</h4>
+              <p>Швидко відбирайте об'єкти за бюджетом, спальнями та типом нерухомості.</p>
+            </div>
+          </div>
+          <div class="onboarding-feature">
+            <span class="feature-icon">🌊</span>
+            <div class="feature-text">
+              <h4>Розумні теги</h4>
+              <p>Миттєво знаходьте варіанти з видом на море чи з меблями.</p>
+            </div>
+          </div>
+          <div class="onboarding-feature">
+            <span class="feature-icon">❤️</span>
+            <div class="feature-text">
+              <h4>Список обраного</h4>
+              <p>Зберігайте найкращі квартири та надсилайте запит в один клік.</p>
+            </div>
+          </div>
+        </div>
+
+        <button id="startSearchBtn" class="btn btn-primary btn-block">🚀 Почати пошук</button>
+      </div>
+    </div>
   </div>
 
   <!-- App Javascript -->

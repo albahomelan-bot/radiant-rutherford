@@ -902,3 +902,129 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/* Onboarding Screen & Blur Effect */
+.main-interface {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  transition: filter 0.4s ease, brightness 0.4s ease;
+}
+
+.main-interface.blur-effect {
+  filter: blur(12px) brightness(0.45);
+  pointer-events: none;
+}
+
+.onboarding-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+.onboarding-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.onboarding-card {
+  background: rgba(15, 18, 24, 0.85);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.onboarding-logo {
+  font-size: 32px;
+  width: 64px;
+  height: 64px;
+  background: rgba(229, 169, 59, 0.1);
+  border: 1px solid rgba(229, 169, 59, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 4px auto;
+}
+
+.onboarding-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e5a93b;
+}
+
+.onboarding-subtitle {
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
+.onboarding-features {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  margin: 6px 0;
+}
+
+.onboarding-feature {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.feature-icon {
+  font-size: 20px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.feature-text h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.feature-text p {
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.3;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

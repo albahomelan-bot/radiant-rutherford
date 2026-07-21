@@ -172,6 +172,15 @@ const toast = document.getElementById('toast');
 
 // Initialize App
 async function init() {
+  // Check Onboarding state
+  const isOnboarded = localStorage.getItem('c21_onboarded');
+  const onboardingOverlay = document.getElementById('onboardingOverlay');
+  const mainInterface = document.getElementById('mainInterface');
+  if (isOnboarded === 'true') {
+    onboardingOverlay.classList.add('hidden');
+    mainInterface.classList.remove('blur-effect');
+  }
+
   // Load Favorites from LocalStorage
   try {
     const savedFavs = localStorage.getItem('c21_favorites');
@@ -323,6 +332,24 @@ function setupEventListeners() {
       await translatePropertyDetails(activeProperty, targetLang);
     });
   });
+
+  // Onboarding Button Action
+  const startSearchBtn = document.getElementById('startSearchBtn');
+  if (startSearchBtn) {
+    startSearchBtn.addEventListener('click', () => {
+      const onboardingOverlay = document.getElementById('onboardingOverlay');
+      const mainInterface = document.getElementById('mainInterface');
+      
+      onboardingOverlay.style.opacity = '0';
+      mainInterface.classList.remove('blur-effect');
+      
+      localStorage.setItem('c21_onboarded', 'true');
+      
+      setTimeout(() => {
+        onboardingOverlay.classList.add('hidden');
+      }, 350);
+    });
+  }
 }
 
 // Switch between Catalog & Favorites tabs
