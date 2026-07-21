@@ -1,0 +1,19 @@
+# Allow all search engines and AI web crawlers to index our Albania real estate app
+User-agent: *
+Allow: /
+
+# Specifically allow major AI indexing crawlers (OpenAI, Google-Extended, Anthropic, Applebot)
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Link to sitemap
+Sitemap: https://century21-albania.pages.dev/sitemap.xml
