@@ -955,17 +955,54 @@ body {
   animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.onboarding-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .onboarding-logo {
-  font-size: 32px;
-  width: 64px;
-  height: 64px;
+  font-size: 28px;
+  width: 52px;
+  height: 52px;
   background: rgba(229, 169, 59, 0.1);
   border: 1px solid rgba(229, 169, 59, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 4px auto;
+  margin: 0;
+}
+
+.onboarding-lang-bar {
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 2px;
+  align-items: center;
+}
+
+.onboarding-lang-btn {
+  background: transparent;
+  border: none;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: inherit;
+  color: #9ca3af;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  transition: all 0.2s ease;
+}
+
+.onboarding-lang-btn.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5a93b;
 }
 
 .onboarding-card h2 {

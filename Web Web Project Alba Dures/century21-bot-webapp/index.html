@@ -244,38 +244,53 @@
 
     <!-- Welcome/Onboarding Overlay Screen -->
     <div id="onboardingOverlay" class="onboarding-overlay">
-      <div class="onboarding-card">
-        <div class="onboarding-logo">🏢</div>
+      <div class="onboarding-card" style="position: relative;">
+        <!-- Onboarding Loader -->
+        <div id="onboardingLoader" class="translate-loader hidden">
+          <span class="spinner"></span>
+          <span>Переклад...</span>
+        </div>
+
+        <div class="onboarding-header-bar">
+          <div class="onboarding-logo">🏢</div>
+          <div class="onboarding-lang-bar">
+            <button class="onboarding-lang-btn active" data-lang="uk">🇺🇦 Uk</button>
+            <button class="onboarding-lang-btn" data-lang="en">🇬🇧 En</button>
+            <button class="onboarding-lang-btn" data-lang="sq">🇦🇱 Sq</button>
+            <button class="onboarding-lang-btn" data-lang="ru">🇷🇺 Ru</button>
+          </div>
+        </div>
+
         <h2>Century 21 Albania</h2>
-        <p class="onboarding-subtitle">Ваш персональний AI-помічник з пошуку найкращої нерухомості в Дурресі та Тирані.</p>
+        <p class="onboarding-subtitle" id="onboardingSubtitle">Ваш персональний AI-помічник з пошуку найкращої нерухомості в Дурресі та Тирані.</p>
         
         <div class="onboarding-features">
           <div class="onboarding-feature">
             <span class="feature-icon">🔍</span>
             <div class="feature-text">
-              <h4>Розумний пошук</h4>
-              <p>Шукайте будь-якою мовою (UA, EN, SQ, RU) — бот перекладає на льоту.</p>
+              <h4 id="onboardingF1Title">Розумний пошук</h4>
+              <p id="onboardingF1Desc">Шукайте будь-якою мовою (UA, EN, SQ, RU) — бот перекладає на льоту.</p>
             </div>
           </div>
           <div class="onboarding-feature">
             <span class="feature-icon">⚙️</span>
             <div class="feature-text">
-              <h4>Гнучкі фільтри</h4>
-              <p>Швидко відбирайте об'єкти за бюджетом, спальнями та типом нерухомості.</p>
+              <h4 id="onboardingF2Title">Гнучкі фільтри</h4>
+              <p id="onboardingF2Desc">Швидко відбирайте об'єкти за бюджетом, спальнями та типом нерухомості.</p>
             </div>
           </div>
           <div class="onboarding-feature">
             <span class="feature-icon">🌊</span>
             <div class="feature-text">
-              <h4>Розумні теги</h4>
-              <p>Миттєво знаходьте варіанти з видом на море чи з меблями.</p>
+              <h4 id="onboardingF3Title">Розумні теги</h4>
+              <p id="onboardingF3Desc">Миттєво знаходьте варіанти з видом на море чи з меблями.</p>
             </div>
           </div>
           <div class="onboarding-feature">
             <span class="feature-icon">❤️</span>
             <div class="feature-text">
-              <h4>Список обраного</h4>
-              <p>Зберігайте найкращі квартири та надсилайте запит в один клік.</p>
+              <h4 id="onboardingF4Title">Список обраного</h4>
+              <p id="onboardingF4Desc">Зберігайте найкращі квартири та надсилайте запит в один клік.</p>
             </div>
           </div>
         </div>

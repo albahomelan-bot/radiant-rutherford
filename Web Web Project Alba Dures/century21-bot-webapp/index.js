@@ -350,6 +350,21 @@ function setupEventListeners() {
       }, 350);
     });
   }
+
+  // Onboarding Language Buttons Action
+  const onboardingLangBtns = document.querySelectorAll('.onboarding-lang-btn');
+  onboardingLangBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetLang = btn.dataset.lang;
+      
+      // Update UI active state
+      onboardingLangBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Translate onboarding card
+      translateOnboarding(targetLang);
+    });
+  });
 }
 
 // Switch between Catalog & Favorites tabs
@@ -878,6 +893,86 @@ function showToast(message) {
       toast.classList.add('hidden');
     }, 300);
   }, 2000);
+}
+
+// Pre-defined static translations for Onboarding Screen
+const ONBOARDING_TRANSLATIONS = {
+  uk: {
+    subtitle: "Ваш персональний AI-помічник з пошуку найкращої нерухомості в Дурресі та Тирані.",
+    f1Title: "Розумний пошук",
+    f1Desc: "Шукайте будь-якою мовою (UA, EN, SQ, RU) — бот перекладає на льоту.",
+    f2Title: "Гнучкі фільтри",
+    f2Desc: "Швидко відбирайте об'єкти за бюджетом, спальнями та типом нерухомості.",
+    f3Title: "Розумні теги",
+    f3Desc: "Миттєво знаходьте варіанти з видом на море чи з меблями.",
+    f4Title: "Список обраного",
+    f4Desc: "Зберігайте найкращі квартири та надсилайте запит в один клік.",
+    btn: "🚀 Почати пошук"
+  },
+  en: {
+    subtitle: "Your personal AI assistant for finding the best real estate in Durrës and Tirana.",
+    f1Title: "Smart Search",
+    f1Desc: "Search in any language (UA, EN, SQ, RU) — the bot translates on the fly.",
+    f2Title: "Flexible Filters",
+    f2Desc: "Quickly select properties by budget, bedrooms, and property type.",
+    f3Title: "Smart Tags",
+    f3Desc: "Instantly find options with sea view or fully furnished.",
+    f4Title: "Favorites List",
+    f4Desc: "Save the best properties and send a request to the manager in one click.",
+    btn: "🚀 Start Search"
+  },
+  sq: {
+    subtitle: "Asistenti juaj personal AI për gjetjen e pronave më të mira në Durrës dhe Tiranë.",
+    f1Title: "Kërkim inteligjent",
+    f1Desc: "Kërkoni në çdo gjuhë (UA, EN, SQ, RU) — boti përkthen në fluturim.",
+    f2Title: "Filtra fleksibël",
+    f2Desc: "Zgjidhni shpejt pronat sipas buxhetit, dhomave të gjumit dhe llojit të pronës.",
+    f3Title: "Etiketa inteligjente",
+    f3Desc: "Gjeni menjëherë opsione me pamje nga deti ose të mobiluara plotësisht.",
+    f4Title: "Lista e të preferuarave",
+    f4Desc: "Ruani pronat më të mira dhe dërgoni një kërkesë te menaxheri me një klikim.",
+    btn: "🚀 Fillo Kërkimin"
+  },
+  ru: {
+    subtitle: "Ваш персональный AI-помощник по поиску лучшей недвижимости в Дурресе и Тиране.",
+    f1Title: "Умный поиск",
+    f1Desc: "Ищите на любом языке (UA, EN, SQ, RU) — бот переводит на лету.",
+    f2Title: "Гибкие фильтры",
+    f2Desc: "Быстро отбирайте объекты по бюджету, спальням и типу недвижимости.",
+    f3Title: "Умные теги",
+    f3Desc: "Мгновенно находите варианты с видом на море или с мебелью.",
+    f4Title: "Список избранного",
+    f4Desc: "Сохраняйте лучшие квартиры и отправляйте запрос в один клик.",
+    btn: "🚀 Начать поиск"
+  }
+};
+
+async function translateOnboarding(lang) {
+  const loader = document.getElementById('onboardingLoader');
+  loader.classList.remove('hidden');
+  
+  try {
+    const data = ONBOARDING_TRANSLATIONS[lang];
+    if (data) {
+      document.getElementById('onboardingSubtitle').textContent = data.subtitle;
+      document.getElementById('onboardingF1Title').textContent = data.f1Title;
+      document.getElementById('onboardingF1Desc').textContent = data.f1Desc;
+      document.getElementById('onboardingF2Title').textContent = data.f2Title;
+      document.getElementById('onboardingF2Desc').textContent = data.f2Desc;
+      document.getElementById('onboardingF3Title').textContent = data.f3Title;
+      document.getElementById('onboardingF3Desc').textContent = data.f3Desc;
+      document.getElementById('onboardingF4Title').textContent = data.f4Title;
+      document.getElementById('onboardingF4Desc').textContent = data.f4Desc;
+      document.getElementById('startSearchBtn').textContent = data.btn;
+    }
+  } catch (e) {
+    console.error("Error setting onboarding text language:", e);
+  } finally {
+    // Add visual delay for styling
+    setTimeout(() => {
+      loader.classList.add('hidden');
+    }, 150);
+  }
 }
 
 // Run app init
