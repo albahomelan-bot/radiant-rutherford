@@ -149,7 +149,9 @@
           "value": {
             "Image — посилання на фото.": "={{ $json[\"Image — посилання на фото.\"] }}"
           },
-          "matchingColumns": [],
+          "matchingColumns": [
+            "URL — посилання на об'єкт."
+          ],
           "schema": [
             {
               "id": "URL — посилання на об'єкт.",
