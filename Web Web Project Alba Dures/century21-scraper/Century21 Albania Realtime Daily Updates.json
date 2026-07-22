@@ -470,11 +470,6 @@
             "node": "Get Existing URLs",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Find New URLs",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -486,7 +481,13 @@
             "node": "Get Existing URLs",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Get Existing URLs": {
+      "main": [
+        [
           {
             "node": "Find New URLs",
             "type": "main",
