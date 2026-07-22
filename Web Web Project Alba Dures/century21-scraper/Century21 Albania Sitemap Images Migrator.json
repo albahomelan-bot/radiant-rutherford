@@ -115,7 +115,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const item = $input.first().json;\nconst html = item.data || item.body || '';\nlet image = '';\nif (html) {\n  const ogImageRegex = /<meta\\s+property=[\"']og:image[\"']\\s+content=[\"']([^\"']+)[\"']/i;\n  const match = ogImageRegex.exec(html);\n  if (match) {\n    image = match[1];\n  }\n}\nreturn {\n  \"URL — посилання на об'єкт.\": item[\"URL — посилання на об'єкт.\"],\n  \"Image — посилання на фото.\": image\n};"
+        "jsCode": "const item = $input.first().json;\nconst html = item.data || item.body || '';\nlet image = '';\nif (html) {\n  const ogImageRegex = /<meta\\s+property=[\"']og:image[\"']\\s+content=[\"']([^\"']+)[\"']/i;\n  const match = ogImageRegex.exec(html);\n  if (match) {\n    image = match[1];\n  }\n}\n\n// Filter out logo if it's the only one found and try to find the real one\nif (image && image.includes('Century21-nav-logo.png')) {\n  const allMatches = html.match(/content=\"([^\"]*?\\.jpg)\"/g);\n  if (allMatches) {\n    for (const m of allMatches) {\n      if (m.includes('digitaloceanspaces')) {\n        const cleanMatch = /content=\"([^\"]+)\"/.exec(m);\n        if (cleanMatch) {\n          image = cleanMatch[1];\n          break;\n        }\n      }\n    }\n  }\n}\n\nreturn {\n  \"URL — посилання на об'єкт.\": $('Split In Batches').item.json[\"URL — посилання на об'єкт.\"],\n  \"Image — посилання на фото.\": image\n};"
       },
       "id": "aa13836e-6abc-4299-9ebe-12ad38c159b4",
       "name": "Extract Image URL",
@@ -235,13 +235,13 @@
       "main": [
         [
           {
-                "node": "Split In Batches",
-                "type": "main",
-                "index": 0
-              }
-            ]
-          ]
-        },
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Split In Batches": {
       "main": [
         [
