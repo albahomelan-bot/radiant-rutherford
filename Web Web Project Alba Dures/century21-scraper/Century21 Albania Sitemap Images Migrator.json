@@ -128,7 +128,7 @@
     },
     {
       "parameters": {
-        "operation": "update",
+        "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
           "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
@@ -143,7 +143,6 @@
           "cachedResultName": "Аркуш1",
           "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit#gid=0"
         },
-        "columnToMatchOn": "URL — посилання на об'єкт.",
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
