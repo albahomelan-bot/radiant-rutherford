@@ -128,7 +128,7 @@
     },
     {
       "parameters": {
-        "operation": "appendOrUpdate",
+        "operation": "update",
         "documentId": {
           "__rl": true,
           "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
@@ -146,6 +146,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
+            "URL — посилання на об'єкт.": "={{ $json[\"URL — посилання на об'єкт.\"] }}",
             "Image — посилання на фото.": "={{ $json[\"Image — посилання на фото.\"] }}"
           },
           "matchingColumns": [
@@ -171,7 +172,8 @@
               "canBeUsedToMatch": true
             }
           ]
-        }
+        },
+        "columnToMatchOn": "URL — посилання на об'єкт."
       },
       "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e585",
       "name": "Update Sheet Row",
