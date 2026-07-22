@@ -68,9 +68,14 @@
         <a href="#comparison">Сравнение</a>
         <a href="#reviews">Отзывы</a>
       </nav>
-      <a href="https://t.me/your_telegram_username" target="_blank" class="btn-contact">
-        <i class="fab fa-telegram-plane"></i> <span class="btn-text">Написать в </span>Telegram
-      </a>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <a href="https://t.me/your_telegram_username" target="_blank" class="btn-contact">
+          <i class="fab fa-telegram-plane"></i> <span class="btn-text">Написать в </span>Telegram
+        </a>
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Переключить тему">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -171,71 +176,70 @@
     </div>
   </section>
 
-  <!-- Блок 5 — Интерактивный тест-опросник (Квиз для конверсии) -->
+  <!-- Блок 5 — Интерактивный калькулятор доходов (Вместо квиза) -->
   <section id="quiz-section">
     <div class="section-header">
-      <h2>Пройди тест и узнай <span>свои перспективы</span></h2>
-      <p>Ответь на 3 вопроса, чтобы рассчитать примерный доход и получить брошюру о переезде</p>
+      <h2>Рассчитай свой <span>потенциальный доход</span></h2>
+      <p>Выбери параметры работы, чтобы узнать ориентировочный заработок в месяц и зафиксировать условия</p>
     </div>
     
-    <div class="quiz-container">
-      <div class="quiz-progress">
-        <div class="progress-bar"></div>
-      </div>
+    <div class="calc-wrapper">
+      <!-- Левая колонка: параметры -->
+      <div class="calc-settings">
+        <div class="calc-field">
+          <label class="calc-label">1. Количество рабочих смен в неделю:</label>
+          <div class="calc-options-row" id="shifts-options">
+            <button type="button" class="calc-opt-btn active" data-value="4">4 смены</button>
+            <button type="button" class="calc-opt-btn" data-value="5">5 смен</button>
+            <button type="button" class="calc-opt-btn" data-value="6">6 смен</button>
+          </div>
+        </div>
 
-      <!-- Вопрос 1 -->
-      <div class="quiz-step active">
-        <div class="quiz-question">1. Был ли у тебя опыт работы в стриминге?</div>
-        <div class="quiz-options">
-          <button class="option-btn" data-value="no_experience">Нет опыта, нужно обучение с нуля</button>
-          <button class="option-btn" data-value="some_experience">Есть небольшой опыт стріминга / веб-моделинга</button>
-          <button class="option-btn" data-value="pro_experience">Я опытная модель (ищу лучшие условия)</button>
+        <div class="calc-field">
+          <label class="calc-label">2. Уровень владения английским языком:</label>
+          <div class="calc-options-row" id="english-options">
+            <button type="button" class="calc-opt-btn active" data-value="basic">Базовый (с переводчиком)</button>
+            <button type="button" class="calc-opt-btn" data-value="medium">Средний (понимаю / пишу)</button>
+            <button type="button" class="calc-opt-btn" data-value="fluent">Разговорный / Свободный</button>
+          </div>
+        </div>
+
+        <div class="calc-field">
+          <label class="calc-label">3. Опыт работы в стриминге:</label>
+          <div class="calc-options-row" id="experience-options">
+            <button type="button" class="calc-opt-btn active" data-value="no">Нет опыта (обучение с нуля)</button>
+            <button type="button" class="calc-opt-btn" data-value="yes">Есть опыт работы</button>
+          </div>
         </div>
       </div>
 
-      <!-- Вопрос 2 -->
-      <div class="quiz-step">
-        <div class="quiz-question">2. Каков твой уровень владения английским языком?</div>
-        <div class="quiz-options">
-          <button class="option-btn" data-value="elementary">Не знаю / базовый (буду пользоваться онлайн-переводчиком)</button>
-          <button class="option-btn" data-value="intermediate">Понимаю простые фразы, могу поддержать диалог</button>
-          <button class="option-btn" data-value="fluent">Свободно разговариваю и пишу</button>
-        </div>
-      </div>
+      <!-- Правая колонка: результат и форма -->
+      <div class="calc-result-card">
+        <div class="result-header">Твой ориентировочный доход:</div>
+        <div class="result-amount"><span id="calc-income">$2,200</span> <small>/ месяц</small></div>
+        
+        <ul class="result-features">
+          <li><i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i> Бесплатное проживание у моря</li>
+          <li><i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i> 100% оплата авиабилетов в Батуми</li>
+          <li><i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i> Полная конфиденциальность & геоблокинг СНГ</li>
+        </ul>
 
-      <!-- Вопрос 3 -->
-      <div class="quiz-step">
-        <div class="quiz-question">3. Когда ты готова прилететь в Батуми при условии оплаты билетов?</div>
-        <div class="quiz-options">
-          <button class="option-btn" data-value="within_2_weeks">Готова в течение 1-2 недель (нужен билет)</button>
-          <button class="option-btn" data-value="within_month">В течение ближайшего месяца</button>
-          <button class="option-btn" data-value="just_asking">Просто присматриваюсь к условиям</button>
-        </div>
-      </div>
+        <form id="calc-form" class="calc-contact-form">
+          <div class="form-group">
+            <input type="text" id="calc-name" class="form-control" placeholder="Твое имя / Никнейм" required>
+          </div>
+          <div class="form-group">
+            <input type="text" id="calc-telegram" class="form-control" placeholder="Твой Telegram (@username или телефон)" required>
+          </div>
+          <button type="submit" class="btn-primary btn-submit-calc">Зафиксировать доход и забронировать место</button>
+        </form>
 
-      <!-- Контакты -->
-      <div class="quiz-step">
-        <div class="quiz-question">Куда прислать расчет твоего дохода и брошюру?</div>
-        <div class="form-group">
-          <label for="model-name">Ваше имя / никнейм</label>
-          <input type="text" id="model-name" class="form-control" placeholder="Например, Алина" required>
+        <!-- Сообщение об успехе -->
+        <div id="calc-success" class="calc-success-msg" style="display: none; text-align: center; padding: 20px 0;">
+          <div style="color: #10b981; font-size: 40px; margin-bottom: 15px;"><i class="fa-solid fa-circle-check"></i></div>
+          <h3 style="font-size: 20px; margin-bottom: 10px; color: var(--text-main);">Заявка успешно отправлена!</h3>
+          <p style="color: var(--text-sec); font-size: 14px; line-height: 1.5;">Мы зафиксировали твои выбранные условия. Куратор свяжется с тобой в Telegram в течение 15 минут.</p>
         </div>
-        <div class="form-group">
-          <label for="model-telegram">Ваш Telegram (ник или телефон)</label>
-          <input type="text" id="model-telegram" class="form-control" placeholder="@username или +380..." required>
-        </div>
-      </div>
-
-      <!-- Успех -->
-      <div class="quiz-step text-center" style="text-align: center; padding: 20px 0;">
-        <div class="card-icon" style="color: #10b981; font-size: 48px; margin-bottom: 20px;"><i class="fa-solid fa-circle-check"></i></div>
-        <h3 style="font-size: 24px; margin-bottom: 15px;">Тест успешно пройден!</h3>
-        <p style="color: var(--text-sec); font-size: 15px;">Мы уже рассчитываем твой потенциальный доход и готовим брошюру о переезде. Куратор свяжется с тобой в Telegram в течение 15 минут.</p>
-      </div>
-
-      <div class="quiz-navigation">
-        <button class="btn-secondary btn-prev" style="visibility: hidden;">Назад</button>
-        <button class="btn-primary btn-next">Далее</button>
       </div>
     </div>
   </section>

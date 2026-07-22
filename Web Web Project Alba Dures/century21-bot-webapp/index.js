@@ -170,6 +170,20 @@ const modalFavBtn = document.getElementById('modalFavBtn');
 const inquiryBtn = document.getElementById('inquiryBtn');
 const toast = document.getElementById('toast');
 
+// Fetch with custom timeout helper to prevent hanging on slow APIs
+async function fetchWithTimeout(resource, options = {}) {
+  const { timeout = 3500 } = options;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal
+  });
+  clearTimeout(id);
+  return response;
+}
+
 // Initialize App
 async function init() {
   // Check Onboarding state
@@ -226,7 +240,8 @@ async function init() {
 
   for (const url of apiUrls) {
     try {
-      const response = await fetch(url);
+      console.log(`Attempting to load from: ${url}...`);
+      const response = await fetchWithTimeout(url, { timeout: 3500 });
       if (response.ok) {
         listings = await response.json();
         loaded = true;
@@ -234,7 +249,7 @@ async function init() {
         break;
       }
     } catch (e) {
-      console.warn(`Failed to fetch from ${url}:`, e.message);
+      console.warn(`Failed to fetch from ${url} (aborted or offline):`, e.message);
     }
   }
 
@@ -242,6 +257,7 @@ async function init() {
     listings = FALLBACK_PROPERTIES;
     console.log('Loaded listings from embedded fallback data');
   }
+
 
   // Setup Event Listeners
   setupEventListeners();
@@ -703,27 +719,40 @@ function render() {
     const card = document.createElement('div');
     card.className = 'property-card';
     
+    // Crash-proof fallbacks for missing/null properties
+    const itemCategory = item.category || 'Sale';
+    const categoryClass = itemCategory.toLowerCase();
+    const categoryText = itemCategory === 'Sale' ? 'Продаж' : 'Оренда';
+    const itemImage = item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=400&q=80';
+    const itemTitle = item.title || 'Об\'єкт нерухомості';
+    const itemPrice = item.price || 'Ціна за запитом';
+    const itemCity = item.city || 'Durrës';
+    const itemDistrict = item.district || '';
+    const itemArea = item.area || '0 m2';
+    const itemBedrooms = item.bedrooms || '0';
+    
     card.innerHTML = `
       <div class="card-image-wrapper">
-        <img src="${item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=400&q=80'}" alt="${item.title}">
-        <div class="card-category-badge ${item.category.toLowerCase()}">${item.category === 'Sale' ? 'Продаж' : 'Оренда'}</div>
+        <img src="${itemImage}" alt="${itemTitle}">
+        <div class="card-category-badge ${categoryClass}">${categoryText}</div>
         <button class="card-fav-btn ${isFav ? 'active' : ''}">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
         </button>
       </div>
       <div class="card-details">
-        <div class="card-price">${item.price}</div>
-        <div class="card-title">${item.title}</div>
+        <div class="card-price">${itemPrice}</div>
+        <div class="card-title">${itemTitle}</div>
         <div class="card-location">
           <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          ${item.city}, ${item.district}
+          ${itemCity}${itemDistrict ? ', ' + itemDistrict : ''}
         </div>
         <div class="card-stats">
-          <div class="card-stat">📏 ${item.area}</div>
-          <div class="card-stat">🛏 ${item.bedrooms} кімн.</div>
+          <div class="card-stat">📏 ${itemArea}</div>
+          <div class="card-stat">🛏 ${itemBedrooms} кімн.</div>
         </div>
       </div>
     `;
+
 
     // Click on Favourites button inside card
     const favBtn = card.querySelector('.card-fav-btn');

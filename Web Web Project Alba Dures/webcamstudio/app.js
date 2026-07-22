@@ -1,162 +1,135 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Принудительный сброс скролла наверх при перезагрузке страницы
+  // 1. Принудительный сброс скролла наверх при перезагрузке страницы
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
   window.scrollTo(0, 0);
 
-  const steps = document.querySelectorAll('.quiz-step');
-  const progressBar = document.querySelector('.progress-bar');
-  const btnPrev = document.querySelector('.btn-prev');
-  const btnNext = document.querySelector('.btn-next');
-  let currentStep = 0;
-  
-  // Store quiz answers
-  const answers = {
-    experience: '',
-    english: '',
-    timeframe: '',
-    contactName: '',
-    contactTelegram: ''
-  };
-
-  // Update Progress Bar
-  const updateProgress = () => {
-    const totalSteps = steps.length - 1; // exclude success screen
-    const percent = ((currentStep) / totalSteps) * 100;
-    progressBar.style.width = `${percent}%`;
-  };
-
-  // Show Active Step
-  const showStep = (index) => {
-    steps.forEach((step, idx) => {
-      if (idx === index) {
-        step.classList.add('active');
-      } else {
-        step.classList.remove('active');
-      }
-    });
-
-    // Handle back button visibility
-    if (index === 0 || index === steps.length - 1) {
-      btnPrev.style.visibility = 'hidden';
-    } else {
-      btnPrev.style.visibility = 'visible';
+  // 2. Логика переключения тем (Светлая / Темная)
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Проверяем сохраненную тему (по умолчанию темная)
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+      themeIcon.className = 'fa-solid fa-sun';
     }
 
-    // Handle next button visibility / text
-    if (index === steps.length - 2) {
-      btnNext.innerText = 'Отправить заявку';
-    } else if (index === steps.length - 1) {
-      // Hide navigation entirely on success screen
-      document.querySelector('.quiz-navigation').style.display = 'none';
-      document.querySelector('.quiz-progress').style.display = 'none';
-    } else {
-      btnNext.innerText = 'Далее';
-      btnNext.style.visibility = 'visible';
-    }
-  };
-
-  // Option selection handler
-  const optionButtons = document.querySelectorAll('.option-btn');
-  optionButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-      const parentStep = button.closest('.quiz-step');
-      const stepIndex = Array.from(steps).indexOf(parentStep);
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+      const isLight = document.body.classList.contains('light-theme');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
       
-      // Remove selected class from siblings in this step
-      parentStep.querySelectorAll('.option-btn').forEach(btn => {
-        btn.classList.remove('selected');
-      });
-
-      // Add selected class to clicked button
-      button.classList.add('selected');
-      
-      // Store answer
-      const answerValue = button.getAttribute('data-value');
-      if (stepIndex === 0) answers.experience = answerValue;
-      if (stepIndex === 1) answers.english = answerValue;
-      if (stepIndex === 2) answers.timeframe = answerValue;
-      
-      // Automatically advance step after 300ms for option slides
+      // Анимация вращения иконки при переключении
+      themeIcon.style.transform = 'rotate(360deg)';
       setTimeout(() => {
-        if (currentStep < steps.length - 2) {
-          currentStep++;
-          showStep(currentStep);
-          updateProgress();
-        }
-      }, 300);
+        themeIcon.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        themeIcon.style.transform = 'rotate(0deg)';
+      }, 200);
     });
-  });
+  }
 
-  // Next button click handler
-  btnNext.addEventListener('click', () => {
-    // Validation check for current step
-    if (currentStep < steps.length - 2) {
-      // Check if option is selected
-      const activeStep = steps[currentStep];
-      const selectedOption = activeStep.querySelector('.option-btn.selected');
-      if (!selectedOption) {
-        alert('Пожалуйста, выберите один из вариантов ответа.');
-        return;
+  // 3. Интерактивный калькулятор доходов
+  const calcIncome = document.getElementById('calc-income');
+  const calcForm = document.getElementById('calc-form');
+  const calcSuccess = document.getElementById('calc-success');
+
+  const calcOptions = {
+    shifts: 4,
+    english: 'basic',
+    experience: 'no'
+  };
+
+  const calculateSalary = () => {
+    if (!calcIncome) return;
+
+    let base = 1800;
+    if (calcOptions.shifts === 5) base = 2400;
+    if (calcOptions.shifts === 6) base = 3200;
+
+    let multiplier = 1.0;
+    if (calcOptions.english === 'medium') multiplier = 1.25;
+    if (calcOptions.english === 'fluent') multiplier = 1.5;
+
+    if (calcOptions.experience === 'yes') multiplier *= 1.15;
+
+    const total = Math.round((base * multiplier) / 100) * 100;
+    calcIncome.textContent = `$${total.toLocaleString()}`;
+  };
+
+  // Обработка кликов по опциям калькулятора
+  const bindCalcOption = (containerId, optionKey, isNumeric = false) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const buttons = container.querySelectorAll('.calc-opt-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const val = btn.getAttribute('data-value');
+        calcOptions[optionKey] = isNumeric ? parseInt(val) : val;
+        
+        calculateSalary();
+      });
+    });
+  };
+
+  bindCalcOption('shifts-options', 'shifts', true);
+  bindCalcOption('english-options', 'english');
+  bindCalcOption('experience-options', 'experience');
+
+  // Первичный расчет при загрузке
+  calculateSalary();
+
+  // Отправка формы калькулятора
+  if (calcForm) {
+    calcForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const nameInput = document.getElementById('calc-name');
+      const telegramInput = document.getElementById('calc-telegram');
+
+      if (!nameInput || !telegramInput) return;
+
+      const leadData = {
+        name: nameInput.value.trim(),
+        telegram: telegramInput.value.trim(),
+        selectedShifts: calcOptions.shifts,
+        selectedEnglish: calcOptions.english,
+        selectedExperience: calcOptions.experience,
+        estimatedIncome: calcIncome.textContent
+      };
+
+      console.log('Sending Calculator Lead to Telegram/n8n:', leadData);
+
+      // Имитируем отправку на сервер
+      calcForm.style.display = 'none';
+      if (calcSuccess) {
+        calcSuccess.style.display = 'block';
       }
-      currentStep++;
-      showStep(currentStep);
-      updateProgress();
-    } else if (currentStep === steps.length - 2) {
-      // Form submit validation
-      const nameInput = document.getElementById('model-name');
-      const telegramInput = document.getElementById('model-telegram');
-      
-      if (!nameInput.value.trim()) {
-        alert('Пожалуйста, введите ваше имя.');
-        return;
-      }
-      if (!telegramInput.value.trim()) {
-        alert('Пожалуйста, введите ваш ник в Telegram или телефон.');
-        return;
-      }
+    });
+  }
 
-      answers.contactName = nameInput.value;
-      answers.contactTelegram = telegramInput.value;
-
-      console.log('Sending Quiz Answers to Tilda/n8n:', answers);
-
-      // Transition to success step
-      currentStep++;
-      showStep(currentStep);
-      updateProgress();
-    }
-  });
-
-  // Prev button click handler
-  btnPrev.addEventListener('click', () => {
-    if (currentStep > 0) {
-      currentStep--;
-      showStep(currentStep);
-      updateProgress();
-    }
-  });
-
-  // Scroll to Top Button Logic
+  // 4. Логика плавающей кнопки скролла наверх
   const btnScrollTop = document.getElementById('btn-scroll-top');
-
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 400) {
-      btnScrollTop.classList.add('show');
-    } else {
-      btnScrollTop.classList.remove('show');
-    }
-  });
-
-  btnScrollTop.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+  if (btnScrollTop) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        btnScrollTop.classList.add('show');
+      } else {
+        btnScrollTop.classList.remove('show');
+      }
     });
-  });
 
-  // Initialize
-  showStep(currentStep);
-  updateProgress();
+    btnScrollTop.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
 });
