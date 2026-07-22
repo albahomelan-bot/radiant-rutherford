@@ -412,7 +412,7 @@
     {
       "parameters": {
         "chatId": "-1002415361322",
-        "text": "=🆕 Додано новий об'єкт нерухомості!\n\n🏡 Назва: {{ $('Clean & Format Data').item.json.title }}\n💵 Ціна: {{ $('Clean & Format Data').item.json.price }}\n📏 Площа: {{ $('Clean & Format Data').item.json.area }}\n🛏 Спальні: {{ $('Clean & Format Data').item.json.bedrooms }}\n🔗 Посилання: {{ $('Clean & Format Data').item.json.url }}\n📅 Дата: {{ new Date($('Clean & Format Data').item.json.lastModified).toLocaleString('uk-UA', { timeZone: 'Europe/Kiev' }) }}\n\n📝 Опис:\n{{ $('Clean & Format Data').item.json.description.length > 250 ? $('Clean & Format Data').item.json.description.substring(0, 250) + '...' : $('Clean & Format Data').item.json.description }}",
+        "text": "=🆕 Додано новий об'єкт нерухомості!\n\n🏡 Назва: {{ $json[\"Title — назва об'єкта.\"] || '' }}\n💵 Ціна: {{ $json[\"Price — ціна.\"] || '' }}\n📏 Площа: {{ $json[\"Area — площа (м²).\"] || '' }}\n🛏 Спальні: {{ $json[\"Bedrooms — кількість спалень/кімнат.\"] || '' }}\n🔗 Посилання: {{ $json[\"URL — посилання на об'єкт.\"] || '' }}\n📅 Дата: {{ $json[\"Last Modified — дата останньої зміни об'єкта на сайті.\"] ? new Date($json[\"Last Modified — дата останньої зміни об'єкта на сайті.\"]).toLocaleString('uk-UA', { timeZone: 'Europe/Kiev' }) : '' }}\n\n📝 Опис:\n{{ ($json[\"Description — опис об'єкта.\"] || '').length > 250 ? ($json[\"Description — опис об'єкта.\"] || '').substring(0, 250) + '...' : ($json[\"Description — опис об'єкта.\"] || '') }}",
         "additionalFields": {}
       },
       "id": "a303ed1b-b108-47da-b948-72f8215e7894",
