@@ -144,6 +144,7 @@ if (tg) {
 }
 
 // Elements
+const appContent = document.querySelector('.app-content');
 const catalogSection = document.getElementById('catalogSection');
 const emptyState = document.getElementById('emptyState');
 const favCount = document.getElementById('favCount');
@@ -406,7 +407,20 @@ function setupEventListeners() {
       translateOnboarding(targetLang);
     });
   });
+
+  // Infinite Scroll scroll listener inside the app-content container
+  if (appContent) {
+    appContent.addEventListener('scroll', () => {
+      // Check if scrolled near the bottom of the container (300px threshold)
+      if (appContent.scrollTop + appContent.clientHeight >= appContent.scrollHeight - 300) {
+        if (renderedCount < activeFilteredList.length) {
+          renderNextPage();
+        }
+      }
+    });
+  }
 }
+
 
 // Switch between Catalog & Favorites tabs
 function switchTab(tab) {
@@ -622,7 +636,74 @@ function matchesSmartTag(property, tagType) {
   return true;
 }
 
-// Render Listings Grid
+// Render Listings Grid with Progressive Loading (Infinite Scroll / Pagination)
+let renderedCount = 0;
+const ITEMS_PER_PAGE = 15;
+let activeFilteredList = [];
+
+function renderNextPage() {
+  const nextSlice = activeFilteredList.slice(renderedCount, renderedCount + ITEMS_PER_PAGE);
+  if (nextSlice.length === 0) return;
+
+  nextSlice.forEach(item => {
+    const isFav = favorites.includes(item.url);
+    const card = document.createElement('div');
+    card.className = 'property-card';
+    
+    // Crash-proof fallbacks for missing/null properties
+    const itemCategory = item.category || 'Sale';
+    const categoryClass = itemCategory.toLowerCase();
+    const categoryText = itemCategory === 'Sale' ? 'Продаж' : 'Оренда';
+    const itemImage = item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=400&q=80';
+    const itemTitle = item.title || 'Об\'єкт нерухомості';
+    const itemPrice = item.price || 'Ціна за запитом';
+    const itemCity = item.city || 'Durrës';
+    const itemDistrict = item.district || '';
+    const itemArea = item.area || '0 m2';
+    const itemBedrooms = item.bedrooms || '0';
+    
+    card.innerHTML = `
+      <div class="card-image-wrapper">
+        <img src="${itemImage}" alt="${itemTitle}">
+        <div class="card-category-badge ${categoryClass}">${categoryText}</div>
+        <button class="card-fav-btn ${isFav ? 'active' : ''}">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
+      </div>
+      <div class="card-details">
+        <div class="card-price">${itemPrice}</div>
+        <div class="card-title">${itemTitle}</div>
+        <div class="card-location">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          ${itemCity}${itemDistrict ? ', ' + itemDistrict : ''}
+        </div>
+        <div class="card-stats">
+          <div class="card-stat">📏 ${itemArea}</div>
+          <div class="card-stat">🛏 ${itemBedrooms} кімн.</div>
+        </div>
+      </div>
+    `;
+
+    // Click on Favourites button inside card
+    const favBtn = card.querySelector('.card-fav-btn');
+    favBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFavorite(item.url);
+      favBtn.classList.toggle('active');
+      render();
+    });
+
+    // Click on Card opens Detailed Modal
+    card.addEventListener('click', () => {
+      openDetailModal(item);
+    });
+
+    catalogSection.appendChild(card);
+  });
+
+  renderedCount += nextSlice.length;
+}
+
 function render() {
   catalogSection.innerHTML = '';
   
@@ -704,8 +785,11 @@ function render() {
     return new Date(b.lastModified) - new Date(a.lastModified);
   });
 
-  // 3. Render items
-  if (filtered.length === 0) {
+  // 3. Setup active list and render first page
+  activeFilteredList = filtered;
+  renderedCount = 0;
+
+  if (activeFilteredList.length === 0) {
     emptyState.classList.remove('hidden');
     catalogSection.classList.add('hidden');
     return;
@@ -714,63 +798,9 @@ function render() {
   emptyState.classList.add('hidden');
   catalogSection.classList.remove('hidden');
 
-  filtered.forEach(item => {
-    const isFav = favorites.includes(item.url);
-    const card = document.createElement('div');
-    card.className = 'property-card';
-    
-    // Crash-proof fallbacks for missing/null properties
-    const itemCategory = item.category || 'Sale';
-    const categoryClass = itemCategory.toLowerCase();
-    const categoryText = itemCategory === 'Sale' ? 'Продаж' : 'Оренда';
-    const itemImage = item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=400&q=80';
-    const itemTitle = item.title || 'Об\'єкт нерухомості';
-    const itemPrice = item.price || 'Ціна за запитом';
-    const itemCity = item.city || 'Durrës';
-    const itemDistrict = item.district || '';
-    const itemArea = item.area || '0 m2';
-    const itemBedrooms = item.bedrooms || '0';
-    
-    card.innerHTML = `
-      <div class="card-image-wrapper">
-        <img src="${itemImage}" alt="${itemTitle}">
-        <div class="card-category-badge ${categoryClass}">${categoryText}</div>
-        <button class="card-fav-btn ${isFav ? 'active' : ''}">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        </button>
-      </div>
-      <div class="card-details">
-        <div class="card-price">${itemPrice}</div>
-        <div class="card-title">${itemTitle}</div>
-        <div class="card-location">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          ${itemCity}${itemDistrict ? ', ' + itemDistrict : ''}
-        </div>
-        <div class="card-stats">
-          <div class="card-stat">📏 ${itemArea}</div>
-          <div class="card-stat">🛏 ${itemBedrooms} кімн.</div>
-        </div>
-      </div>
-    `;
-
-
-    // Click on Favourites button inside card
-    const favBtn = card.querySelector('.card-fav-btn');
-    favBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleFavorite(item.url);
-      favBtn.classList.toggle('active');
-      render();
-    });
-
-    // Click on Card opens Detailed Modal
-    card.addEventListener('click', () => {
-      openDetailModal(item);
-    });
-
-    catalogSection.appendChild(card);
-  });
+  renderNextPage();
 }
+
 
 // Toggle Favorites item state in localStorage
 function toggleFavorite(url) {
