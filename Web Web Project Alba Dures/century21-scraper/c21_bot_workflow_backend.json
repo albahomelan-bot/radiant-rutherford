@@ -37,7 +37,12 @@
                     "operator": "equals"
                   }
                 ],
-                "combinator": "and"
+                "combinator": "and",
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "type": "string"
+                }
               }
             },
             {
@@ -49,7 +54,12 @@
                     "operator": "equals"
                   }
                 ],
-                "combinator": "and"
+                "combinator": "and",
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "type": "string"
+                }
               }
             },
             {
@@ -61,7 +71,12 @@
                     "operator": "equals"
                   }
                 ],
-                "combinator": "and"
+                "combinator": "and",
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "type": "string"
+                }
               }
             },
             {
@@ -73,7 +88,12 @@
                     "operator": "equals"
                   }
                 ],
-                "combinator": "and"
+                "combinator": "and",
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "type": "string"
+                }
               }
             }
           ]
