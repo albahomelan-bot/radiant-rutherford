@@ -31,15 +31,19 @@
         "rules": {
           "rules": [
             {
+              "operation": "equal",
               "value2": "/start"
             },
             {
+              "operation": "equal",
               "value2": "ℹ️ Допомога"
             },
             {
+              "operation": "equal",
               "value2": "📞 Менеджер"
             },
             {
+              "operation": "equal",
               "value2": "🔄 Почати з нуля"
             }
           ]
@@ -353,7 +357,7 @@
     },
     {
       "parameters": {
-        "chatId": "7431843172",
+        "chatId": "-1002415361322",
         "text": "=🔔 <b>Новий запит контакту менеджера!</b>\n\n👤 <b>Користувач:</b> {{ $json.message.from.first_name }} {{ $json.message.from.last_name ? $json.message.from.last_name : '' }}\n💬 <b>Username:</b> @{{ $json.message.from.username ? $json.message.from.username : 'немає' }}\n🆔 <b>ID:</b> <code>{{ $json.message.from.id }}</code>",
         "additionalFields": {
           "parse_mode": "HTML"
