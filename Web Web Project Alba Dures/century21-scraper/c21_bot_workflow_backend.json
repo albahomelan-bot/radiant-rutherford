@@ -37,7 +37,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
+                    "leftValue": "={{ $json.messageText }}",
                     "rightValue": "/start",
                     "operator": "equals"
                   }
@@ -55,7 +55,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
+                    "leftValue": "={{ $json.messageText }}",
                     "rightValue": "ℹ️ Допомога",
                     "operator": "equals"
                   }
@@ -73,7 +73,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
+                    "leftValue": "={{ $json.messageText }}",
                     "rightValue": "📞 Менеджер",
                     "operator": "equals"
                   }
@@ -91,7 +91,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
+                    "leftValue": "={{ $json.messageText }}",
                     "rightValue": "🔄 Почати з нуля",
                     "operator": "equals"
                   }
@@ -376,6 +376,19 @@
           "name": "Мій Фінансовий Асистент"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nfor (const item of items) {\n  item.json.messageText = item.json.message && item.json.message.text ? item.json.message.text : '';\n  // Safeguard basic properties for downstream nodes\n  if (!item.json.message) {\n    item.json.message = {\n      chat: { id: 7431843172 },\n      from: { first_name: 'Клієнт' }\n    };\n  } else {\n    if (!item.json.message.chat) {\n      item.json.message.chat = { id: 7431843172 };\n    }\n    if (!item.json.message.from) {\n      item.json.message.from = { first_name: 'Клієнт' };\n    }\n  }\n}\nreturn items;"
+      },
+      "id": "e2a2fb2e-12ab-4bc8-8e6d-9b1e847c230a",
+      "name": "Sanitize Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        560
+      ]
     }
   ],
   "pinData": {},
@@ -384,7 +397,7 @@
       "main": [
         [
           {
-            "node": "Router Switch",
+            "node": "Sanitize Message",
             "type": "main",
             "index": 0
           }
@@ -457,6 +470,17 @@
         [
           {
             "node": "Send Error Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sanitize Message": {
+      "main": [
+        [
+          {
+            "node": "Router Switch",
             "type": "main",
             "index": 0
           }
