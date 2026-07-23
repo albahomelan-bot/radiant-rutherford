@@ -1,0 +1,412 @@
+{
+  "name": "Century21 Albania WebApp Bot Backend",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "e43b8a1c-99b8-4e89-a2b1-56c7d2ea49ff",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        3000,
+        300
+      ],
+      "webhookId": "9b1fb28e-5b12-4c28-98e6-12a938c11aa5",
+      "credentials": {
+        "telegramApi": {
+          "name": "Century21 Scraper Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "type": "string"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": "equals"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "rename": "start"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "type": "string"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "ℹ️ Допомога",
+                    "operator": "equals"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "rename": "help"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "type": "string"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "📞 Менеджер",
+                    "operator": "equals"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "rename": "manager"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "type": "string"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "🔄 Почати з нуля",
+                    "operator": "equals"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "rename": "reset"
+            }
+          ]
+        },
+        "fallbackOutput": "ai_search"
+      },
+      "id": "ad88c1c5-e51b-4f1b-ba1c-a3c9b2e88ad5",
+      "name": "Router Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        3220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $json.message.chat.id }}",
+        "photo": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+        "caption": "🏢 *Century 21 Albania | Розумний пошук*\n\nВітаємо, **{{ $json.message.from.first_name }}**! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в **Дурресі** та **Тирані** безпосередньо з офіційної бази Century 21.\n\n**Чим я корисний:**\n* 🏢 **Інтерактивний каталог** — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n* 🌐 **Розумний пошук** — просто напишіть мені запит своїми словами (наприклад: *«оренда 2-кімнатної в Дурресі до 600€»*), і я сам підберу варіанти.\n* 🛡️ **Безпека** — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 **Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:**",
+        "replyMarkup": "replyKeyboardMarkup",
+        "keyboardMarkup": {
+          "rows": [
+            {
+              "buttons": [
+                {
+                  "text": "🚀 Відкрити каталог",
+                  "web_app": {
+                    "url": "https://century21-albania.pages.dev"
+                  }
+                }
+              ]
+            },
+            {
+              "buttons": [
+                {
+                  "text": "📞 Менеджер"
+                },
+                {
+                  "text": "ℹ️ Допомога"
+                }
+              ]
+            },
+            {
+              "buttons": [
+                {
+                  "text": "🔄 Почати з нуля"
+                }
+              ]
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e583",
+      "name": "Send Welcome Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3500,
+        100
+      ],
+      "credentials": {
+        "telegramApi": {
+          "name": "Century21 Scraper Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "ℹ️ **Як користуватися пошуком:**\n\n1. Натисніть кнопку 🚀 **Відкрити каталог**.\n2. Введіть назву району, площу або налаштуйте бюджет у вкладці фільтрів `⚙️`.\n3. Додавайте вподобані об'єкти в **Обране (❤️)**.\n4. Перейдіть у вкладку «Обране» та натисніть кнопку **«Надіслати запит менеджеру»**, щоб зв'язатися з нами щодо обраного об'єкта.\n\nТакож ви можете відправити текстовий запит сюди в чат бота, наприклад:\n*\"хочу купити квартиру від 80 кв.м. в Дурресі з видом на море\"*",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "e82d7b51-789a-4fd2-89cc-03ad56788fbe",
+      "name": "Send Help Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3500,
+        250
+      ],
+      "credentials": {
+        "telegramApi": {
+          "name": "Century21 Scraper Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "📞 **Контакти менеджера:**\n\nНаш спеціаліст готовий допомогти вам із вибором!\n\n💬 Telegram: @albaRoyalQ\n📧 Email: alba.homelan@gmail.com\n\nАбо просто надішліть заявку через кнопку в нашому додатку, і ми зв'яжемося з вами самі!",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "a203ed1b-a108-47da-b948-72f8215e7896",
+      "name": "Send Manager Contacts",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3500,
+        400
+      ],
+      "credentials": {
+        "telegramApi": {
+          "name": "Century21 Scraper Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "🔄 Всі налаштування пошуку та історію скинуто! Натисніть кнопку нижче, щоб почати перегляд спочатку.",
+        "replyMarkup": "replyKeyboardMarkup",
+        "keyboardMarkup": {
+          "rows": [
+            {
+              "buttons": [
+                {
+                  "text": "🚀 Відкрити каталог",
+                  "web_app": {
+                    "url": "https://century21-albania.pages.dev"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "id": "ae5b9c21-f92d-41a3-b6d8-e7c8e9d3d0f2",
+      "name": "Send Reset Confirmation",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3500,
+        550
+      ],
+      "credentials": {
+        "telegramApi": {
+          "name": "Century21 Scraper Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": {
+          "messageValues": [
+            {
+              "role": "system",
+              "message": "You are a smart parser for a real estate search bot in Albania (Durrës and Tirana).\nExtract search filters from the user's natural language request.\nOutput ONLY a valid JSON object matching this schema:\n{\n  \"category\": \"Sale\" | \"Rent\" | \"all\",\n  \"city\": \"Durrës\" | \"Tirana\" | \"all\",\n  \"rooms\": \"1\" | \"2\" | \"3+\" | \"all\",\n  \"priceMax\": number | null,\n  \"priceMin\": number | null\n}\nIf fields are not mentioned, set them to default values (\"all\" or null).\nTranslate Ukrainian queries correctly (e.g. \"оренда\" -> Rent, \"купити/продаж\" -> Sale, \"кімнатна\" -> rooms)."
+            },
+            {
+              "role": "user",
+              "message": "={{ $json.message.text }}"
+            }
+          ]
+        },
+        "options": {
+          "responseFormat": "json_object"
+        }
+      },
+      "id": "c85d7b51-789a-4fd2-89cc-03ad56788fbf",
+      "name": "AI NLP Parser",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        3500,
+        700
+      ],
+      "credentials": {
+        "openAiApi": {
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const filters = JSON.parse($input.first().json.choices[0].message.content);\n\nlet url = 'https://century21-albania.pages.dev/?';\nconst params = [];\nif (filters.category && filters.category !== 'all') params.push(`category=${filters.category}`);\nif (filters.city && filters.city !== 'all') params.push(`city=${filters.city}`);\nif (filters.rooms && filters.rooms !== 'all') params.push(`rooms=${filters.rooms}`);\nif (filters.priceMax) params.push(`priceMax=${filters.priceMax}`);\nif (filters.priceMin) params.push(`priceMin=${filters.priceMin}`);\n\nurl += params.join('&');\n\nreturn {\n  url,\n  summary: `Угода: ${filters.category === 'Rent' ? 'Оренда' : filters.category === 'Sale' ? 'Продаж' : 'Будь-яка'}, Місто: ${filters.city || 'Всі'}, Кімнат: ${filters.rooms || 'Будь-яка'}${filters.priceMax ? ', Макс. ціна: ' + filters.priceMax + '€' : ''}`\n};"
+      },
+      "id": "2b5252e5-e2d9-4d78-88d8-ed4ebf579ac8",
+      "name": "Generate Filtered URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3720,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=🔍 **Я налаштував фільтри під ваш запит!**\n\n⚙️ {{ $json.summary }}\n\nНатисніть кнопку нижче, щоб відкрити каталог із уже вибраними параметрами! 👇",
+        "replyMarkup": "inlineKeyboardMarkup",
+        "keyboardMarkup": {
+          "rows": [
+            {
+              "buttons": [
+                {
+                  "text": "🚀 Відкрити підібрані варіанти",
+                  "web_app": {
+                    "url": "={{ $json.url }}"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e584",
+      "name": "Send Filtered Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3940,
+        700
+      ],
+      "credentials": {
+        "telegramApi": {
+          "name": "Century21 Scraper Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Router Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router Switch": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Help Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Manager Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Reset Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI NLP Parser",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI NLP Parser": {
+      "main": [
+        [
+          {
+            "node": "Generate Filtered URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Filtered URL": {
+      "main": [
+        [
+          {
+            "node": "Send Filtered Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  }
+}
