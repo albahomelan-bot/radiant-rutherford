@@ -1,5 +1,5 @@
 {
-  "name": "Century21 Albania WebApp Bot Backend",
+  "name": "21_bot_workflow_backend",
   "nodes": [
     {
       "parameters": {
@@ -8,18 +8,19 @@
         ],
         "additionalFields": {}
       },
-      "id": "e43b8a1c-99b8-4e89-a2b1-56c7d2ea49ff",
+      "id": "867fdcdc-b2a4-4de0-8692-ce5b28269d80",
       "name": "Telegram Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.1,
       "position": [
-        3000,
-        300
+        464,
+        576
       ],
       "webhookId": "9b1fb28e-5b12-4c28-98e6-12a938c11aa5",
       "credentials": {
         "telegramApi": {
-          "name": "Century21 Scraper Bot"
+          "id": "r717IUH8sHUrL1dE",
+          "name": "Durres Property Finder"
         }
       }
     },
@@ -32,6 +33,8 @@
                 "options": {
                   "caseSensitive": false,
                   "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1,
                   "type": "string"
                 },
                 "conditions": [
@@ -42,14 +45,15 @@
                   }
                 ],
                 "combinator": "and"
-              },
-              "rename": "start"
+              }
             },
             {
               "conditions": {
                 "options": {
                   "caseSensitive": false,
                   "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1,
                   "type": "string"
                 },
                 "conditions": [
@@ -60,14 +64,15 @@
                   }
                 ],
                 "combinator": "and"
-              },
-              "rename": "help"
+              }
             },
             {
               "conditions": {
                 "options": {
                   "caseSensitive": false,
                   "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1,
                   "type": "string"
                 },
                 "conditions": [
@@ -78,14 +83,15 @@
                   }
                 ],
                 "combinator": "and"
-              },
-              "rename": "manager"
+              }
             },
             {
               "conditions": {
                 "options": {
                   "caseSensitive": false,
                   "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1,
                   "type": "string"
                 },
                 "conditions": [
@@ -96,20 +102,19 @@
                   }
                 ],
                 "combinator": "and"
-              },
-              "rename": "reset"
+              }
             }
           ]
         },
-        "fallbackOutput": "ai_search"
+        "options": {}
       },
-      "id": "ad88c1c5-e51b-4f1b-ba1c-a3c9b2e88ad5",
+      "id": "affd806c-e3d3-4eb4-8211-2ed8cbd01883",
       "name": "Router Switch",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3,
       "position": [
-        3220,
-        300
+        688,
+        576
       ]
     },
     {
@@ -119,9 +124,6 @@
         "photo": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
         "caption": "🏢 *Century 21 Albania | Розумний пошук*\n\nВітаємо, **{{ $json.message.from.first_name }}**! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в **Дурресі** та **Тирані** безпосередньо з офіційної бази Century 21.\n\n**Чим я корисний:**\n* 🏢 **Інтерактивний каталог** — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n* 🌐 **Розумний пошук** — просто напишіть мені запит своїми словами (наприклад: *«оренда 2-кімнатної в Дурресі до 600€»*), і я сам підберу варіанти.\n* 🛡️ **Безпека** — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 **Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:**",
         "replyMarkup": "replyKeyboardMarkup",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        },
         "replyKeyboardMarkup": {
           "rows": [
             {
@@ -152,19 +154,24 @@
               ]
             }
           ]
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown"
         }
       },
-      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e583",
+      "id": "70f5caf9-03bf-4dd1-8d6c-d2365fbb3eb8",
       "name": "Send Welcome Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3500,
-        100
+        960,
+        368
       ],
+      "webhookId": "c6a542c5-fcbf-40b3-a4b0-89cd94b7330a",
       "credentials": {
         "telegramApi": {
-          "name": "Century21 Scraper Bot"
+          "id": "r717IUH8sHUrL1dE",
+          "name": "Durres Property Finder"
         }
       }
     },
@@ -176,17 +183,19 @@
           "parse_mode": "Markdown"
         }
       },
-      "id": "e82d7b51-789a-4fd2-89cc-03ad56788fbe",
+      "id": "9a7ca5c1-4016-44db-b065-fc48b2137c0d",
       "name": "Send Help Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3500,
-        250
+        960,
+        528
       ],
+      "webhookId": "84ca0aad-a28f-44c1-ac21-c72dc006ebcb",
       "credentials": {
         "telegramApi": {
-          "name": "Century21 Scraper Bot"
+          "id": "r717IUH8sHUrL1dE",
+          "name": "Durres Property Finder"
         }
       }
     },
@@ -198,17 +207,19 @@
           "parse_mode": "Markdown"
         }
       },
-      "id": "a203ed1b-a108-47da-b948-72f8215e7896",
+      "id": "b287c456-d86c-496f-be3e-0693adfba6a5",
       "name": "Send Manager Contacts",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3500,
-        400
+        960,
+        672
       ],
+      "webhookId": "85f61f6a-d125-4bc3-a837-0b7370bfb9cb",
       "credentials": {
         "telegramApi": {
-          "name": "Century21 Scraper Bot"
+          "id": "r717IUH8sHUrL1dE",
+          "name": "Durres Property Finder"
         }
       }
     },
@@ -217,7 +228,6 @@
         "chatId": "={{ $json.message.chat.id }}",
         "text": "🔄 Всі налаштування пошуку та історію скинуто! Натисніть кнопку нижче, щоб почати перегляд спочатку.",
         "replyMarkup": "replyKeyboardMarkup",
-        "additionalFields": {},
         "replyKeyboardMarkup": {
           "rows": [
             {
@@ -231,19 +241,22 @@
               ]
             }
           ]
-        }
+        },
+        "additionalFields": {}
       },
-      "id": "ae5b9c21-f92d-41a3-b6d8-e7c8e9d3d0f2",
+      "id": "24c82d72-9628-4151-96b1-011d7a600666",
       "name": "Send Reset Confirmation",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3500,
-        550
+        960,
+        832
       ],
+      "webhookId": "0621d845-563e-4c70-aa79-3c912639f8e1",
       "credentials": {
         "telegramApi": {
-          "name": "Century21 Scraper Bot"
+          "id": "r717IUH8sHUrL1dE",
+          "name": "Durres Property Finder"
         }
       }
     },
@@ -266,17 +279,18 @@
           "responseFormat": "json_object"
         }
       },
-      "id": "c85d7b51-789a-4fd2-89cc-03ad56788fbf",
+      "id": "bed7c594-c16b-4dce-a1ea-c90bdf99b0c6",
       "name": "AI NLP Parser",
       "type": "n8n-nodes-base.openAi",
       "typeVersion": 1.1,
       "position": [
-        3500,
-        700
+        960,
+        976
       ],
       "credentials": {
         "openAiApi": {
-          "name": "OpenAI API"
+          "id": "4XBA6U2hCe2dPkmn",
+          "name": "OpenAI account"
         }
       }
     },
@@ -284,23 +298,20 @@
       "parameters": {
         "jsCode": "const filters = JSON.parse($input.first().json.choices[0].message.content);\n\nlet url = 'https://century21-albania.pages.dev/?';\nconst params = [];\nif (filters.category && filters.category !== 'all') params.push(`category=${filters.category}`);\nif (filters.city && filters.city !== 'all') params.push(`city=${filters.city}`);\nif (filters.rooms && filters.rooms !== 'all') params.push(`rooms=${filters.rooms}`);\nif (filters.priceMax) params.push(`priceMax=${filters.priceMax}`);\nif (filters.priceMin) params.push(`priceMin=${filters.priceMin}`);\n\nurl += params.join('&');\n\nreturn {\n  url,\n  summary: `Угода: ${filters.category === 'Rent' ? 'Оренда' : filters.category === 'Sale' ? 'Продаж' : 'Будь-яка'}, Місто: ${filters.city || 'Всі'}, Кімнат: ${filters.rooms || 'Будь-яка'}${filters.priceMax ? ', Макс. ціна: ' + filters.priceMax + '€' : ''}`\n};"
       },
-      "id": "2b5252e5-e2d9-4d78-88d8-ed4ebf579ac8",
+      "id": "5a6d459c-a53f-41c5-ad8b-95a5556dae3f",
       "name": "Generate Filtered URL",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3720,
-        700
+        1184,
+        976
       ]
     },
     {
       "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "=🔍 **Я налаштував фільтри під ваш запит!**\n\n⚙️ {{ $json.summary }}\n\nНатисніть кнопку нижче, щоб відкрити каталог із уже вибраними параметрами! 👇",
+        "text": "=🔍 **Я налаштував фільтри под ваш запит!**\n\n⚙️ {{ $json.summary }}\n\nНатисніть кнопку нижче, щоб відкрити каталог із уже вибраними параметрами! 👇",
         "replyMarkup": "inlineKeyboardMarkup",
-        "additionalFields": {
-          "parse_mode": "Markdown"
-        },
         "inlineKeyboardMarkup": {
           "rows": [
             {
@@ -314,23 +325,29 @@
               ]
             }
           ]
+        },
+        "additionalFields": {
+          "parse_mode": "Markdown"
         }
       },
-      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e584",
+      "id": "301f9f0d-60f1-4bc4-8e83-be6c740e212e",
       "name": "Send Filtered Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3940,
-        700
+        1408,
+        976
       ],
+      "webhookId": "c22da0b0-f268-4ff1-92f3-d12d867917ce",
       "credentials": {
         "telegramApi": {
-          "name": "Century21 Scraper Bot"
+          "id": "r717IUH8sHUrL1dE",
+          "name": "Durres Property Finder"
         }
       }
     }
   ],
+  "pinData": {},
   "connections": {
     "Telegram Trigger": {
       "main": [
@@ -405,8 +422,17 @@
       ]
     }
   },
+  "active": false,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate"
-  }
+  },
+  "versionId": "da8eb5c1-9a38-4011-aeec-6c2a0ae935d4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
+  },
+  "nodeGroups": [],
+  "id": "UPJxfCTfdb7rs99K",
+  "tags": []
 }
