@@ -3,24 +3,22 @@
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "GET",
         "path": "properties",
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "e43b8a1c-99b8-4e89-a2b1-56c7d2ea49fa",
+      "id": "94c7748a-218e-4069-8e5a-ba5dab75b95f",
       "name": "Webhook API Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        3000,
-        100
+        528,
+        -112
       ],
       "webhookId": "9b1fb28e-5b12-4c28-98e6-12a938c11ab6"
     },
     {
       "parameters": {
-        "operation": "read",
         "documentId": {
           "__rl": true,
           "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
@@ -37,13 +35,13 @@
         },
         "options": {}
       },
-      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e582",
+      "id": "db0da04e-c1f6-4d58-bc28-13c8ae6542ef",
       "name": "Read Google Sheet Database",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        3220,
-        100
+        752,
+        -112
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -54,15 +52,15 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\n\n// Helper to dynamically match keys by prefix to handle column renaming/translation\nconst getValByPrefix = (row, prefix) => {\n  const key = Object.keys(row).find(k => k.toLowerCase().trim().startsWith(prefix.toLowerCase()));\n  return key ? row[key] : '';\n};\n\n// Dynamic Property Type Classifier\nconst parsePropertyType = (url, title, desc) => {\n  const text = `${url} ${title} ${desc}`.toLowerCase();\n  \n  if (text.includes('vila') || text.includes('villa') || text.includes('shtepi') || text.includes('house') || text.includes('будинок') || text.includes('вілла')) {\n    return 'Villa';\n  }\n  if (text.includes('truall') || text.includes('toke') || text.includes('land') || text.includes('plot') || text.includes('ділянка')) {\n    return 'Land';\n  }\n  if (text.includes('ambient') || text.includes('biznes') || text.includes('commercial') || text.includes('office') || text.includes('комерційн') || text.includes('офіс') || text.includes('magazin') || text.includes('dyqan')) {\n    return 'Commercial';\n  }\n  return 'Apartment';\n};\n\n// District list mapping\nconst parseLocation = (url, title, desc) => {\n  const text = `${url} ${title} ${desc}`.toLowerCase();\n  \n  let city = 'Durrës';\n  if (text.includes('tirane') || text.includes('tirana') || text.includes('bllok') || text.includes('lake park')) {\n    city = 'Tirana';\n  }\n  \n  let district = 'Plazh';\n  if (city === 'Tirana') {\n    district = 'Center';\n    if (text.includes('bllok')) district = 'Blloku';\n    else if (text.includes('lake') || text.includes('liqen')) district = 'Lake Park';\n    else if (text.includes('don bosko')) district = 'Don Bosko';\n  } else {\n    if (text.includes('golem')) district = 'Golem';\n    else if (text.includes('qerret')) district = 'Qerret';\n    else if (text.includes('vollga')) district = 'Vollga';\n    else if (text.includes('mali i robit')) district = 'Mali i Robit';\n    else if (text.includes('hamallaj')) district = 'Hamallaj';\n    else if (text.includes('lalz')) district = 'Gjiri i Lalzit';\n    else if (text.includes('shkembi') || text.includes('kavaj')) district = 'Shkëmbi i Kavajës';\n  }\n  \n  return { city, district };\n};\n\nconst formatted = items.map(item => {\n  const row = item.json;\n  const url = getValByPrefix(row, 'url');\n  const title = getValByPrefix(row, 'title');\n  const desc = getValByPrefix(row, 'description');\n  const price = getValByPrefix(row, 'price') || '0 €';\n  const categoryRaw = getValByPrefix(row, 'category');\n  \n  const loc = parseLocation(url, title, desc);\n  const type = parsePropertyType(url, title, desc);\n  \n  // Normalize category\n  const category = categoryRaw.toLowerCase().includes('rent') || categoryRaw.toLowerCase().includes('оренда') ? 'Rent' : 'Sale';\n  \n  return {\n    url,\n    title,\n    price,\n    category,\n    area: getValByPrefix(row, 'area') || '0 m2',\n    bedrooms: getValByPrefix(row, 'bedrooms') || '0',\n    description: desc,\n    agentName: getValByPrefix(row, 'agent name') || 'Century 21',\n    agentPhone: getValByPrefix(row, 'agent phone'),\n    lastModified: getValByPrefix(row, 'last modified') || new Date().toISOString(),\n    image: getValByPrefix(row, 'image') || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=400&q=80',\n    city: loc.city,\n    district: loc.district,\n    type: type\n  };\n});\n\nreturn formatted;"
+        "jsCode": "const items = $input.all();\n\n// Розумний хелпер для динамічного пошуку колонок за першими літерами\nconst getValByPrefix = (row, prefix) => {\n  const key = Object.keys(row).find(k => k.toLowerCase().trim().startsWith(prefix.toLowerCase()));\n  return key ? row[key] : '';\n};\n\n// Динамічний класифікатор типів\nconst parsePropertyType = (url, title, desc) => {\n  const text = `${url} ${title} ${desc}`.toLowerCase();\n  \n  if (text.includes('vila') || text.includes('villa') || text.includes('shtepi') || text.includes('house') || text.includes('будинок') || text.includes('вілла')) {\n    return 'Villa';\n  }\n  if (text.includes('truall') || text.includes('toke') || text.includes('land') || text.includes('plot') || text.includes('ділянка')) {\n    return 'Land';\n  }\n  if (text.includes('ambient') || text.includes('biznes') || text.includes('commercial') || text.includes('office') || text.includes('комерційн') || text.includes('офіс') || text.includes('magazin') || text.includes('dyqan')) {\n    return 'Commercial';\n  }\n  return 'Apartment';\n};\n\n// Визначення локації\nconst parseLocation = (url, title, desc) => {\n  const text = `${url} ${title} ${desc}`.toLowerCase();\n  \n  let city = 'Durrës';\n  if (text.includes('tirane') || text.includes('tirana') || text.includes('bllok') || text.includes('lake park')) {\n    city = 'Tirana';\n  }\n  \n  let district = 'Plazh';\n  if (city === 'Tirana') {\n    district = 'Center';\n    if (text.includes('bllok')) district = 'Blloku';\n    else if (text.includes('lake') || text.includes('liqen')) district = 'Lake Park';\n    else if (text.includes('don bosko')) district = 'Don Bosko';\n  } else {\n    if (text.includes('golem')) district = 'Golem';\n    else if (text.includes('qerret')) district = 'Qerret';\n    else if (text.includes('vollga')) district = 'Vollga';\n    else if (text.includes('mali i robit')) district = 'Mali i Robit';\n    else if (text.includes('hamallaj')) district = 'Hamallaj';\n    else if (text.includes('lalz')) district = 'Gjiri i Lalzit';\n    else if (text.includes('shkembi') || text.includes('kavaj')) district = 'Shkëmbi i Kavajës';\n  }\n  \n  return { city, district };\n};\n\nconst formatted = items.map(item => {\n  const row = item.json;\n  const url = getValByPrefix(row, 'url');\n  const title = getValByPrefix(row, 'title');\n  const desc = getValByPrefix(row, 'description');\n  const price = getValByPrefix(row, 'price') || '0 €';\n  const categoryRaw = getValByPrefix(row, 'category');\n  \n  const loc = parseLocation(url, title, desc);\n  const type = parsePropertyType(url, title, desc);\n  \n  // Нормалізація категорії\n  const category = categoryRaw.toLowerCase().includes('rent') || categoryRaw.toLowerCase().includes('оренда') ? 'Rent' : 'Sale';\n  \n  return {\n    url,\n    title,\n    price,\n    category,\n    area: getValByPrefix(row, 'area') || '0 m2',\n    bedrooms: getValByPrefix(row, 'bedrooms') || '0',\n    description: desc,\n    agentName: getValByPrefix(row, 'agent name') || 'Century 21',\n    agentPhone: getValByPrefix(row, 'agent phone'),\n    lastModified: getValByPrefix(row, 'last modified') || new Date().toISOString(),\n    image: getValByPrefix(row, 'image') || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=400&q=80',\n    city: loc.city,\n    district: loc.district,\n    type: type\n  };\n});\n\nreturn formatted;"
       },
-      "id": "2b5252e5-e2d9-4d78-88d8-ed4ebf579acb",
+      "id": "1f53b24e-f627-4915-bdbb-090aaf780d45",
       "name": "Parse & Format Properties",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3440,
-        100
+        976,
+        -112
       ]
     },
     {
@@ -84,16 +82,17 @@
           }
         }
       },
-      "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e586",
+      "id": "2e1dad5a-5d49-4460-b0a5-d271e458a701",
       "name": "Respond WebApp JSON",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        3660,
-        100
+        1200,
+        -112
       ]
     }
   ],
+  "pinData": {},
   "connections": {
     "Webhook API Trigger": {
       "main": [
@@ -129,8 +128,17 @@
       ]
     }
   },
+  "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
-  }
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "6eff0b94-c8a7-41bd-9e2d-2f0a1bcb3c49",
+  "meta": {
+    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
+  },
+  "nodeGroups": [],
+  "id": "KLwSH605nwoiRChg",
+  "tags": []
 }
