@@ -119,7 +119,10 @@
         "photo": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
         "caption": "🏢 *Century 21 Albania | Розумний пошук*\n\nВітаємо, **{{ $json.message.from.first_name }}**! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в **Дурресі** та **Тирані** безпосередньо з офіційної бази Century 21.\n\n**Чим я корисний:**\n* 🏢 **Інтерактивний каталог** — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n* 🌐 **Розумний пошук** — просто напишіть мені запит своїми словами (наприклад: *«оренда 2-кімнатної в Дурресі до 600€»*), і я сам підберу варіанти.\n* 🛡️ **Безпека** — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 **Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:**",
         "replyMarkup": "replyKeyboardMarkup",
-        "keyboardMarkup": {
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        },
+        "replyKeyboardMarkup": {
           "rows": [
             {
               "buttons": [
@@ -149,9 +152,6 @@
               ]
             }
           ]
-        },
-        "additionalFields": {
-          "parse_mode": "Markdown"
         }
       },
       "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e583",
@@ -217,7 +217,8 @@
         "chatId": "={{ $json.message.chat.id }}",
         "text": "🔄 Всі налаштування пошуку та історію скинуто! Натисніть кнопку нижче, щоб почати перегляд спочатку.",
         "replyMarkup": "replyKeyboardMarkup",
-        "keyboardMarkup": {
+        "additionalFields": {},
+        "replyKeyboardMarkup": {
           "rows": [
             {
               "buttons": [
@@ -230,8 +231,7 @@
               ]
             }
           ]
-        },
-        "additionalFields": {}
+        }
       },
       "id": "ae5b9c21-f92d-41a3-b6d8-e7c8e9d3d0f2",
       "name": "Send Reset Confirmation",
@@ -298,7 +298,10 @@
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
         "text": "=🔍 **Я налаштував фільтри під ваш запит!**\n\n⚙️ {{ $json.summary }}\n\nНатисніть кнопку нижче, щоб відкрити каталог із уже вибраними параметрами! 👇",
         "replyMarkup": "inlineKeyboardMarkup",
-        "keyboardMarkup": {
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        },
+        "inlineKeyboardMarkup": {
           "rows": [
             {
               "buttons": [
@@ -311,9 +314,6 @@
               ]
             }
           ]
-        },
-        "additionalFields": {
-          "parse_mode": "Markdown"
         }
       },
       "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e584",
