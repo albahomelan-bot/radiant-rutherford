@@ -738,7 +738,7 @@ function render() {
     }
     
     // Price
-    const numericPrice = Number((item.price || '').replace(/[^0-9]/g, ''));
+    const numericPrice = Number(String(item.price || '').replace(/[^0-9]/g, ''));
     if (filterState.priceMin && numericPrice < filterState.priceMin) return false;
     if (filterState.priceMax && numericPrice > filterState.priceMax) return false;
     
@@ -772,8 +772,8 @@ function render() {
 
   // 2. Sort listings
   filtered.sort((a, b) => {
-    const priceA = Number((a.price || '').replace(/[^0-9]/g, ''));
-    const priceB = Number((b.price || '').replace(/[^0-9]/g, ''));
+    const priceA = Number(String(a.price || '').replace(/[^0-9]/g, ''));
+    const priceB = Number(String(b.price || '').replace(/[^0-9]/g, ''));
     
     if (filterState.sortBy === 'cheapest') {
       return priceA - priceB;
