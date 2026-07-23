@@ -26,88 +26,29 @@
     },
     {
       "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.messageText }}",
         "rules": {
-          "values": [
+          "rules": [
             {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "type": "string"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.messageText }}",
-                    "rightValue": "/start",
-                    "operator": "equals"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "rename": "start"
+              "value2": "/start"
             },
             {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "type": "string"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.messageText }}",
-                    "rightValue": "ℹ️ Допомога",
-                    "operator": "equals"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "rename": "help"
+              "value2": "ℹ️ Допомога"
             },
             {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "type": "string"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.messageText }}",
-                    "rightValue": "📞 Менеджер",
-                    "operator": "equals"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "rename": "manager"
+              "value2": "📞 Менеджер"
             },
             {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "type": "string"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.messageText }}",
-                    "rightValue": "🔄 Почати з нуля",
-                    "operator": "equals"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "rename": "reset"
+              "value2": "🔄 Почати з нуля"
             }
           ]
-        },
-        "fallbackOutput": "ai_search"
+        }
       },
       "id": "41e751e3-a442-4677-9a61-5089e0feefcd",
       "name": "Router Switch",
       "type": "n8n-nodes-base.switch",
-      "typeVersion": 3,
+      "typeVersion": 1,
       "position": [
         448,
         560
