@@ -115,7 +115,6 @@
     {
       "parameters": {
         "chatId": "={{ $json.message.chat.id }}",
-        "text": "👋 Вітаю! Я помічник у пошуку нерухомості від Century 21 Albania.\n\nНатисніть 🚀 **Відкрити каталог** нижче, щоб переглянути доступні квартири в Дурресі та Тирані.\n\nВи також можете написати мені свій запит своїми словами (наприклад: *\"оренда 2-кімнатної до 600€ в Дурресі\"*), і я автоматично підготую для вас відфільтроване посилання!",
         "replyMarkup": "replyKeyboardMarkup",
         "keyboardMarkup": {
           "rows": [
@@ -124,7 +123,7 @@
                 {
                   "text": "🚀 Відкрити каталог",
                   "web_app": {
-                    "url": "http://localhost:8082"
+                    "url": "https://century21-albania.pages.dev"
                   }
                 }
               ]
@@ -150,7 +149,10 @@
         },
         "additionalFields": {
           "parse_mode": "Markdown"
-        }
+        },
+        "operation": "sendPhoto",
+        "photo": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+        "caption": "🏢 *Century 21 Albania | Розумний пошук*\n\nВітаємо, **{{ $json.message.from.first_name }}**! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в **Дурресі** та **Тирані** безпосередньо з офіційної бази Century 21.\n\n**Чим я корисний:**\n* 🏢 **Інтерактивний каталог** — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n* 🌐 **Розумний пошук** — просто напишіть мені запит своїми словами (наприклад: *«оренда 2-кімнатної в Дурресі до 600€»*), і я сам підберу варіанти.\n* 🛡️ **Безпека** — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 **Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:**"
       },
       "id": "fc1791b5-cbcc-4b8a-9e07-362f8529e583",
       "name": "Send Welcome Message",
@@ -222,7 +224,7 @@
                 {
                   "text": "🚀 Відкрити каталог",
                   "web_app": {
-                    "url": "http://localhost:8082"
+                    "url": "https://century21-albania.pages.dev"
                   }
                 }
               ]
@@ -280,7 +282,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const filters = JSON.parse($input.first().json.choices[0].message.content);\n\nlet url = 'http://localhost:8082/?';\nconst params = [];\nif (filters.category && filters.category !== 'all') params.push(`category=${filters.category}`);\nif (filters.city && filters.city !== 'all') params.push(`city=${filters.city}`);\nif (filters.rooms && filters.rooms !== 'all') params.push(`rooms=${filters.rooms}`);\nif (filters.priceMax) params.push(`priceMax=${filters.priceMax}`);\nif (filters.priceMin) params.push(`priceMin=${filters.priceMin}`);\n\nurl += params.join('&');\n\nreturn {\n  url,\n  summary: `Угода: ${filters.category === 'Rent' ? 'Оренда' : filters.category === 'Sale' ? 'Продаж' : 'Будь-яка'}, Місто: ${filters.city || 'Всі'}, Кімнат: ${filters.rooms || 'Будь-яка'}${filters.priceMax ? ', Макс. ціна: ' + filters.priceMax + '€' : ''}`\n};"
+        "jsCode": "const filters = JSON.parse($input.first().json.choices[0].message.content);\n\nlet url = 'https://century21-albania.pages.dev/?';\nconst params = [];\nif (filters.category && filters.category !== 'all') params.push(`category=${filters.category}`);\nif (filters.city && filters.city !== 'all') params.push(`city=${filters.city}`);\nif (filters.rooms && filters.rooms !== 'all') params.push(`rooms=${filters.rooms}`);\nif (filters.priceMax) params.push(`priceMax=${filters.priceMax}`);\nif (filters.priceMin) params.push(`priceMin=${filters.priceMin}`);\n\nurl += params.join('&');\n\nreturn {\n  url,\n  summary: `Угода: ${filters.category === 'Rent' ? 'Оренда' : filters.category === 'Sale' ? 'Продаж' : 'Будь-яка'}, Місто: ${filters.city || 'Всі'}, Кімнат: ${filters.rooms || 'Будь-яка'}${filters.priceMax ? ', Макс. ціна: ' + filters.priceMax + '€' : ''}`\n};"
       },
       "id": "2b5252e5-e2d9-4d78-88d8-ed4ebf579ac8",
       "name": "Generate Filtered URL",
