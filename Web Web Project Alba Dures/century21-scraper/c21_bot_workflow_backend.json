@@ -59,7 +59,7 @@
         "operation": "sendPhoto",
         "chatId": "={{ $json.message.chat.id }}",
         "replyMarkup": "replyKeyboard",
-        "keyboardMarkup": { "rows": [
+        "replyKeyboard": { "rows": [
             {
               "buttons": [
                 {
@@ -164,7 +164,7 @@
         "chatId": "={{ $json.message.chat.id }}",
         "text": "🔄 Всі налаштування пошуку та історію скинуто! Натисніть кнопку нижче, щоб почати перегляд спочатку.",
         "replyMarkup": "replyKeyboard",
-        "keyboardMarkup": { "rows": [
+        "replyKeyboard": { "rows": [
             {
               "buttons": [
                 {
