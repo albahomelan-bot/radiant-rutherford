@@ -58,7 +58,7 @@
       "parameters": {
         "operation": "sendPhoto",
         "chatId": "={{ $json.message.chat.id }}",
-        "replyMarkup": "replyKeyboardMarkup",
+        "replyMarkup": "replyKeyboard",
         "additionalFields": {
           "parse_mode": "HTML",
           "caption": "=🏢 <b>Century 21 Albania | Розумний пошук</b>\n\nВітаємо, <b>{{ $json.message.from.first_name }}</b>! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в <b>Дурресі</b> та <b>Тирані</b> безпосередньо з офіційної бази Century 21.\n\n<b>Чим я корисний:</b>\n• 🏢 <b>Інтерактивний каталог</b> — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n• 🌐 <b>Розумний пошук</b> — просто напишіть мені запит своїми словами (наприклад: <i>«оренда 2-кімнатної в Дурресі до 600€»</i>), і я сам підберу варіанти.\n• 🛡️ <b>Безпека</b> — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 <b>Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:</b>"
@@ -164,7 +164,7 @@
       "parameters": {
         "chatId": "={{ $json.message.chat.id }}",
         "text": "🔄 Всі налаштування пошуку та історію скинуто! Натисніть кнопку нижче, щоб почати перегляд спочатку.",
-        "replyMarkup": "replyKeyboardMarkup",
+        "replyMarkup": "replyKeyboard",
         "additionalFields": {},
         "keyboardMarkup": {
           "rows": [
