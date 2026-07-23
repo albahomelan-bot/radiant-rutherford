@@ -32,19 +32,23 @@
           "rules": [
             {
               "operation": "equal",
-              "value2": "/start"
+              "value2": "/start",
+              "outputKey": 0
             },
             {
               "operation": "equal",
-              "value2": "ℹ️ Допомога"
+              "value2": "ℹ️ Допомога",
+              "outputKey": 1
             },
             {
               "operation": "equal",
-              "value2": "📞 Менеджер"
+              "value2": "📞 Менеджер",
+              "outputKey": 2
             },
             {
               "operation": "equal",
-              "value2": "🔄 Почати з нуля"
+              "value2": "🔄 Почати з нуля",
+              "outputKey": 3
             }
           ]
         }
