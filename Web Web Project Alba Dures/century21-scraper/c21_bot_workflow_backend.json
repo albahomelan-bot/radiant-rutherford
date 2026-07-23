@@ -35,7 +35,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.message?.text || \"\" }}",
+                    "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
                     "rightValue": "/start",
                     "operator": "equals"
                   }
@@ -50,7 +50,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.message?.text || \"\" }}",
+                    "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
                     "rightValue": "ℹ️ Допомога",
                     "operator": "equals"
                   }
@@ -65,7 +65,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.message?.text || \"\" }}",
+                    "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
                     "rightValue": "📞 Менеджер",
                     "operator": "equals"
                   }
@@ -80,7 +80,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.message?.text || \"\" }}",
+                    "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
                     "rightValue": "🔄 Почати з нуля",
                     "operator": "equals"
                   }
