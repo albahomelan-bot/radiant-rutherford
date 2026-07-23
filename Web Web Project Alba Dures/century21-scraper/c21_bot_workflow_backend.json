@@ -30,9 +30,6 @@
           "values": [
             {
               "conditions": {
-                "options": {
-                  "caseSensitive": false
-                },
                 "conditions": [
                   {
                     "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
@@ -45,9 +42,6 @@
             },
             {
               "conditions": {
-                "options": {
-                  "caseSensitive": false
-                },
                 "conditions": [
                   {
                     "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
@@ -60,9 +54,6 @@
             },
             {
               "conditions": {
-                "options": {
-                  "caseSensitive": false
-                },
                 "conditions": [
                   {
                     "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
@@ -75,9 +66,6 @@
             },
             {
               "conditions": {
-                "options": {
-                  "caseSensitive": false
-                },
                 "conditions": [
                   {
                     "leftValue": "={{ $json.message && $json.message.text ? $json.message.text : \"\" }}",
