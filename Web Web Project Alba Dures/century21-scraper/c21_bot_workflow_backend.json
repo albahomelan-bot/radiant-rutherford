@@ -127,9 +127,9 @@
     {
       "parameters": {
         "chatId": "={{ $json.message.chat.id }}",
-        "text": "ℹ️ **Як користуватися пошуком:**\n\n1. Натисніть кнопку 🚀 **Відкрити каталог**.\n2. Введіть назву району, площу або налаштуйте бюджет у вкладці фільтрів `⚙️`.\n3. Додавайте вподобані об'єкти в **Обране (❤️)**.\n4. Перейдіть у вкладку «Обране» та натисніть кнопку **«Надіслати запит менеджеру»**, щоб зв'язатися з нами щодо обраного об'єкта.\n\nТакож ви можете відправити текстовий запит сюди в чат бота, наприклад:\n*\"хочу купити квартиру від 80 кв.м. в Дурресі з видом на море\"*",
+        "text": "📖 <b>Інструкція користувача:</b>\n\nЯ розумію як звичайні команди, так і запити своїми словами. Спробуйте написати мені так, як написали б реальному ріелтору:\n\n💡 <i>«оренда 1-кімнатної в Дурресі до 500 євро»</i>\n💡 <i>«купити квартиру з 2 спальнями в Тирані»</i>\n\n<b>Швидкі команди:</b>\n• 🚀 <b>Відкрити каталог</b> — відкриває інтерактивну мапу та список об'єктів з фільтрами.\n• 📞 <b>Менеджер</b> — покаже прямі контакти нашого спеціаліста.\n• 🔄 <b>Почати з нуля</b> — повністю скидає всі налаштовані фільтри пошуку.",
         "additionalFields": {
-          "parse_mode": "Markdown"
+          "parse_mode": "HTML"
         }
       },
       "id": "1561a8d9-a09a-47e7-a1bd-cbda2de0c8fe",
@@ -151,9 +151,9 @@
     {
       "parameters": {
         "chatId": "={{ $json.message.chat.id }}",
-        "text": "📞 **Контакти менеджера:**\n\nНаш спеціаліст готовий допомогти вам із вибором!\n\n💬 Telegram: @albaRoyalQ\n📧 Email: alba.homelan@gmail.com\n\nАбо просто надішліть заявку через кнопку в нашому додатку, і ми зв'яжемося з вами самі!",
+        "text": "📞 <b>Контакти менеджера:</b>\n\nНаш спеціаліст готовий допомогти вам із вибором!\n\n💬 Telegram: @albaRoyalQ\n📧 Email: alba.homelan@gmail.com\n\nАбо просто надішліть заявку через кнопку в нашому додатку, і ми зв'яжемося з вами самі!",
         "additionalFields": {
-          "parse_mode": "Markdown"
+          "parse_mode": "HTML"
         }
       },
       "id": "4b035de2-98aa-4e21-8f6b-0deff81d3dd4",
@@ -195,7 +195,9 @@
             }
           ]
         },
-        "additionalFields": {},
+        "additionalFields": {
+          "parse_mode": "HTML"
+        },
         "replyKeyboardOptions": {}
       },
       "id": "fed6cc07-5d90-4c42-96e7-b70cf5155e75",
@@ -264,7 +266,7 @@
     {
       "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "=🔍 **Я налаштував фільтри під ваш запит!**\n\n⚙️ {{ $json.summary }}\n\nНатисніть кнопку нижче, щоб відкрити каталог із уже вибраними параметрами! 👇",
+        "text": "=🔍 <b>Я налаштував фільтри під ваш запит!</b>\n\n⚙️ {{ $json.summary }}\n\nНатисніть кнопку нижче, щоб відкрити каталог із уже вибраними параметрами! 👇",
         "replyMarkup": "inlineKeyboardMarkup",
         "inlineKeyboardMarkup": {
           "rows": [
@@ -281,7 +283,7 @@
           ]
         },
         "additionalFields": {
-          "parse_mode": "Markdown"
+          "parse_mode": "HTML"
         }
       },
       "id": "80b0b1b6-30fc-4b48-a0c3-12db7064388d",
@@ -347,6 +349,29 @@
         336,
         560
       ]
+    },
+    {
+      "parameters": {
+        "chatId": "7431843172",
+        "text": "=🔔 <b>Новий запит контакту менеджера!</b>\n\n👤 <b>Користувач:</b> {{ $json.message.from.first_name }} {{ $json.message.from.last_name ? $json.message.from.last_name : '' }}\n💬 <b>Username:</b> @{{ $json.message.from.username ? $json.message.from.username : 'немає' }}\n🆔 <b>ID:</b> <code>{{ $json.message.from.id }}</code>",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "bfa8d8f0-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+      "name": "Notify Manager",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        950,
+        656
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "r717IUH8sHUrL1dE",
+          "name": "Durres Property Finder"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -439,6 +464,17 @@
         [
           {
             "node": "Router Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Manager Contacts": {
+      "main": [
+        [
+          {
+            "node": "Notify Manager",
             "type": "main",
             "index": 0
           }
