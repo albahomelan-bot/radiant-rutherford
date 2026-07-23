@@ -259,9 +259,14 @@ async function init() {
     console.log('Loaded listings from embedded fallback data');
   }
 
+  // Reverse listings array so the newest items (at the bottom of the Google Sheet) appear first
+  if (Array.isArray(listings)) {
+    listings.reverse();
+  }
 
   // Setup Event Listeners
   setupEventListeners();
+
   
   // Parse URL Parameters (allows deep-linking filters from n8n bot NLP queries)
   parseUrlParams();
