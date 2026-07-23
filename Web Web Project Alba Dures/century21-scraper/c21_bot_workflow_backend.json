@@ -31,11 +31,7 @@
             {
               "conditions": {
                 "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1,
-                  "type": "string"
+                  "caseSensitive": false
                 },
                 "conditions": [
                   {
@@ -50,11 +46,7 @@
             {
               "conditions": {
                 "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1,
-                  "type": "string"
+                  "caseSensitive": false
                 },
                 "conditions": [
                   {
@@ -69,11 +61,7 @@
             {
               "conditions": {
                 "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1,
-                  "type": "string"
+                  "caseSensitive": false
                 },
                 "conditions": [
                   {
@@ -88,11 +76,7 @@
             {
               "conditions": {
                 "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 1,
-                  "type": "string"
+                  "caseSensitive": false
                 },
                 "conditions": [
                   {
