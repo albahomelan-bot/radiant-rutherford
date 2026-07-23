@@ -14,7 +14,7 @@
     },
     {
       "parameters": {
-        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "chatId": "7431843172",
         "text": "=⚠️ *Помилка у сценарії n8n!*\n\n*Сценарій:* {{ $json.workflow.name }}\n*Вузол:* {{ $json.execution.error.node }}\n*Помилка:* {{ $json.execution.error.message }}\n\n🔗 [Відкрити помилку в n8n]({{ $json.execution.url }})",
         "additionalFields": {
           "parse_mode": "Markdown"
