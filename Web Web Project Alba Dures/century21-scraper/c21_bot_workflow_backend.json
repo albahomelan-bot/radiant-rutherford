@@ -379,7 +379,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\nfor (const item of items) {\n  item.json.messageText = item.json.message && item.json.message.text ? item.json.message.text : '';\n  // Safeguard basic properties for downstream nodes\n  if (!item.json.message) {\n    item.json.message = {\n      chat: { id: 7431843172 },\n      from: { first_name: 'Клієнт' }\n    };\n  } else {\n    if (!item.json.message.chat) {\n      item.json.message.chat = { id: 7431843172 };\n    }\n    if (!item.json.message.from) {\n      item.json.message.from = { first_name: 'Клієнт' };\n    }\n  }\n}\nreturn items;"
+        "jsCode": "return $input.all().map(item => {\n  // Deep copy the item to bypass n8n's read-only/frozen object restriction\n  const newItem = JSON.parse(JSON.stringify(item));\n  \n  newItem.json.messageText = newItem.json.message && newItem.json.message.text ? newItem.json.message.text : '';\n  \n  // Safeguard basic properties for downstream nodes\n  if (!newItem.json.message) {\n    newItem.json.message = {\n      chat: { id: 7431843172 },\n      from: { first_name: 'Клієнт' }\n    };\n  } else {\n    if (!newItem.json.message.chat) {\n      newItem.json.message.chat = { id: 7431843172 };\n    }\n    if (!newItem.json.message.from) {\n      newItem.json.message.from = { first_name: 'Клієнт' };\n    }\n  }\n  \n  return newItem;\n});"
       },
       "id": "e2a2fb2e-12ab-4bc8-8e6d-9b1e847c230a",
       "name": "Sanitize Message",
