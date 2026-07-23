@@ -59,7 +59,13 @@
         "operation": "sendPhoto",
         "chatId": "={{ $json.message.chat.id }}",
         "replyMarkup": "replyKeyboardMarkup",
-        "replyKeyboardMarkup": { "rows": [
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "caption": "=🏢 <b>Century 21 Albania | Розумний пошук</b>\n\nВітаємо, <b>{{ $json.message.from.first_name }}</b>! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в <b>Дурресі</b> та <b>Тирані</b> безпосередньо з офіційної бази Century 21.\n\n<b>Чим я корисний:</b>\n• 🏢 <b>Інтерактивний каталог</b> — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n• 🌐 <b>Розумний пошук</b> — просто напишіть мені запит своїми словами (наприклад: <i>«оренда 2-кімнатної в Дурресі до 600€»</i>), і я сам підберу варіанти.\n• 🛡️ <b>Безпека</b> — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 <b>Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:</b>"
+        },
+        "file": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+        "keyboardMarkup": {
+          "rows": [
             {
               "buttons": [
                 {
@@ -88,12 +94,7 @@
               ]
             }
           ]
-        },
-        "additionalFields": {
-          "parse_mode": "HTML",
-          "caption": "=🏢 <b>Century 21 Albania | Розумний пошук</b>\n\nВітаємо, <b>{{ $json.message.from.first_name }}</b>! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в <b>Дурресі</b> та <b>Тирані</b> безпосередньо з офіційної бази Century 21.\n\n<b>Чим я корисний:</b>\n• 🏢 <b>Інтерактивний каталог</b> — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n• 🌐 <b>Розумний пошук</b> — просто напишіть мені запит своїми словами (наприклад: <i>«оренда 2-кімнатної в Дурресі до 600€»</i>), і я сам підберу варіанти.\n• 🛡️ <b>Безпека</b> — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 <b>Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:</b>"
-        },
-        "file": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80"
+        }
       },
       "id": "263c1193-aedd-48ed-8ec1-3da070d09e9c",
       "name": "Send Welcome Message",
@@ -164,7 +165,9 @@
         "chatId": "={{ $json.message.chat.id }}",
         "text": "🔄 Всі налаштування пошуку та історію скинуто! Натисніть кнопку нижче, щоб почати перегляд спочатку.",
         "replyMarkup": "replyKeyboardMarkup",
-        "replyKeyboardMarkup": { "rows": [
+        "additionalFields": {},
+        "keyboardMarkup": {
+          "rows": [
             {
               "buttons": [
                 {
@@ -176,8 +179,7 @@
               ]
             }
           ]
-        },
-        "additionalFields": {}
+        }
       },
       "id": "fed6cc07-5d90-4c42-96e7-b70cf5155e75",
       "name": "Send Reset Confirmation",
