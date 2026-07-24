@@ -33,22 +33,22 @@
             {
               "operation": "equal",
               "value2": "/start",
-              "outputKey": 0
+              "outputKey": "0"
             },
             {
               "operation": "equal",
               "value2": "ℹ️ Допомога",
-              "outputKey": 1
+              "outputKey": "1"
             },
             {
               "operation": "equal",
               "value2": "📞 Менеджер",
-              "outputKey": 2
+              "outputKey": "2"
             },
             {
               "operation": "equal",
               "value2": "🔄 Почати з нуля",
-              "outputKey": 3
+              "outputKey": "3"
             }
           ]
         }
