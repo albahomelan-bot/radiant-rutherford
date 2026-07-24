@@ -173,7 +173,7 @@ const toast = document.getElementById('toast');
 
 // Fetch with custom timeout helper to prevent hanging on slow APIs
 async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 3500 } = options;
+  const { timeout = 25000 } = options;
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
   
@@ -242,7 +242,7 @@ async function init() {
   for (const url of apiUrls) {
     try {
       console.log(`Attempting to load from: ${url}...`);
-      const response = await fetchWithTimeout(url, { timeout: 3500 });
+      const response = await fetchWithTimeout(url, { timeout: 25000 });
       if (response.ok) {
         listings = await response.json();
         loaded = true;
