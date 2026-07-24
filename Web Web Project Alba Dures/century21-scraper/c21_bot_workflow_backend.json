@@ -1,5 +1,4 @@
 {
-  "name": "21_bot_workflow_backend",
   "nodes": [
     {
       "parameters": {
@@ -8,13 +7,13 @@
         ],
         "additionalFields": {}
       },
-      "id": "254ff363-5000-410b-bfc4-c8c083ce0ef7",
+      "id": "261f32ef-cbb1-478f-9d0d-ea4179789906",
       "name": "Telegram Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.1,
       "position": [
-        224,
-        560
+        27808,
+        8272
       ],
       "webhookId": "9b1fb28e-5b12-4c28-98e6-12a938c11aa5",
       "credentials": {
@@ -53,19 +52,20 @@
           ]
         }
       },
-      "id": "41e751e3-a442-4677-9a61-5089e0feefcd",
+      "id": "2e1a40f0-229f-4039-a6cf-bf3ee8e740d0",
       "name": "Router Switch",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 1,
       "position": [
-        448,
-        560
+        28032,
+        8272
       ]
     },
     {
       "parameters": {
         "operation": "sendPhoto",
         "chatId": "={{ $json.message.chat.id }}",
+        "file": "https://century21-albania.pages.dev/welcome_banner.jpg?v=1",
         "replyMarkup": "replyKeyboard",
         "replyKeyboard": {
           "rows": [
@@ -109,22 +109,21 @@
             }
           ]
         },
-        "additionalFields": {
-          "parse_mode": "HTML",
-          "caption": "=🏢 <b>Century 21 Albania | Розумний пошук</b>\n\nВітаємо, <b>{{ $json.message.from.first_name }}</b>! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в <b>Дурресі</b> та <b>Тирані</b> безпосередньо з офіційної бази Century 21.\n\n<b>Чим я корисний:</b>\n• 🏢 <b>Інтерактивний каталог</b> — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n• 🌐 <b>Розумний пошук</b> — просто напишіть мені запит своїми словами (наприклад: <i>«оренда 2-кімнатної в Дурресі до 600€»</i>), і я сам підберу варіанти.\n• 🛡️ <b>Безпека</b> — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 <b>Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:</b>"
-        },
         "replyKeyboardOptions": {
           "resizeKeyboard": true
         },
-        "photo": "https://century21-albania.pages.dev/welcome_banner.jpg?v=1"
+        "additionalFields": {
+          "caption": "=🏢 <b>Century 21 Albania | Розумний пошук</b>\n\nВітаємо, <b>{{ $json.message.from.first_name }}</b>! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в <b>Дурресі</b> та <b>Тирані</b> безпосередньо з офіційної бази Century 21.\n\n<b>Чим я корисний:</b>\n• 🏢 <b>Інтерактивний каталог</b> — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n• 🌐 <b>Розумний пошук</b> — просто напишіть мені запит своїми словами (наприклад: <i>«оренда 2-кімнатної в Дурресі до 600€»</i>), і я сам підберу варіанти.\n• 🛡️ <b>Безпека</b> — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 <b>Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:</b>",
+          "parse_mode": "HTML"
+        }
       },
-      "id": "263c1193-aedd-48ed-8ec1-3da070d09e9c",
+      "id": "ad3b6e23-ea31-43df-8c54-3d56e75fb95d",
       "name": "Send Welcome Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        720,
-        352
+        28304,
+        8064
       ],
       "webhookId": "c6a542c5-fcbf-40b3-a4b0-89cd94b7330a",
       "credentials": {
@@ -142,13 +141,13 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "1561a8d9-a09a-47e7-a1bd-cbda2de0c8fe",
+      "id": "16c80ecc-e10f-417b-a068-ae90fbeffd0e",
       "name": "Send Help Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        720,
-        512
+        28304,
+        8224
       ],
       "webhookId": "84ca0aad-a28f-44c1-ac21-c72dc006ebcb",
       "credentials": {
@@ -166,13 +165,13 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "4b035de2-98aa-4e21-8f6b-0deff81d3dd4",
+      "id": "48dbf431-9e4a-4c1e-8ffd-b0a65889c228",
       "name": "Send Manager Contacts",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        720,
-        656
+        28304,
+        8368
       ],
       "webhookId": "85f61f6a-d125-4bc3-a837-0b7370bfb9cb",
       "credentials": {
@@ -205,20 +204,20 @@
             }
           ]
         },
-        "additionalFields": {
-          "parse_mode": "HTML"
-        },
         "replyKeyboardOptions": {
           "resizeKeyboard": true
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
         }
       },
-      "id": "fed6cc07-5d90-4c42-96e7-b70cf5155e75",
+      "id": "a8df87b8-da36-4928-8f69-287244d603b4",
       "name": "Send Reset Confirmation",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        720,
-        816
+        28304,
+        8528
       ],
       "webhookId": "0621d845-563e-4c70-aa79-3c912639f8e1",
       "credentials": {
@@ -231,29 +230,16 @@
     {
       "parameters": {
         "model": "gpt-4o-mini",
-        "messages": {
-          "messageValues": [
-            {
-              "role": "system",
-              "message": "You are a smart parser for a real estate search bot in Albania (Durrës and Tirana).\nExtract search filters from the user's natural language request.\nOutput ONLY a valid JSON object matching this schema:\n{\n  \"category\": \"Sale\" | \"Rent\" | \"all\",\n  \"city\": \"Durrës\" | \"Tirana\" | \"all\",\n  \"rooms\": \"1\" | \"2\" | \"3+\" | \"all\",\n  \"priceMax\": number | null,\n  \"priceMin\": number | null\n}\nIf fields are not mentioned, set them to default values (\"all\" or null).\nTranslate Ukrainian queries correctly (e.g. \"оренда\" -> Rent, \"купити/продаж\" -> Sale, \"кімнатна\" -> rooms)."
-            },
-            {
-              "role": "user",
-              "message": "={{ $json.message.text }}"
-            }
-          ]
-        },
-        "options": {
-          "responseFormat": "json_object"
-        }
+        "options": {},
+        "requestOptions": {}
       },
-      "id": "71815704-c9b8-4f49-bbfd-4b2d743c1c0c",
+      "id": "dd8feba6-3f87-4776-9720-b01a7ae2f19c",
       "name": "AI NLP Parser",
       "type": "n8n-nodes-base.openAi",
       "typeVersion": 1.1,
       "position": [
-        720,
-        960
+        28304,
+        8672
       ],
       "credentials": {
         "openAiApi": {
@@ -266,13 +252,13 @@
       "parameters": {
         "jsCode": "const filters = JSON.parse($input.first().json.choices[0].message.content);\n\nlet url = 'https://century21-albania.pages.dev/?';\nconst params = [];\nif (filters.category && filters.category !== 'all') params.push(`category=${filters.category}`);\nif (filters.city && filters.city !== 'all') params.push(`city=${filters.city}`);\nif (filters.rooms && filters.rooms !== 'all') params.push(`rooms=${filters.rooms}`);\nif (filters.priceMax) params.push(`priceMax=${filters.priceMax}`);\nif (filters.priceMin) params.push(`priceMin=${filters.priceMin}`);\n\nurl += params.join('&');\n\nreturn {\n  url,\n  summary: `Угода: ${filters.category === 'Rent' ? 'Оренда' : filters.category === 'Sale' ? 'Продаж' : 'Будь-яка'}, Місто: ${filters.city || 'Всі'}, Кімнат: ${filters.rooms || 'Будь-яка'}${filters.priceMax ? ', Макс. ціна: ' + filters.priceMax + '€' : ''}`\n};"
       },
-      "id": "76122bd5-b4cf-4056-958d-b3911f1188f6",
+      "id": "86addcdf-5606-49c5-9a59-730b4f145e12",
       "name": "Generate Filtered URL",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        944,
-        960
+        28528,
+        8672
       ]
     },
     {
@@ -280,31 +266,17 @@
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
         "text": "=🔍 <b>Я налаштував фільтри під ваш запит!</b>\n\n⚙️ {{ $json.summary }}\n\nНатисніть кнопку нижче, щоб відкрити каталог із уже вибраними параметрами! 👇",
         "replyMarkup": "inlineKeyboardMarkup",
-        "inlineKeyboardMarkup": {
-          "rows": [
-            {
-              "buttons": [
-                {
-                  "text": "🚀 Відкрити підібрані варіанти",
-                  "web_app": {
-                    "url": "={{ $json.url }}"
-                  }
-                }
-              ]
-            }
-          ]
-        },
         "additionalFields": {
           "parse_mode": "HTML"
         }
       },
-      "id": "80b0b1b6-30fc-4b48-a0c3-12db7064388d",
+      "id": "90fe9faa-a951-48d0-9af4-79e23d0433be",
       "name": "Send Filtered Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1168,
-        960
+        28752,
+        8672
       ],
       "webhookId": "c22da0b0-f268-4ff1-92f3-d12d867917ce",
       "credentials": {
@@ -316,13 +288,13 @@
     },
     {
       "parameters": {},
-      "id": "ae5cff47-4318-4ab7-b48f-31826829a554",
+      "id": "81a710ad-42a8-4da0-82aa-7e3479c3ddc4",
       "name": "Error Trigger",
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
       "position": [
-        192,
-        320
+        27776,
+        8032
       ]
     },
     {
@@ -333,13 +305,13 @@
           "parse_mode": "Markdown"
         }
       },
-      "id": "1f58449f-f1ac-47fa-97a0-a9f866604f61",
+      "id": "8936cba1-4306-4baf-b090-12c60246d7d4",
       "name": "Send Error Telegram",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        448,
-        320
+        28032,
+        8032
       ],
       "webhookId": "a11c6db1-8c82-4a01-aae0-6f21f4268012",
       "credentials": {
@@ -353,13 +325,13 @@
       "parameters": {
         "jsCode": "return $input.all().map(item => {\n  // Deep copy the item to bypass n8n's read-only/frozen object restriction\n  const newItem = JSON.parse(JSON.stringify(item));\n  \n  newItem.json.messageText = newItem.json.message && newItem.json.message.text ? newItem.json.message.text : '';\n  \n  // Safeguard basic properties for downstream nodes\n  if (!newItem.json.message) {\n    newItem.json.message = {\n      chat: { id: 7431843172 },\n      from: { first_name: 'Клієнт' }\n    };\n  } else {\n    if (!newItem.json.message.chat) {\n      newItem.json.message.chat = { id: 7431843172 };\n    }\n    if (!newItem.json.message.from) {\n      newItem.json.message.from = { first_name: 'Клієнт' };\n    }\n  }\n  \n  return newItem;\n});"
       },
-      "id": "e2a2fb2e-12ab-4bc8-8e6d-9b1e847c230a",
+      "id": "c5fbb99e-b4f4-41e4-a2fc-374ab755e8d6",
       "name": "Sanitize Message",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        336,
-        560
+        27920,
+        8272
       ]
     },
     {
@@ -370,14 +342,15 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "bfa8d8f0-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+      "id": "de81fb93-4bba-4a38-9391-6b02b4b93334",
       "name": "Notify Manager",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        950,
-        656
+        28544,
+        8368
       ],
+      "webhookId": "dc4a26df-d0b4-4f9f-9909-66fd4e52024e",
       "credentials": {
         "telegramApi": {
           "id": "r717IUH8sHUrL1dE",
@@ -386,7 +359,6 @@
       }
     }
   ],
-  "pinData": {},
   "connections": {
     "Telegram Trigger": {
       "main": [
@@ -428,10 +400,14 @@
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Send Manager Contacts": {
+      "main": [
         [
           {
-            "node": "AI NLP Parser",
+            "node": "Notify Manager",
             "type": "main",
             "index": 0
           }
@@ -481,22 +457,11 @@
           }
         ]
       ]
-    },
-    "Send Manager Contacts": {
-      "main": [
-        [
-          {
-            "node": "Notify Manager",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
-  "active": false,
-  "settings": {
-    "executionOrder": "v1",
-    "binaryMode": "separate"
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
   }
 }
