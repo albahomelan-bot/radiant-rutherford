@@ -336,7 +336,7 @@
     },
     {
       "parameters": {
-        "chatId": "-1002415361322",
+        "chatId": "7431843172",
         "text": "=🔔 <b>Новий запит контакту менеджера!</b>\n\n👤 <b>Клієнт:</b> {{ $json.message.from.first_name }} {{ $json.message.from.last_name ? $json.message.from.last_name : '' }}\n💬 <b>Username:</b> {{ $json.message.from.username ? '@' + $json.message.from.username : '<i>відсутній</i>' }}\n🆔 <b>Telegram ID:</b> <code>{{ $json.message.from.id }}</code>\n🌐 <b>Мова додатку:</b> <code>{{ $json.message.from.language_code ? $json.message.from.language_code.toUpperCase() : 'невідомо' }}</code>\n🌟 <b>Premium:</b> {{ $json.message.from.is_premium ? 'Так 🔥' : 'Ні' }}\n\n🔗 <a href=\"tg://user?id={{ $json.message.from.id }}\"><b>Натисніть сюди, щоб почати діалог з клієнтом</b></a>",
         "additionalFields": {
           "parse_mode": "HTML"
