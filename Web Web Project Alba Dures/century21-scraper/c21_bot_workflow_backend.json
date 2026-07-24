@@ -113,7 +113,9 @@
           "parse_mode": "HTML",
           "caption": "=🏢 <b>Century 21 Albania | Розумний пошук</b>\n\nВітаємо, <b>{{ $json.message.from.first_name }}</b>! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в <b>Дурресі</b> та <b>Тирані</b> безпосередньо з офіційної бази Century 21.\n\n<b>Чим я корисний:</b>\n• 🏢 <b>Інтерактивний каталог</b> — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n• 🌐 <b>Розумний пошук</b> — просто напишіть мені запит своїми словами (наприклад: <i>«оренда 2-кімнатної в Дурресі до 600€»</i>), і я сам підберу варіанти.\n• 🛡️ <b>Безпека</b> — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 <b>Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:</b>"
         },
-        "replyKeyboardOptions": {},
+        "replyKeyboardOptions": {
+          "resizeKeyboard": true
+        },
         "photo": "https://century21-albania.pages.dev/welcome_banner.jpg?v=1"
       },
       "id": "263c1193-aedd-48ed-8ec1-3da070d09e9c",
@@ -206,7 +208,9 @@
         "additionalFields": {
           "parse_mode": "HTML"
         },
-        "replyKeyboardOptions": {}
+        "replyKeyboardOptions": {
+          "resizeKeyboard": true
+        }
       },
       "id": "fed6cc07-5d90-4c42-96e7-b70cf5155e75",
       "name": "Send Reset Confirmation",
