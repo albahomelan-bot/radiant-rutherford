@@ -7,13 +7,13 @@
         ],
         "additionalFields": {}
       },
-      "id": "261f32ef-cbb1-478f-9d0d-ea4179789906",
+      "id": "7e3cad47-9eba-42f6-86f5-d43cfae9e6cb",
       "name": "Telegram Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.1,
       "position": [
-        27808,
-        8272
+        31504,
+        9216
       ],
       "webhookId": "9b1fb28e-5b12-4c28-98e6-12a938c11aa5",
       "credentials": {
@@ -32,33 +32,33 @@
             {
               "operation": "equal",
               "value2": "/start",
-              "outputIndex": 0
+              "output": 0
             },
             {
               "operation": "equal",
               "value2": "ℹ️ Допомога",
-              "outputIndex": 1
+              "output": 1
             },
             {
               "operation": "equal",
               "value2": "📞 Менеджер",
-              "outputIndex": 2
+              "output": 2
             },
             {
               "operation": "equal",
               "value2": "🔄 Почати з нуля",
-              "outputIndex": 3
+              "output": 3
             }
           ]
         }
       },
-      "id": "2e1a40f0-229f-4039-a6cf-bf3ee8e740d0",
+      "id": "fb67055f-933b-4f27-a412-066103ec8ed6",
       "name": "Router Switch",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 1,
       "position": [
-        28032,
-        8272
+        31728,
+        9216
       ]
     },
     {
@@ -117,13 +117,13 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "ad3b6e23-ea31-43df-8c54-3d56e75fb95d",
+      "id": "543c140a-2964-4059-a973-f2e86fbe3eb5",
       "name": "Send Welcome Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        28304,
-        8064
+        32000,
+        9008
       ],
       "webhookId": "c6a542c5-fcbf-40b3-a4b0-89cd94b7330a",
       "credentials": {
@@ -141,13 +141,13 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "16c80ecc-e10f-417b-a068-ae90fbeffd0e",
+      "id": "be7ce720-d80c-4a3f-9e10-a75ff99bb0a5",
       "name": "Send Help Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        28304,
-        8224
+        32000,
+        9168
       ],
       "webhookId": "84ca0aad-a28f-44c1-ac21-c72dc006ebcb",
       "credentials": {
@@ -165,13 +165,13 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "48dbf431-9e4a-4c1e-8ffd-b0a65889c228",
+      "id": "0276eca1-413d-48c3-9407-7ca7e29fe65a",
       "name": "Send Manager Contacts",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        28304,
-        8368
+        32000,
+        9312
       ],
       "webhookId": "85f61f6a-d125-4bc3-a837-0b7370bfb9cb",
       "credentials": {
@@ -211,13 +211,13 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "a8df87b8-da36-4928-8f69-287244d603b4",
+      "id": "8377c40e-169d-425b-b5af-b5b1c3b3cb3c",
       "name": "Send Reset Confirmation",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        28304,
-        8528
+        32000,
+        9472
       ],
       "webhookId": "0621d845-563e-4c70-aa79-3c912639f8e1",
       "credentials": {
@@ -233,13 +233,13 @@
         "options": {},
         "requestOptions": {}
       },
-      "id": "dd8feba6-3f87-4776-9720-b01a7ae2f19c",
+      "id": "24a53c70-a2d3-464e-99e8-2b1363acce8c",
       "name": "AI NLP Parser",
       "type": "n8n-nodes-base.openAi",
       "typeVersion": 1.1,
       "position": [
-        28304,
-        8672
+        32000,
+        9616
       ],
       "credentials": {
         "openAiApi": {
@@ -252,13 +252,13 @@
       "parameters": {
         "jsCode": "const filters = JSON.parse($input.first().json.choices[0].message.content);\n\nlet url = 'https://century21-albania.pages.dev/?';\nconst params = [];\nif (filters.category && filters.category !== 'all') params.push(`category=${filters.category}`);\nif (filters.city && filters.city !== 'all') params.push(`city=${filters.city}`);\nif (filters.rooms && filters.rooms !== 'all') params.push(`rooms=${filters.rooms}`);\nif (filters.priceMax) params.push(`priceMax=${filters.priceMax}`);\nif (filters.priceMin) params.push(`priceMin=${filters.priceMin}`);\n\nurl += params.join('&');\n\nreturn {\n  url,\n  summary: `Угода: ${filters.category === 'Rent' ? 'Оренда' : filters.category === 'Sale' ? 'Продаж' : 'Будь-яка'}, Місто: ${filters.city || 'Всі'}, Кімнат: ${filters.rooms || 'Будь-яка'}${filters.priceMax ? ', Макс. ціна: ' + filters.priceMax + '€' : ''}`\n};"
       },
-      "id": "86addcdf-5606-49c5-9a59-730b4f145e12",
+      "id": "6878ea5a-3888-4d2e-bf13-aa67245820d0",
       "name": "Generate Filtered URL",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        28528,
-        8672
+        32224,
+        9616
       ]
     },
     {
@@ -270,13 +270,13 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "90fe9faa-a951-48d0-9af4-79e23d0433be",
+      "id": "7abed6e6-6e99-43a3-9e3e-5f14bb2f9b46",
       "name": "Send Filtered Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        28752,
-        8672
+        32448,
+        9616
       ],
       "webhookId": "c22da0b0-f268-4ff1-92f3-d12d867917ce",
       "credentials": {
@@ -288,13 +288,13 @@
     },
     {
       "parameters": {},
-      "id": "81a710ad-42a8-4da0-82aa-7e3479c3ddc4",
+      "id": "49e730e6-ffee-4a21-adb4-25826f89c27e",
       "name": "Error Trigger",
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
       "position": [
-        27776,
-        8032
+        31472,
+        8976
       ]
     },
     {
@@ -305,13 +305,13 @@
           "parse_mode": "Markdown"
         }
       },
-      "id": "8936cba1-4306-4baf-b090-12c60246d7d4",
+      "id": "232b4dfb-3f9a-4032-90ce-00bd49a4fc7f",
       "name": "Send Error Telegram",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        28032,
-        8032
+        31728,
+        8976
       ],
       "webhookId": "a11c6db1-8c82-4a01-aae0-6f21f4268012",
       "credentials": {
@@ -325,13 +325,13 @@
       "parameters": {
         "jsCode": "return $input.all().map(item => {\n  // Deep copy the item to bypass n8n's read-only/frozen object restriction\n  const newItem = JSON.parse(JSON.stringify(item));\n  \n  newItem.json.messageText = newItem.json.message && newItem.json.message.text ? newItem.json.message.text : '';\n  \n  // Safeguard basic properties for downstream nodes\n  if (!newItem.json.message) {\n    newItem.json.message = {\n      chat: { id: 7431843172 },\n      from: { first_name: 'Клієнт' }\n    };\n  } else {\n    if (!newItem.json.message.chat) {\n      newItem.json.message.chat = { id: 7431843172 };\n    }\n    if (!newItem.json.message.from) {\n      newItem.json.message.from = { first_name: 'Клієнт' };\n    }\n  }\n  \n  return newItem;\n});"
       },
-      "id": "c5fbb99e-b4f4-41e4-a2fc-374ab755e8d6",
+      "id": "7fdb28da-c517-49d1-98b4-01cd4f7bd158",
       "name": "Sanitize Message",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        27920,
-        8272
+        31616,
+        9216
       ]
     },
     {
@@ -342,13 +342,13 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "de81fb93-4bba-4a38-9391-6b02b4b93334",
+      "id": "d0711749-e9da-4015-ba32-38bce6240e60",
       "name": "Notify Manager",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        28544,
-        8368
+        32240,
+        9312
       ],
       "webhookId": "dc4a26df-d0b4-4f9f-9909-66fd4e52024e",
       "credentials": {
