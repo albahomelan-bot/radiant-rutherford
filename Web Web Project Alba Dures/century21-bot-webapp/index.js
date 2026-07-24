@@ -230,49 +230,54 @@ async function init() {
   }
   updateFavCount();
 
-  // Try to load listings from live API, fallback to local file, fallback to embedded data
-  let loaded = false;
-  const urlParams = new URLSearchParams(window.location.search);
-  const customApiUrl = urlParams.get('api_url');
-  const apiUrls = [];
-  if (customApiUrl) apiUrls.push(customApiUrl);
-  apiUrls.push('https://albasever.app.n8n.cloud/webhook/properties');
-  apiUrls.push('properties_mock.json');
-
-  for (const url of apiUrls) {
-    try {
-      console.log(`Attempting to load from: ${url}...`);
-      const response = await fetchWithTimeout(url, { timeout: 25000 });
-      if (response.ok) {
-        listings = await response.json();
-        loaded = true;
-        console.log(`Loaded listings successfully from: ${url}`);
-        break;
-      }
-    } catch (e) {
-      console.warn(`Failed to fetch from ${url} (aborted or offline):`, e.message);
-    }
-  }
-
-  if (!loaded) {
-    listings = FALLBACK_PROPERTIES;
-    console.log('Loaded listings from embedded fallback data');
-  }
-
-  // Reverse listings array so the newest items (at the bottom of the Google Sheet) appear first
-  if (Array.isArray(listings)) {
-    listings.reverse();
-  }
+  // Load fallback properties immediately for instant startup (TikTok style)
+  listings = FALLBACK_PROPERTIES;
+  console.log('Loaded listings from embedded fallback data instantly');
 
   // Setup Event Listeners
   setupEventListeners();
 
-  
   // Parse URL Parameters (allows deep-linking filters from n8n bot NLP queries)
   parseUrlParams();
 
-  // Render initial catalog
+  // Render initial catalog instantly with mock/local data
   render();
+
+  // Fetch live API asynchronously in the background
+  (async () => {
+    let loaded = false;
+    const urlParams = new URLSearchParams(window.location.search);
+    const customApiUrl = urlParams.get('api_url');
+    const apiUrls = [];
+    if (customApiUrl) apiUrls.push(customApiUrl);
+    apiUrls.push('https://albasever.app.n8n.cloud/webhook/properties');
+    apiUrls.push('properties_mock.json');
+
+    try {
+      for (const url of apiUrls) {
+        try {
+          console.log(`Background loading from: ${url}...`);
+          const response = await fetchWithTimeout(url, { timeout: 25000 });
+          if (response.ok) {
+            const freshListings = await response.json();
+            if (Array.isArray(freshListings) && freshListings.length > 0) {
+              listings = freshListings;
+              // Reverse so newest items are first
+              listings.reverse();
+              loaded = true;
+              console.log(`Asynchronously loaded ${listings.length} live listings from: ${url}`);
+              break;
+            }
+          }
+        } catch (e) {
+          console.warn(`Failed to background fetch from ${url}:`, e.message);
+        }
+      }
+    } finally {
+      isBackgroundLoading = false;
+      render();
+    }
+  })();
 }
 
 // Setup Event Listeners
@@ -709,6 +714,9 @@ function renderNextPage() {
   renderedCount += nextSlice.length;
 }
 
+// Global loading state flag to handle shimmering skeleton loaders
+let isBackgroundLoading = true;
+
 function render() {
   catalogSection.innerHTML = '';
   
@@ -795,8 +803,15 @@ function render() {
   renderedCount = 0;
 
   if (activeFilteredList.length === 0) {
-    emptyState.classList.remove('hidden');
-    catalogSection.classList.add('hidden');
+    if (isBackgroundLoading && currentActiveTab === 'catalog') {
+      // Show skeleton loaders instead of empty state if background loading is still in progress
+      emptyState.classList.add('hidden');
+      catalogSection.classList.remove('hidden');
+      renderSkeletons();
+    } else {
+      emptyState.classList.remove('hidden');
+      catalogSection.classList.add('hidden');
+    }
     return;
   }
 
@@ -804,6 +819,29 @@ function render() {
   catalogSection.classList.remove('hidden');
 
   renderNextPage();
+
+  // If background loading is active, append skeletons at the bottom of the first page to indicate loading
+  if (isBackgroundLoading && currentActiveTab === 'catalog') {
+    renderSkeletons();
+  }
+}
+
+// Render shimmering skeletons inside the catalog
+function renderSkeletons() {
+  for (let i = 0; i < 4; i++) {
+    const skeleton = document.createElement('div');
+    skeleton.className = 'skeleton-card';
+    skeleton.innerHTML = `
+      <div class="skeleton-image"></div>
+      <div class="skeleton-content">
+        <div class="skeleton-line price"></div>
+        <div class="skeleton-line title"></div>
+        <div class="skeleton-line loc"></div>
+        <div class="skeleton-line stats"></div>
+      </div>
+    `;
+    catalogSection.appendChild(skeleton);
+  }
 }
 
 
