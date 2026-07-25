@@ -352,8 +352,12 @@ function setupEventListeners() {
   applyFiltersBtn.addEventListener('click', applyFilters);
   resetFiltersBtn.addEventListener('click', resetFilters);
   resetFiltersLink.addEventListener('click', () => {
-    resetFilters();
-    render();
+    if (currentActiveTab === 'favorites') {
+      switchTab('catalog');
+    } else {
+      resetFilters();
+      render();
+    }
   });
 
   // Detail Modal Actions
@@ -809,6 +813,26 @@ function render() {
       catalogSection.classList.remove('hidden');
       renderSkeletons();
     } else {
+      // Update empty state text based on active tab
+      const emptyIcon = emptyState.querySelector('.empty-icon');
+      const emptyTitle = emptyState.querySelector('h3');
+      const emptyText = emptyState.querySelector('p');
+      const emptyBtn = document.getElementById('resetFiltersLink');
+      
+      if (currentActiveTab === 'favorites') {
+        emptyIcon.textContent = '❤️';
+        emptyTitle.textContent = 'Ваш список обраного порожній';
+        emptyText.textContent = 'Зберігайте цікаві об\'єкти за допомогою значка серця на картках нерухомості.';
+        emptyBtn.textContent = 'Перейти до каталогу';
+        emptyBtn.className = 'btn btn-primary';
+      } else {
+        emptyIcon.textContent = '📂';
+        emptyTitle.textContent = 'Нічого не знайдено';
+        emptyText.textContent = 'Спробуйте змінити фільтри пошуку або скинути їх.';
+        emptyBtn.textContent = 'Скинути всі фільтри';
+        emptyBtn.className = 'btn btn-secondary';
+      }
+      
       emptyState.classList.remove('hidden');
       catalogSection.classList.add('hidden');
     }
