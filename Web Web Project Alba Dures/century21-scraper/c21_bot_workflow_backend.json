@@ -357,6 +357,53 @@
           "name": "Durres Property Finder"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
+          "mode": "list",
+          "cachedResultName": "century21_scraper_workflow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "name",
+          "cachedResultName": "Leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Дата": "={{ new Date().toLocaleString('uk-UA', { timeZone: 'Europe/Kiev' }) }}",
+            "Ім'я": "={{ $('Sanitize Message').item.json.message.from.first_name }}",
+            "Прізвище": "={{ $('Sanitize Message').item.json.message.from.last_name || '' }}",
+            "Username": "={{ $('Sanitize Message').item.json.message.from.username ? '@' + $('Sanitize Message').item.json.message.from.username : '' }}",
+            "ID": "={{ $('Sanitize Message').item.json.message.from.id }}",
+            "Мова": "={{ $('Sanitize Message').item.json.message.from.language_code || '' }}",
+            "Premium": "={{ $('Sanitize Message').item.json.message.from.is_premium ? 'Так' : 'Ні' }}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "e8a93cb3-c55f-4a0b-9328-98e612fbe3a5",
+      "name": "Save Lead to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        32240,
+        9472
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5WhpEtEGzugSOYEM",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
     }
   ],
   "connections": {
@@ -408,6 +455,11 @@
         [
           {
             "node": "Notify Manager",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save Lead to Google Sheets",
             "type": "main",
             "index": 0
           }
