@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Студия вебкам моделей в Санкт-Петербурге K-MODELS</title>
+  <meta name="description" content="Студия вебкам моделей K-MODELS. Мы одна из лучших Webcam студий в СПб, где парни и девушки могут заработать хорошие деньги в комфортных условиях.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="container header-container">
+      <a href="#" class="logo">
+        <img src="https://spb-webcam.com/wp-content/themes/kinky/images/header-logo/main.svg" alt="logo" class="logo-img">
+        <span class="logo-text">K-MODELS</span>
+      </a>
+      
+      <nav class="nav-menu" id="nav-menu">
+        <a href="#vacancies" class="nav-link">Вакансии</a>
+        <a href="#reviews" class="nav-link">Отзывы</a>
+        <a href="#faq" class="nav-link">Вопросы</a>
+        <a href="#interiors" class="nav-link">Интерьеры</a>
+        <a href="#contacts" class="nav-link">Контакты</a>
+      </nav>
+      
+      <div class="header-actions">
+        <a href="tel:89650022072" class="phone-link">8 (965) 002-20-72</a>
+        <button class="btn btn-primary" onclick="openModal()">ОСТАВИТЬ ЗАЯВКУ</button>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-video-bg">
+      <video autoplay muted loop playsinline poster="https://spb-webcam.com/wp-content/themes/kinky/images/video/video-poster.webp">
+        <source src="https://spb-webcam.com/wp-content/themes/kinky/images/video/video-background.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-overlay"></div>
+    
+    <div class="container hero-container">
+      <div class="hero-content">
+        <h1 class="hero-title">Стань финансово независимой без «работы»</h1>
+        
+        <div class="hero-logo-wrap">
+          <img src="https://spb-webcam.com/wp-content/themes/kinky/images/header-logo/hero-logo.svg" alt="K-Models Logo" class="hero-logo-img">
+        </div>
+        
+        <a href="https://t.me/kmodels_sup" target="_blank" class="btn btn-telegram">
+          <i class="fab fa-telegram-plane"></i> НАПИСАТЬ В ТГ
+        </a>
+        
+        <div class="hero-text">
+          <p>Здесь платят за open-communication, харизму и внимание.</p>
+          <p>Ты работаешь не на нас — мы зарабатываем вместе с тобой.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="hero-gif">
+      <img src="https://spb-webcam.com/wp-content/themes/kinky/images/gif/popcat.gif" alt="Popcat animation">
+    </div>
+    <div class="hero-decor">
+      <img src="https://spb-webcam.com/wp-content/themes/kinky/images/decors/hero-decor.svg" alt="decor">
+    </div>
+  </section>
+
+  <!-- OK IF YOU SECTION -->
+  <section class="ok-section">
+    <div class="container ok-container">
+      <div class="ok-card">
+        <h3 class="ok-subtitle">ОКЕЙ, ЕСЛИ ТЫ</h3>
+        <div class="ok-content">
+          <ul class="ok-list">
+            <li><i class="fa-solid fa-check"></i> без опыта</li>
+            <li><i class="fa-solid fa-check"></i> без идеальной внешности</li>
+            <li><i class="fa-solid fa-check"></i> без “продажи” себя</li>
+            <li><i class="fa-solid fa-check"></i> без знания английского</li>
+          </ul>
+          <div class="ok-image">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/star.png" alt="Star">
+          </div>
+        </div>
+      </div>
+      <div class="ok-footer">
+        <p>Мы всему обучим и поможем начать, не переживай</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONDITIONS SECTION -->
+  <section class="conditions">
+    <div class="container">
+      <div class="section-header">
+        <ul class="decor-icons">
+          <li><img src="https://spb-webcam.com/wp-content/themes/kinky/images/header-logo/main.svg" width="24" height="24"></li>
+        </ul>
+        <h2 class="section-title text-glow">НАШИ УСЛОВИЯ</h2>
+      </div>
+      
+      <div class="conditions-grid">
+        <article class="condition-card">
+          <h3 class="condition-label">Новеньким моделям</h3>
+          <p class="condition-text">Бонус +5000 ₽ к зарплате на старте. Повышенный процент.</p>
+        </article>
+        
+        <article class="condition-card">
+          <h3 class="condition-label">Забирай до 80% дохода</h3>
+          <p class="condition-text">Прогрессивная система процентов и минимальная комиссия.</p>
+        </article>
+        
+        <article class="condition-card">
+          <h3 class="condition-label">Прозрачная зарплата</h3>
+          <p class="condition-text">Ты всегда видишь, из чего формируется твой доход. Выплаты происходят каждую неделю.</p>
+        </article>
+        
+        <article class="condition-card">
+          <h3 class="condition-label">Проживание в городе</h3>
+          <p class="condition-text">Студия может предоставить жильё для иногородних моделей.</p>
+        </article>
+        
+        <article class="condition-card">
+          <h3 class="condition-label">Конфиденциальность</h3>
+          <p class="condition-text">Работа только на зарубежных платформах. Мы не смотрим трансляции моделей и не вмешиваемся.</p>
+        </article>
+        
+        <article class="condition-card">
+          <h3 class="condition-label">Ежедневные выплаты</h3>
+          <p class="condition-text">Для новых моделей доступна ежедневная выплата дохода на старте, затем выплаты проходят на общих условиях.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US SECTION -->
+  <section class="why-us">
+    <div class="why-us-header">
+      <div class="container header-wrap">
+        <img src="https://spb-webcam.com/wp-content/themes/kinky/images/header-logo/main-1.svg" alt="decor">
+        <h2 class="why-us-title">ПОЧЕМУ МЫ?</h2>
+        <img src="https://spb-webcam.com/wp-content/themes/kinky/images/header-logo/main-2.svg" alt="decor">
+      </div>
+    </div>
+    
+    <div class="why-us-blocks">
+      <!-- block 1 -->
+      <div class="why-block block-left">
+        <div class="container why-container">
+          <div class="why-image">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/gif/cat-meng.gif" alt="Cat GIF">
+          </div>
+          <div class="why-content">
+            <div class="why-label left-align">ПОДДЕРЖКА</div>
+            <ul class="why-list">
+              <li>— личный куратор</li>
+              <li>— по желанию - оператор</li>
+              <li>— обучение с нуля</li>
+              <li>— индивидуальная стратегия</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- block 2 -->
+      <div class="why-block block-right">
+        <div class="container why-container reverse">
+          <div class="why-content">
+            <div class="why-label right-align">СПОКОЙСТВИЕ</div>
+            <ul class="why-list">
+              <li>— лицо - по желанию</li>
+              <li>— твои границы - твои правила</li>
+              <li>— конфиденциальность</li>
+              <li>— женский коллектив</li>
+              <li>— регулярные конкурсы и бонусы</li>
+            </ul>
+          </div>
+          <div class="why-image">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/heart.png" alt="Heart">
+          </div>
+        </div>
+      </div>
+      
+      <!-- block 3 -->
+      <div class="why-block block-left">
+        <div class="container why-container">
+          <div class="why-image">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/gif/elgatitolover-elgatitoloves.gif" alt="Cat money GIF">
+          </div>
+          <div class="why-content">
+            <div class="why-label left-align">ДЕНЬГИ</div>
+            <ul class="why-list">
+              <li>— ежедневные выплаты</li>
+              <li>— прогрессивная ставка — до 80% от дохода</li>
+              <li>— работа с Fansly, OnlyFans и др.</li>
+              <li>— средний доход моделей — от 200 000 ₽ при минимальной занятости</li>
+            </ul>
+            <div class="why-note">
+              Откуда деньги? <br> чаевые • приватные чаты • подписки • продюсирование
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- block 4 -->
+      <div class="why-block block-right">
+        <div class="container why-container reverse">
+          <div class="why-content">
+            <div class="why-label right-align">КОМАНДА</div>
+            <ul class="why-list">
+              <li>
+                <strong>Мы — профессионалы.</strong><br>
+                Наша экспертиза подтверждена сертификатами платформ, с которыми мы работаем.<br>
+                <strong>У нас + вайб</strong>
+              </li>
+            </ul>
+          </div>
+          <div class="why-image cursor-img">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/arrow/cursor.png" alt="Cursor">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS SECTION -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats-header">
+        <div class="stats-title-wrap">
+          <img src="https://spb-webcam.com/wp-content/themes/kinky/images/icons/comp.svg" alt="icon">
+          <h2 class="stats-title">СТАТИСТИКА В ЦИФРАХ</h2>
+          <img src="https://spb-webcam.com/wp-content/themes/kinky/images/icons/phone.svg" alt="icon">
+        </div>
+        <p class="stats-subtitle">Данные по нашей работе сквозь года: опыт работы нашего персонала более <span>10 лет</span></p>
+      </div>
+      
+      <div class="stats-grid">
+        <article class="stats-item">
+          <div class="stats-bar-wrap">
+            <span class="stats-bar" style="height: 100%;"></span>
+            <div class="stats-value">+1000</div>
+          </div>
+          <div class="stats-label">Моделей работали с нами</div>
+        </article>
+        
+        <article class="stats-item">
+          <div class="stats-bar-wrap">
+            <span class="stats-bar" style="height: 60%;"></span>
+            <div class="stats-value">+30</div>
+          </div>
+          <div class="stats-label">Домашних моделей с полной поддержкой</div>
+        </article>
+        
+        <article class="stats-item">
+          <div class="stats-bar-wrap">
+            <span class="stats-bar" style="height: 40%;"></span>
+            <div class="stats-value">10</div>
+          </div>
+          <div class="stats-label">Предпринимателям помогли открыть студию</div>
+        </article>
+        
+        <article class="stats-item">
+          <div class="stats-bar-wrap">
+            <span class="stats-bar" style="height: 80%;"></span>
+            <div class="stats-value">+100</div>
+          </div>
+          <div class="stats-label">Людям помогли переехать в Санкт-Петербург</div>
+        </article>
+        
+        <article class="stats-item">
+          <div class="stats-bar-wrap">
+            <span class="stats-bar" style="height: 50%;"></span>
+            <div class="stats-value">+10</div>
+          </div>
+          <div class="stats-label">Лет опыта руководства в индустрии</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERIORS (COMPARISON SLIDER) -->
+  <section id="interiors" class="interiors">
+    <div class="container">
+      <div class="interiors-header">
+        <h2 class="interiors-title text-glow">ИНТЕРЬЕРЫ</h2>
+      </div>
+      
+      <div class="interiors-slider-container">
+        <!-- Before/After Slider 1 -->
+        <div class="compare-slider" id="compare-slider">
+          <div class="compare-layer base-layer">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/inter/02.webp" alt="Наша студия" class="compare-img">
+            <div class="compare-label right">Наша студия</div>
+          </div>
+          
+          <div class="compare-layer overlay-layer">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/inter/11.jpg" alt="Другие студии" class="compare-img">
+            <div class="compare-label left">Другие студии</div>
+          </div>
+          
+          <div class="compare-handle" id="compare-handle">
+            <span class="handle-line"></span>
+            <span class="handle-knob"><i class="fa-solid fa-arrows-left-right"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS SECTION -->
+  <section id="reviews" class="reviews">
+    <div class="container">
+      <div class="reviews-header">
+        <h2 class="reviews-title text-glow">ВСЕ ЕЩЕ СОМНЕВАЕШЬСЯ?</h2>
+        <div class="arrow-divider">
+          <img src="https://spb-webcam.com/wp-content/themes/kinky/images/arrow/arrow-down.svg" alt="arrow">
+        </div>
+      </div>
+      
+      <div class="reviews-grid">
+        <!-- Card 1 -->
+        <article class="review-card" onclick="playReviewVideo(this)">
+          <div class="review-video-wrap">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/reviews/01.webp" alt="Отзыв 1" class="review-poster">
+            <span class="play-btn"><i class="fa-solid fa-play"></i></span>
+            <video class="review-video" playsinline preload="metadata">
+              <source src="https://spb-webcam.com/wp-content/themes/kinky/images/reviews/01.mp4" type="video/mp4">
+            </video>
+          </div>
+        </article>
+        
+        <!-- Card 2 -->
+        <article class="review-card" onclick="playReviewVideo(this)">
+          <div class="review-video-wrap">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/reviews/02.webp" alt="Отзыв 2" class="review-poster">
+            <span class="play-btn"><i class="fa-solid fa-play"></i></span>
+            <video class="review-video" playsinline preload="metadata">
+              <source src="https://spb-webcam.com/wp-content/themes/kinky/images/reviews/02.mp4" type="video/mp4">
+            </video>
+          </div>
+        </article>
+        
+        <!-- Card 3 -->
+        <article class="review-card" onclick="playReviewVideo(this)">
+          <div class="review-video-wrap">
+            <img src="https://spb-webcam.com/wp-content/themes/kinky/images/reviews/03.webp" alt="Отзыв 3" class="review-poster">
+            <span class="play-btn"><i class="fa-solid fa-play"></i></span>
+            <video class="review-video" playsinline preload="metadata">
+              <source src="https://spb-webcam.com/wp-content/themes/kinky/images/reviews/03.mp4" type="video/mp4">
+            </video>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- VACANCIES SECTION -->
+  <section id="vacancies" class="vacancies">
+    <div class="container">
+      <div class="vacancies-grid">
+        <div class="vacancy-card-decor">
+          <img src="https://spb-webcam.com/wp-content/themes/kinky/images/heart.png" alt="Heart">
+        </div>
+        
+        <div class="vacancy-card">
+          <h3 class="vacancy-title">АДМИНИСТРАТОР</h3>
+          <p class="vacancy-income">Средний доход:<br><strong>100 000 – 150 000 ₽</strong></p>
+        </div>
+        
+        <div class="vacancy-card">
+          <h3 class="vacancy-title">СКАУТ</h3>
+          <p class="vacancy-income">Средний доход:<br><strong>300 000 ₽</strong></p>
+        </div>
+        
+        <div class="vacancy-card">
+          <h3 class="vacancy-title">ВЕБКАМ-МОДЕЛЬ</h3>
+          <p class="vacancy-income">Средний доход:<br><strong>200 000 – 500 000 ₽</strong></p>
+        </div>
+        
+        <div class="vacancy-card">
+          <h3 class="vacancy-title">ОПЕРАТОР</h3>
+          <p class="vacancy-income">Средний доход:<br><strong>100 000 – 150 000 ₽</strong></p>
+        </div>
+      </div>
+      
+      <div class="vacancies-action">
+        <button class="btn btn-large btn-glow" onclick="openModal()">ОСТАВИТЬ ЗАЯВКУ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section id="faq" class="faq-section">
+    <div class="container">
+      <h2 class="faq-title text-glow">ЧАСТЫЕ ВОПРОСЫ</h2>
+      
+      <div class="faq-accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>Можно ли работать без опыта?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              Да, можно. Успешной моделью может стать практически каждый, даже без опыта. Все новые модели проходят подробное обучение. Мы знакомим вас с правилами работы, объясняем особенности платформ и показываем, как правильно выстраивать общение с пользователями.
+            </div>
+          </div>
+        </div>
+        
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>Как обеспечивается конфиденциальность?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              Работа ведётся только на зарубежных платформах. По желанию модели мы блокируем доступ к её трансляции из стран СНГ и России. Все личные данные моделей остаются строго конфиденциальными.
+            </div>
+          </div>
+        </div>
+        
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>Можно ли работать без лица?</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              Работать без лица возможно, используя маску или частично скрывая лицо. Однако это может ограничивать уровень заработка, так как пользователи ищут эмоциональный контакт.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTS & FOOTER -->
+  <footer id="contacts" class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-info">
+          <h3 class="footer-title">K-MODELS</h3>
+          <p>Студия вебкам моделей в Санкт-Петербурге.</p>
+          <p class="footer-phone">Тел: <a href="tel:89650022072">8 (965) 002-20-72</a></p>
+          
+          <ul class="social-links">
+            <li><a href="https://t.me/kmodels_sup" target="_blank"><i class="fab fa-telegram-plane"></i></a></li>
+            <li><a href="#"><i class="fab fa-whatsapp"></i></a></li>
+            <li><a href="#"><i class="fab fa-vk"></i></a></li>
+            <li><a href="#"><i class="fab fa-tiktok"></i></a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-map">
+          <!-- Placeholder or Embedded map -->
+          <div class="map-placeholder">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <span>Санкт-Петербург, Россия</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 K-MODELS. Все права защищены.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- REQUEST MODAL -->
+  <div class="modal" id="request-modal">
+    <div class="modal-dialog">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div class="modal-content">
+        <h3 class="modal-title">Оставить заявку</h3>
+        <p class="modal-subtitle">Заполни форму, и менеджер свяжется с тобой в Telegram в течение 10 минут.</p>
+        
+        <form id="lead-form" class="modal-form" onsubmit="submitForm(event)">
+          <div class="form-group">
+            <input type="text" id="form-name" placeholder="Твое имя" required class="form-input">
+          </div>
+          <div class="form-group">
+            <input type="text" id="form-contact" placeholder="@Telegram или Телефон" required class="form-input">
+          </div>
+          <div class="form-group">
+            <select id="form-vacancy" class="form-input select-input">
+              <option value="Model">Вебкам-модель</option>
+              <option value="Admin">Администратор</option>
+              <option value="Scout">Скаут</option>
+              <option value="Operator">Оператор</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="submit-btn">ОТПРАВИТЬ ЗАЯВКУ</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
