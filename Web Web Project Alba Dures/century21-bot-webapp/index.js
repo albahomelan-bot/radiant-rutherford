@@ -250,7 +250,7 @@ async function init() {
     const customApiUrl = urlParams.get('api_url');
     const apiUrls = [];
     if (customApiUrl) apiUrls.push(customApiUrl);
-    apiUrls.push('https://albasever.app.n8n.cloud/webhook/properties');
+    apiUrls.push('https://n8n.alba-automation.top/webhook/properties');
     apiUrls.push('properties_mock.json');
 
     try {
