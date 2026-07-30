@@ -187,6 +187,17 @@ async function fetchWithTimeout(resource, options = {}) {
 
 // Initialize App
 async function init() {
+  // Set header language buttons active state based on stored/default language
+  const defaultLang = localStorage.getItem('c21_lang') || 'uk';
+  const headerLangBtns = document.querySelectorAll('.lang-btn');
+  headerLangBtns.forEach(btn => {
+    if (btn.dataset.lang === defaultLang) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
   // Check Onboarding state
   const isOnboarded = localStorage.getItem('c21_onboarded');
   const onboardingOverlay = document.getElementById('onboardingOverlay');
@@ -196,23 +207,23 @@ async function init() {
     mainInterface.classList.remove('blur-effect');
   } else {
     // Setup onboarding language and greetings (Default strictly to Ukrainian 'uk' on first open)
-    let defaultLang = localStorage.getItem('c21_lang');
-    if (!defaultLang) {
-      defaultLang = 'uk';
+    let langToUse = localStorage.getItem('c21_lang');
+    if (!langToUse) {
+      langToUse = 'uk';
       localStorage.setItem('c21_lang', 'uk');
     }
 
     // Select the correct flag button state
     const onboardingLangBtns = document.querySelectorAll('.onboarding-lang-btn');
     onboardingLangBtns.forEach(btn => {
-      if (btn.dataset.lang === defaultLang) {
+      if (btn.dataset.lang === langToUse) {
         btn.classList.add('active');
       } else {
         btn.classList.remove('active');
       }
     });
 
-    translateOnboarding(defaultLang);
+    translateOnboarding(langToUse);
   }
 
   // Load Favorites from LocalStorage
@@ -411,12 +422,59 @@ function setupEventListeners() {
     btn.addEventListener('click', () => {
       const targetLang = btn.dataset.lang;
       
-      // Update UI active state
+      // Update UI active state in onboarding
       onboardingLangBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       
-      // Translate onboarding card
+      // Update UI active state in header too
+      const headerLangBtns = document.querySelectorAll('.lang-btn');
+      headerLangBtns.forEach(b => {
+        if (b.dataset.lang === targetLang) b.classList.add('active');
+        else b.classList.remove('active');
+      });
+      
+      // Save language & Translate onboarding card
+      localStorage.setItem('c21_lang', targetLang);
       translateOnboarding(targetLang);
+      
+      // Re-render catalog for translated cards
+      render();
+    });
+  });
+
+  // Header Language Switcher Buttons Action
+  const headerLangBtns = document.querySelectorAll('.lang-btn');
+  headerLangBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetLang = btn.dataset.lang;
+      
+      // Update UI active state in header
+      headerLangBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // Update UI active state in onboarding too
+      const onboardingLangBtns = document.querySelectorAll('.onboarding-lang-btn');
+      onboardingLangBtns.forEach(b => {
+        if (b.dataset.lang === targetLang) b.classList.add('active');
+        else b.classList.remove('active');
+      });
+      
+      // Save language
+      localStorage.setItem('c21_lang', targetLang);
+      
+      // Translate onboarding text in case they open it again
+      translateOnboarding(targetLang);
+      
+      // Sync translation in detail modal if active
+      if (activeProperty) {
+        resetTranslateButtons(targetLang);
+        if (targetLang !== 'sq') {
+          translatePropertyDetails(activeProperty, targetLang);
+        }
+      }
+      
+      // Re-render catalog with the new language
+      render();
     });
   });
 
@@ -684,7 +742,7 @@ function renderNextPage() {
       </div>
       <div class="card-details">
         <div class="card-price">${itemPrice}</div>
-        <div class="card-title">${itemTitle}</div>
+        <div class="card-title" data-original-title="${itemTitle}">${itemTitle}</div>
         <div class="card-location">
           <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
           ${itemCity}${itemDistrict ? ', ' + itemDistrict : ''}
@@ -711,6 +769,13 @@ function renderNextPage() {
     });
 
     catalogSection.appendChild(card);
+
+    // Auto-translate card title on main grid if target language is not Albanian
+    const currentLang = localStorage.getItem('c21_lang') || 'uk';
+    if (currentLang !== 'sq') {
+      const cardTitleEl = card.querySelector('.card-title');
+      translateCardTitle(cardTitleEl, itemTitle, currentLang);
+    }
   });
 
   renderedCount += nextSlice.length;
@@ -1033,6 +1098,33 @@ async function fetchGoogleTranslate(text, toLang) {
   if (!response.ok) throw new Error("Translation API failed");
   const data = await response.json();
   return data[0].map(item => item[0]).join('');
+}
+
+// Global translation cache for card titles to avoid duplicate hits
+let titleTranslationCache = {};
+
+// Translate card title on grid dynamically
+async function translateCardTitle(element, text, lang) {
+  if (!text || text.trim() === '' || lang === 'sq') return;
+  
+  // Check memory cache
+  const cacheKey = `${text}_${lang}`;
+  if (titleTranslationCache[cacheKey]) {
+    element.textContent = titleTranslationCache[cacheKey];
+    return;
+  }
+  
+  try {
+    const translated = await fetchGoogleTranslate(text, lang);
+    titleTranslationCache[cacheKey] = translated;
+    
+    // Make sure the element still represents the same original text (prevent race condition during fast scrolling/rendering)
+    if (element.dataset.originalTitle === text) {
+      element.textContent = translated;
+    }
+  } catch (e) {
+    console.warn("Failed to translate card title:", e);
+  }
 }
 
 // Reset translate flags state to active language
