@@ -195,18 +195,12 @@ async function init() {
     onboardingOverlay.classList.add('hidden');
     mainInterface.classList.remove('blur-effect');
   } else {
-    // Setup onboarding language and greetings
+    // Setup onboarding language and greetings (Default strictly to Ukrainian 'uk' on first open)
     let defaultLang = localStorage.getItem('c21_lang');
-    if (!defaultLang && tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-      const tgLang = tg.initDataUnsafe.user.language_code;
-      if (tgLang) {
-        if (tgLang.startsWith('uk') || tgLang.startsWith('ua')) defaultLang = 'uk';
-        else if (tgLang.startsWith('ru')) defaultLang = 'ru';
-        else if (tgLang.startsWith('sq')) defaultLang = 'sq';
-        else defaultLang = 'en';
-      }
+    if (!defaultLang) {
+      defaultLang = 'uk';
+      localStorage.setItem('c21_lang', 'uk');
     }
-    if (!defaultLang) defaultLang = 'uk'; // Default language
 
     // Select the correct flag button state
     const onboardingLangBtns = document.querySelectorAll('.onboarding-lang-btn');
@@ -905,10 +899,17 @@ function openDetailModal(item) {
   document.getElementById('detailAgentName').textContent = item.agentName;
   
   updateModalFavBtnState(item.url);
-  resetTranslateButtons();
+  
+  const currentLang = localStorage.getItem('c21_lang') || 'uk';
+  resetTranslateButtons(currentLang);
 
   detailModal.classList.add('active');
   detailModal.classList.remove('hidden');
+  
+  // Auto-translate to the user's active language if it is not Albanian (sq)
+  if (currentLang !== 'sq') {
+    translatePropertyDetails(item, currentLang);
+  }
 }
 
 function closeDetailModal() {
@@ -1034,11 +1035,11 @@ async function fetchGoogleTranslate(text, toLang) {
   return data[0].map(item => item[0]).join('');
 }
 
-// Reset translate flags state to Sq (Albanian)
-function resetTranslateButtons() {
+// Reset translate flags state to active language
+function resetTranslateButtons(lang = 'sq') {
   const translateBtns = document.querySelectorAll('.translate-btn');
   translateBtns.forEach(btn => {
-    if (btn.dataset.lang === 'sq') {
+    if (btn.dataset.lang === lang) {
       btn.classList.add('active');
     } else {
       btn.classList.remove('active');
