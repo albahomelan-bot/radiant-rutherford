@@ -316,7 +316,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return $input.all().map(item => {\n  // Deep copy the item to bypass n8n's read-only/frozen object restriction\n  const newItem = JSON.parse(JSON.stringify(item));\n  \n  newItem.json.messageText = newItem.json.message && newItem.json.message.text ? newItem.json.message.text : '';\n  \n  // Safeguard basic properties for downstream nodes\n  if (!newItem.json.message) {\n    newItem.json.message = {\n      chat: { id: 7431843172 },\n      from: { first_name: 'Клієнт' }\n    };\n  } else {\n    if (!newItem.json.message.chat) {\n      newItem.json.message.chat = { id: 7431843172 };\n    }\n    if (!newItem.json.message.from) {\n      newItem.json.message.from = { first_name: 'Клієнт' };\n    }\n  }\n  \n  return newItem;\n});"
+        "jsCode": "return $input.all().map(item => {\n  // Deep copy the item to bypass n8n's read-only/frozen object restriction\n  const newItem = JSON.parse(JSON.stringify(item));\n  \n  newItem.json.messageText = newItem.json.message && newItem.json.message.text ? newItem.json.message.text : '';\n  \n  // Check for web_app_data property inquiries\n  if (newItem.json.message && newItem.json.message.web_app_data && newItem.json.message.web_app_data.data) {\n    try {\n      const webAppData = JSON.parse(newItem.json.message.web_app_data.data);\n      newItem.json.webAppData = webAppData;\n      if (webAppData.action === 'property_inquiry') {\n        newItem.json.messageText = '__web_app_property_inquiry__';\n      }\n    } catch (e) {\n      console.error(\"Failed to parse web_app_data:\", e.message);\n    }\n  }\n  \n  // Safeguard basic properties for downstream nodes\n  if (!newItem.json.message) {\n    newItem.json.message = {\n      chat: { id: 7431843172 },\n      from: { first_name: 'Клієнт' }\n    };\n  } else {\n    if (!newItem.json.message.chat) {\n      newItem.json.message.chat = { id: 7431843172 };\n    }\n    if (!newItem.json.message.from) {\n      newItem.json.message.from = { first_name: 'Клієнт' };\n    }\n  }\n  \n  return newItem;\n});"
       },
       "id": "5e2e5475-350b-4a76-915d-5be02ab649cb",
       "name": "Sanitize Message",
@@ -553,6 +553,28 @@
                 ],
                 "combinator": "and"
               }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "web-app-inquiry-condition-id",
+                    "leftValue": "={{ $json.messageText }}",
+                    "rightValue": "__web_app_property_inquiry__",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
             }
           ]
         },
@@ -568,6 +590,146 @@
       ],
       "id": "abbaeb2f-dae6-49eb-b2ca-9cad9bf5c22e",
       "name": "Switch"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "✅ <b>Дякуємо! Ваш запит успішно надіслано менеджеру.</b>\n\n🏠 <b>Ви обрали:</b>\n<a href=\"{{ $json.webAppData.property.url }}\">{{ $json.webAppData.property.title }}</a> (Ціна: {{ $json.webAppData.property.price }})\n\nМенеджер зв'яжеться з вами найближчим часом для обговорення деталей. 🤝",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "client-confirmation-node-id",
+      "name": "Send Client Confirmation",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        1744
+      ],
+      "webhookId": "client-confirm-webhook-id",
+      "credentials": {
+        "telegramApi": {
+          "id": "KeXT6vnyyJZvNF9d",
+          "name": "Durres Prpoperty Finder"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "7431843172",
+        "text": "🔔 <b>Новий запит на об'єкт нерухомості!</b>\n\n👤 <b>Клієнт:</b> {{ $json.message.from.first_name }} {{ $json.message.from.last_name || '' }}\n💬 <b>Username:</b> {{ $json.message.from.username ? '@' + $json.message.from.username : 'відсутній' }}\n🆔 <b>Telegram ID:</b> <code>{{ $json.message.from.id }}</code>\n\n🏠 <b>Об'єкт нерухомості:</b>\n• <b>Назва:</b> <a href=\"{{ $json.webAppData.property.url }}\">{{ $json.webAppData.property.title }}</a>\n• <b>Ціна:</b> <code>{{ $json.webAppData.property.price }}</code>\n• <b>Локація:</b> <code>{{ $json.webAppData.property.city }}, {{ $json.webAppData.property.district }}</code>\n\n💼 <b>Контакти агента в Albania:</b>\n• <b>Ім'я:</b> <code>{{ $json.webAppData.property.agentName }}</code>\n• <b>Телефон:</b> <code>{{ $json.webAppData.property.agentPhone || 'не вказано' }}</code>\n\n🔗 <a href=\"{{ $json.message.from.username ? 'https://t.me/' + $json.message.from.username : 'tg://user?id=' + $json.message.from.id }}\"><b>Натисніть сюди, щоб почати діалог з клієнтом</b></a>",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "notify-manager-inquiry-node-id",
+      "name": "Notify Manager Property Inquiry",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        1744
+      ],
+      "webhookId": "notify-inquiry-webhook-id",
+      "credentials": {
+        "telegramApi": {
+          "id": "KeXT6vnyyJZvNF9d",
+          "name": "Durres Prpoperty Finder"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Дата": "={{ new Date().toLocaleString('uk-UA', { timeZone: 'Europe/Kiev' }) }}",
+            "Тип запиту": "Запит об'єкта",
+            "Об'єкт": "={{ $json.webAppData.property.title }}",
+            "Ціна": "={{ $json.webAppData.property.price }}",
+            "Посилання": "={{ $json.webAppData.property.url }}",
+            "Ім'я": "={{ $json.message.from.first_name }}",
+            "Прізвище": "={{ $json.message.from.last_name || '' }}",
+            "Username": "={{ $json.message.from.username ? '@' + $json.message.from.username : '' }}",
+            "ID": "={{ $json.message.from.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Дата",
+              "displayName": "Дата",
+              "type": "string"
+            },
+            {
+              "id": "Тип запиту",
+              "displayName": "Тип запиту",
+              "type": "string"
+            },
+            {
+              "id": "Об'єкт",
+              "displayName": "Об'єкт",
+              "type": "string"
+            },
+            {
+              "id": "Ціна",
+              "displayName": "Ціна",
+              "type": "string"
+            },
+            {
+              "id": "Посилання",
+              "displayName": "Посилання",
+              "type": "string"
+            },
+            {
+              "id": "Ім'я",
+              "displayName": "Ім'я",
+              "type": "string"
+            },
+            {
+              "id": "Прізвище",
+              "displayName": "Прізвище",
+              "type": "string"
+            },
+            {
+              "id": "Username",
+              "displayName": "Username",
+              "type": "string"
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "save-inquiry-sheets-node-id",
+      "name": "Save Inquiry to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        432,
+        1920
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "d5ZvZn4jgzWHg3Gt",
+          "name": "Google Sheets account"
+        }
+      }
     }
   ],
   "connections": {
@@ -668,6 +830,23 @@
         [
           {
             "node": "Send Reset Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Client Confirmation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Manager Property Inquiry",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save Inquiry to Google Sheets",
             "type": "main",
             "index": 0
           }
