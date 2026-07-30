@@ -4,7 +4,7 @@
 
 - **Preferred Name**: Андрій (Andrii).
 - **Location**: Albania.
-- **Background**: Former military serviceman (served 2 years in the Armed Forces of Ukraine / ЗСУ). Currently resting, looking for remote employment and learning opportunities.
+- **Background**: Former military serviceman (military experience in the past). Currently resting, looking for remote employment and learning opportunities.
 - **Role/Profession**: n8n Automation Specialist & AI Integrator (1+ years of experience).
 - **Contacts**:
   - Email: `alba.homelan@gmail.com`

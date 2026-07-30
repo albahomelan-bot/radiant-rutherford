@@ -289,7 +289,8 @@ function setupEventListeners() {
   // Search input change with smart translation debounce
   let searchTimeout = null;
   searchInput.addEventListener('input', (e) => {
-    const val = e.target.value.trim().toLowerCase();
+    const rawVal = e.target.value.trim();
+    const val = rawVal.toLowerCase();
     
     // Clear previous timeout
     if (searchTimeout) clearTimeout(searchTimeout);
@@ -304,12 +305,15 @@ function setupEventListeners() {
     // Check if contains Cyrillic characters (Ukrainian / Russian)
     const hasCyrillic = /[а-яА-ЯёЁіІїЇєЄґҐ]/.test(val);
     if (hasCyrillic) {
+      // Capitalize first letter of each word to ensure Google Translate treats it as a proper noun (e.g. city name)
+      const capitalizedVal = rawVal.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      
       // Debounce translation (400ms) to prevent excessive API requests
       searchTimeout = setTimeout(async () => {
         try {
           const [enTrans, sqTrans] = await Promise.all([
-            fetchGoogleTranslate(val, 'en'),
-            fetchGoogleTranslate(val, 'sq')
+            fetchGoogleTranslate(capitalizedVal, 'en'),
+            fetchGoogleTranslate(capitalizedVal, 'sq')
           ]);
           filterState.searchQuery = val;
           filterState.translatedQueries = [
@@ -726,14 +730,16 @@ function render() {
   
   // 1. Filter listings
   let filtered = listings.filter(item => {
-    // Search bar matching (smart multi-lingual match)
+    // Search bar matching (smart multi-lingual match checking title, description, city, and district)
     if (filterState.searchQuery) {
       const title = (item.title || '').toLowerCase();
       const desc = (item.description || '').toLowerCase();
+      const city = (item.city || '').toLowerCase();
+      const district = (item.district || '').toLowerCase();
       
       const isMatch = filterState.translatedQueries.some(term => {
         if (!term) return false;
-        return title.includes(term) || desc.includes(term);
+        return title.includes(term) || desc.includes(term) || city.includes(term) || district.includes(term);
       });
       
       if (!isMatch) return false;

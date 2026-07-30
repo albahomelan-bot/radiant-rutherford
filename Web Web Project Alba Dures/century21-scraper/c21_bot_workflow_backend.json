@@ -7,59 +7,21 @@
         ],
         "additionalFields": {}
       },
-      "id": "7e3cad47-9eba-42f6-86f5-d43cfae9e6cb",
+      "id": "4f9f2435-022f-4807-b58d-103b210cfb8a",
       "name": "Telegram Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.1,
       "position": [
-        31504,
-        9216
+        -464,
+        1264
       ],
       "webhookId": "9b1fb28e-5b12-4c28-98e6-12a938c11aa5",
       "credentials": {
         "telegramApi": {
-          "id": "r717IUH8sHUrL1dE",
-          "name": "Durres Property Finder"
+          "id": "KeXT6vnyyJZvNF9d",
+          "name": "Durres Prpoperty Finder"
         }
       }
-    },
-    {
-      "parameters": {
-        "dataType": "string",
-        "value1": "={{ $json.messageText }}",
-        "rules": {
-          "rules": [
-            {
-              "operation": "equal",
-              "value2": "/start",
-              "output": 0
-            },
-            {
-              "operation": "equal",
-              "value2": "ℹ️ Допомога",
-              "output": 1
-            },
-            {
-              "operation": "equal",
-              "value2": "📞 Менеджер",
-              "output": 2
-            },
-            {
-              "operation": "equal",
-              "value2": "🔄 Почати з нуля",
-              "output": 3
-            }
-          ]
-        }
-      },
-      "id": "fb67055f-933b-4f27-a412-066103ec8ed6",
-      "name": "Router Switch",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 1,
-      "position": [
-        31728,
-        9216
-      ]
     },
     {
       "parameters": {
@@ -113,47 +75,47 @@
           "resize_keyboard": true
         },
         "additionalFields": {
-          "caption": "=🏢 <b>Century 21 Albania | Розумний пошук</b>\n\nВітаємо, <b>{{ $json.message.from.first_name }}</b>! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в <b>Дурресі</b> та <b>Тирані</b> безпосередньо з офіційної бази Century 21.\n\n<b>Чим я корисний:</b>\n• 🏢 <b>Інтерактивний каталог</b> — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n• 🌐 <b>Розумний пошук</b> — просто напишіть мені запит своїми словами (наприклад: <i>«оренда 2-кімнатної в Дурресі до 600€»</i>), і я сам підберу варіанти.\n• 🛡️ <b>Безпека</b> — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 <b>Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:</b>",
+          "caption": "=🏢 <b>Century 21 Albania | Розумний пошук</b>\n\nВітаємо, <b>{{ $json.message.from.first_name }}</b>! \n\nЯ ваш персональний асистент для пошуку житла та комерційної нерухомості в <b>Дурресі</b> та <b>Тирані</b> безпосередньо з офіційної базы Century 21.\n\n<b>Чим я корисний:</b>\n• 🏢 <b>Інтерактивний каталог</b> — шукайте та фільтруйте квартири у зручному мобільному додатку прямо в Telegram.\n• 🌐 <b>Розумний пошук</b> — просто напишіть мені запит своїми словами (наприклад: <i>«оренда 2-кімнатної в Дурресі до 600€»</i>), і я сам підберу варіанти.\n• 🛡️ <b>Безпека</b> — тільки перевірені об'єкти та прямий зв'язок з ліцензованими агентами.\n\n👇 <b>Натисніть кнопку нижче, щоб відкрити каталог та знайти найкращі варіанти:</b>",
           "parse_mode": "HTML"
         }
       },
-      "id": "543c140a-2964-4059-a973-f2e86fbe3eb5",
+      "id": "46614c95-9188-4b88-a96c-6aabafedb8f8",
       "name": "Send Welcome Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        32000,
-        9008
+        208,
+        976
       ],
       "webhookId": "c6a542c5-fcbf-40b3-a4b0-89cd94b7330a",
       "credentials": {
         "telegramApi": {
-          "id": "r717IUH8sHUrL1dE",
-          "name": "Durres Property Finder"
+          "id": "KeXT6vnyyJZvNF9d",
+          "name": "Durres Prpoperty Finder"
         }
       }
     },
     {
       "parameters": {
         "chatId": "={{ $json.message.chat.id }}",
-        "text": "📖 <b>Інструкція користувача:</b>\n\nЯ розумію як звичайні команди, так і запити своїми словами. Спробуйте написати мені так, як написали б реальному ріелтору:\n\n💡 <i>«оренда 1-кімнатної в Дурресі до 500 євро»</i>\n💡 <i>«купити квартиру з 2 спальнями в Тирані»</i>\n\n<b>Швидкі команди:</b>\n• 🚀 <b>Відкрити каталог</b> — відкриває інтерактивну мапу та список об'єктів з фільтрами.\n• 📞 <b>Менеджер</b> — покаже прямі контакти нашого спеціаліста.\n• 🔄 <b>Почати з нуля</b> — повністю скидає всі налаштовані фільтри пошуку.",
+        "text": "📖 <b>Інструкція користувача:</b>\n\nЯ розумію як звичайні команди, так і запити своїми словами. Спробуйте напишіть мені так, як написали б реальному ріелтору:\n\n💡 <i>«оренда 1-кімнатної в Дурресі до 500 євро»</i>\n💡 <i>«купити квартиру з 2 спальнями в Тирані»</i>\n\n<b>Швидкі команди:</b>\n• 🚀 <b>Відкрити каталог</b> — відкриває інтерактивну мапу та список об'єктів з фільтрами.\n• 📞 <b>Менеджер</b> — покаже прямі контакти нашого спеціаліста.\n• 🔄 <b>Почати з нуля</b> — повністю скидає всі налаштовані фільтри пошуку.",
         "additionalFields": {
           "parse_mode": "HTML"
         }
       },
-      "id": "be7ce720-d80c-4a3f-9e10-a75ff99bb0a5",
+      "id": "abd13bb5-622d-4a7e-aee3-1836f7aa39df",
       "name": "Send Help Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        32000,
-        9168
+        208,
+        1168
       ],
       "webhookId": "84ca0aad-a28f-44c1-ac21-c72dc006ebcb",
       "credentials": {
         "telegramApi": {
-          "id": "r717IUH8sHUrL1dE",
-          "name": "Durres Property Finder"
+          "id": "KeXT6vnyyJZvNF9d",
+          "name": "Durres Prpoperty Finder"
         }
       }
     },
@@ -165,19 +127,19 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "0276eca1-413d-48c3-9407-7ca7e29fe65a",
+      "id": "e1829a90-e6b4-4f96-9dd2-c0e778dc366e",
       "name": "Send Manager Contacts",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        32000,
-        9312
+        208,
+        1360
       ],
       "webhookId": "85f61f6a-d125-4bc3-a837-0b7370bfb9cb",
       "credentials": {
         "telegramApi": {
-          "id": "r717IUH8sHUrL1dE",
-          "name": "Durres Property Finder"
+          "id": "KeXT6vnyyJZvNF9d",
+          "name": "Durres Prpoperty Finder"
         }
       }
     },
@@ -211,40 +173,53 @@
           "parse_mode": "HTML"
         }
       },
-      "id": "8377c40e-169d-425b-b5af-b5b1c3b3cb3c",
+      "id": "16dfc866-59c8-4852-a1c1-e6d7e21b4564",
       "name": "Send Reset Confirmation",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        32000,
-        9472
+        208,
+        1552
       ],
       "webhookId": "0621d845-563e-4c70-aa79-3c912639f8e1",
       "credentials": {
         "telegramApi": {
-          "id": "r717IUH8sHUrL1dE",
-          "name": "Durres Property Finder"
+          "id": "KeXT6vnyyJZvNF9d",
+          "name": "Durres Prpoperty Finder"
         }
       }
     },
     {
       "parameters": {
+        "resource": "chat",
         "model": "gpt-4o-mini",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a real estate assistant. Extract search parameters from the user's natural language request. Return a valid JSON object with the following keys. Do not return any other text, markdown formatting, or code block wrappers. Only the raw JSON object!\n\nKeys:\n- category: 'Rent' (for rent requests), 'Sale' (for buying/selling requests), or 'all'\n- city: 'Tirana', 'Durrës', or 'all'\n- rooms: '1', '2', '3+', or 'all'\n- priceMax: integer maximum price in Euros, or null if not specified\n- priceMin: integer minimum price in Euros, or null if not specified\n\nExamples:\n- 'оренда 1-кімнатної в Дурресі до 500 євро' -> {\"category\":\"Rent\",\"city\":\"Durrës\",\"rooms\":\"1\",\"priceMax\":500,\"priceMin\":null}\n- 'купити квартиру з 2 спальнями в Тирані' -> {\"category\":\"Sale\",\"city\":\"Tirana\",\"rooms\":\"2\",\"priceMax\":null,\"priceMin\":null}"
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.messageText }}"
+            }
+          ]
+        },
         "options": {},
         "requestOptions": {}
       },
-      "id": "24a53c70-a2d3-464e-99e8-2b1363acce8c",
+      "id": "123ca2e9-533f-4645-84e6-d17702dcee25",
       "name": "AI NLP Parser",
       "type": "n8n-nodes-base.openAi",
       "typeVersion": 1.1,
       "position": [
-        32000,
-        9616
+        -512,
+        1552
       ],
       "credentials": {
         "openAiApi": {
-          "id": "4XBA6U2hCe2dPkmn",
-          "name": "OpenAI account"
+          "id": "e7orr7twlaqU1Wfy",
+          "name": "OpenAI NLP Parser"
         }
       }
     },
@@ -252,13 +227,13 @@
       "parameters": {
         "jsCode": "const filters = JSON.parse($input.first().json.choices[0].message.content);\n\nlet url = 'https://century21-albania.pages.dev/?';\nconst params = [];\nif (filters.category && filters.category !== 'all') params.push(`category=${filters.category}`);\nif (filters.city && filters.city !== 'all') params.push(`city=${filters.city}`);\nif (filters.rooms && filters.rooms !== 'all') params.push(`rooms=${filters.rooms}`);\nif (filters.priceMax) params.push(`priceMax=${filters.priceMax}`);\nif (filters.priceMin) params.push(`priceMin=${filters.priceMin}`);\n\nurl += params.join('&');\n\nreturn {\n  url,\n  summary: `Угода: ${filters.category === 'Rent' ? 'Оренда' : filters.category === 'Sale' ? 'Продаж' : 'Будь-яка'}, Місто: ${filters.city || 'Всі'}, Кімнат: ${filters.rooms || 'Будь-яка'}${filters.priceMax ? ', Макс. ціна: ' + filters.priceMax + '€' : ''}`\n};"
       },
-      "id": "6878ea5a-3888-4d2e-bf13-aa67245820d0",
+      "id": "d0c64552-2df9-4658-a684-6798a41a4757",
       "name": "Generate Filtered URL",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        32224,
-        9616
+        -288,
+        1552
       ]
     },
     {
@@ -268,33 +243,51 @@
         "replyMarkup": "inlineKeyboardMarkup",
         "additionalFields": {
           "parse_mode": "HTML"
+        },
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🚀 Відкрити каталог",
+                    "additionalFields": {
+                      "web_app": {
+                        "url": "={{ $json.url }}"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
         }
       },
-      "id": "7abed6e6-6e99-43a3-9e3e-5f14bb2f9b46",
+      "id": "f850ff0b-ff5a-49b4-8d09-f9e2b81ff5fe",
       "name": "Send Filtered Message",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        32448,
-        9616
+        -64,
+        1552
       ],
       "webhookId": "c22da0b0-f268-4ff1-92f3-d12d867917ce",
       "credentials": {
         "telegramApi": {
-          "id": "r717IUH8sHUrL1dE",
-          "name": "Durres Property Finder"
+          "id": "KeXT6vnyyJZvNF9d",
+          "name": "Durres Prpoperty Finder"
         }
       }
     },
     {
       "parameters": {},
-      "id": "49e730e6-ffee-4a21-adb4-25826f89c27e",
+      "id": "102217c1-6596-4367-a277-2e75761a36a3",
       "name": "Error Trigger",
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
       "position": [
-        31472,
-        8976
+        -448,
+        1008
       ]
     },
     {
@@ -305,19 +298,19 @@
           "parse_mode": "Markdown"
         }
       },
-      "id": "232b4dfb-3f9a-4032-90ce-00bd49a4fc7f",
+      "id": "d941520f-a9c0-4243-8dd7-abf6cc7c668c",
       "name": "Send Error Telegram",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        31728,
-        8976
+        -224,
+        1008
       ],
       "webhookId": "a11c6db1-8c82-4a01-aae0-6f21f4268012",
       "credentials": {
         "telegramApi": {
-          "id": "qZBuPcKLta8Rab31",
-          "name": "Мій Фінансовий Асистент"
+          "id": "1Eb0lkA3TEKFvlpY",
+          "name": "My Financial Assistent"
         }
       }
     },
@@ -325,36 +318,36 @@
       "parameters": {
         "jsCode": "return $input.all().map(item => {\n  // Deep copy the item to bypass n8n's read-only/frozen object restriction\n  const newItem = JSON.parse(JSON.stringify(item));\n  \n  newItem.json.messageText = newItem.json.message && newItem.json.message.text ? newItem.json.message.text : '';\n  \n  // Safeguard basic properties for downstream nodes\n  if (!newItem.json.message) {\n    newItem.json.message = {\n      chat: { id: 7431843172 },\n      from: { first_name: 'Клієнт' }\n    };\n  } else {\n    if (!newItem.json.message.chat) {\n      newItem.json.message.chat = { id: 7431843172 };\n    }\n    if (!newItem.json.message.from) {\n      newItem.json.message.from = { first_name: 'Клієнт' };\n    }\n  }\n  \n  return newItem;\n});"
       },
-      "id": "7fdb28da-c517-49d1-98b4-01cd4f7bd158",
+      "id": "5e2e5475-350b-4a76-915d-5be02ab649cb",
       "name": "Sanitize Message",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        31616,
-        9216
+        -240,
+        1264
       ]
     },
     {
       "parameters": {
         "chatId": "7431843172",
-        "text": "=🔔 <b>Новий запит контакту менеджера!</b>\n\n👤 <b>Клієнт:</b> {{ $('Sanitize Message').item.json.message.from.first_name }} {{ $('Sanitize Message').item.json.message.from.last_name ? $('Sanitize Message').item.json.message.from.last_name : '' }}\n💬 <b>Username:</b> {{ $('Sanitize Message').item.json.message.from.username ? '@' + $('Sanitize Message').item.json.message.from.username : '<i>відсутній</i>' }}\n🆔 <b>Telegram ID:</b> <code>{{ $('Sanitize Message').item.json.message.from.id }}</code>\n🌐 <b>Мова додатку:</b> <code>{{ $('Sanitize Message').item.json.message.from.language_code ? $('Sanitize Message').item.json.message.from.language_code.toUpperCase() : 'невідомо' }}</code>\n🌟 <b>Premium:</b> {{ $('Sanitize Message').item.json.message.from.is_premium ? 'Так 🔥' : 'Ні' }}\n\n🔗 <a href=\"{{ $('Sanitize Message').item.json.message.from.username ? 'https://t.me/' + $('Sanitize Message').item.json.message.from.username : 'tg://user?id=' + $('Sanitize Message').item.json.message.from.id }}\"><b>Натисніть сюди, щоб почати діалог з клієнтом</b></a>",
+        "text": "=🔔 <b>Новий запит контакту менеджера!</b>\n\n👤 <b>Клієнт:</b> {{ $('Sanitize Message').item.json.message.from.first_name }} {{ $('Sanitize Message').item.json.message.from.last_name ? $('Sanitize Message').item.json.message.from.last_name : '' }}\n💬 <b>Username:</b> {{ $('Sanitize Message').item.json.message.from.username ? '@' + $('Sanitize Message').item.json.message.from.username : '<i>відсутній</i>' }}\n🆔 <b>Telegram ID:</b> <code>{{ $('Sanitize Message').item.json.message.from.id }}</code>\n🌐 <b>Мова додатку:</b> <code>{{ $('Sanitize Message').item.json.message.from.language_code ? $('Sanitize Message').item.json.message.from.language_code.toUpperCase() : 'невідомо' }}</code>\n🌟 <b>Premium:</b> {{ $('Sanitize Message').item.json.message.from.is_premium ? 'Так 🔥' : 'Ні' }}\n\n🔗 <a href=\"{{ $('Sanitize Message').item.json.message.from.username ? 'https://t.me/' + $('Sanitize Message').item.json.message.from.username : 'tg://user?id=' + $('Sanitize Message').item.json.message.from.id }}\"><b>Натисніть сюди, щоб почати діалог з клєнтом</b></a>",
         "additionalFields": {
           "parse_mode": "HTML"
         }
       },
-      "id": "d0711749-e9da-4015-ba32-38bce6240e60",
+      "id": "23773bcb-631f-4689-86e4-f4b43edac278",
       "name": "Notify Manager",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        32240,
-        9312
+        432,
+        1264
       ],
       "webhookId": "dc4a26df-d0b4-4f9f-9909-66fd4e52024e",
       "credentials": {
         "telegramApi": {
-          "id": "r717IUH8sHUrL1dE",
-          "name": "Durres Property Finder"
+          "id": "KeXT6vnyyJZvNF9d",
+          "name": "Durres Prpoperty Finder"
         }
       }
     },
@@ -363,10 +356,8 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
-          "mode": "list",
-          "cachedResultName": "century21_scraper_workflow",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g/edit?usp=drivesdk"
+          "value": "1GAIXFn3PYrqKoiH60-L-iWkPWKkUqL3nIdilkE51-g",
+          "mode": "list"
         },
         "sheetName": {
           "__rl": true,
@@ -386,24 +377,197 @@
             "Premium": "={{ $('Sanitize Message').item.json.message.from.is_premium ? 'Так' : 'Ні' }}"
           },
           "matchingColumns": [],
-          "schema": []
+          "schema": [
+            {
+              "id": "Дата",
+              "displayName": "Дата",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Ім'я",
+              "displayName": "Ім'я",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Прізвище",
+              "displayName": "Прізвище",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Username",
+              "displayName": "Username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Мова",
+              "displayName": "Мова",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Premium",
+              "displayName": "Premium",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
-      "id": "e8a93cb3-c55f-4a0b-9328-98e612fbe3a5",
+      "id": "8f3e31f2-6ba5-4624-bbd8-48214c471729",
       "name": "Save Lead to Google Sheets",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        32240,
-        9472
+        432,
+        1456
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "5WhpEtEGzugSOYEM",
-          "name": "Google Sheets OAuth2 API"
+          "id": "d5ZvZn4jgzWHg3Gt",
+          "name": "Google Sheets account"
         }
       }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.messageText }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "41541965-62c8-426a-b285-0f4cc456f7e2"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e2024634-e7c3-4a1e-9d53-05592ff9d95e",
+                    "leftValue": "={{ $json.messageText }}",
+                    "rightValue": "ℹ️ Допомога",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "361556df-4904-4e5f-8b5c-890dbcbdbb35",
+                    "leftValue": "={{ $json.messageText }}",
+                    "rightValue": "📞 Менеджер",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4b72e153-949f-4b1a-94d3-6c548ab3b64f",
+                    "leftValue": "={{ $json.messageText }}",
+                    "rightValue": "🔄 Почати з нуля",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -48,
+        1200
+      ],
+      "id": "abbaeb2f-dae6-49eb-b2ca-9cad9bf5c22e",
+      "name": "Switch"
     }
   ],
   "connections": {
@@ -412,38 +576,6 @@
         [
           {
             "node": "Sanitize Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Router Switch": {
-      "main": [
-        [
-          {
-            "node": "Send Welcome Message",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send Help Message",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send Manager Contacts",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send Reset Confirmation",
             "type": "main",
             "index": 0
           }
@@ -503,7 +635,46 @@
       "main": [
         [
           {
-            "node": "Router Switch",
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Help Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Manager Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Reset Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI NLP Parser",
             "type": "main",
             "index": 0
           }
@@ -514,6 +685,6 @@
   "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "1738cc703c532f75ec4504ffd7b72eb884e6d93128a04c1afa4283656b731b0d"
+    "instanceId": "dd1c5c2dd3ba100b55519a6ad14524376d868fe1e92592dc1b3e9fed3be1c37e"
   }
 }
