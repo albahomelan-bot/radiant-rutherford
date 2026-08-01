@@ -1031,11 +1031,13 @@ function openDetailModal(item) {
   // Set up gallery images list
   activeImagesList = item.images && item.images.length > 0 ? item.images : [item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80'];
   
-  // Show view photos button if there are multiple photos
-  if (activeImagesList.length > 1) {
-    viewPhotosBtn.classList.remove('hidden');
-  } else {
-    viewPhotosBtn.classList.add('hidden');
+  // Show view photos button if there are multiple photos (safeguarded against HTML caching)
+  if (viewPhotosBtn) {
+    if (activeImagesList.length > 1) {
+      viewPhotosBtn.classList.remove('hidden');
+    } else {
+      viewPhotosBtn.classList.add('hidden');
+    }
   }
   
   document.getElementById('detailImage').src = item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80';
