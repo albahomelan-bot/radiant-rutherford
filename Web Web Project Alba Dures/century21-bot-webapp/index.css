@@ -1396,37 +1396,40 @@ body {
    WHATSAPP & BACK TO TOP BUTTONS
    ========================================== */
 
-/* WhatsApp Header button */
-.whatsapp-header-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+/* WhatsApp Floating button (Bottom Left) */
+.whatsapp-float-btn {
+  position: absolute; /* relative to #app container */
+  bottom: 24px;
+  left: 20px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   background: #25d366;
   color: #fff;
   border: none;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
   text-decoration: none;
-  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
-  margin-right: auto; /* Push flags to the right */
 }
 
-.whatsapp-header-btn:hover {
-  transform: scale(1.1);
+.whatsapp-float-btn:hover {
+  transform: translateY(-3px) scale(1.05);
   background: #128c7e;
-  box-shadow: 0 6px 15px rgba(37, 211, 102, 0.5);
+  box-shadow: 0 8px 25px rgba(18, 140, 126, 0.5);
 }
 
-.whatsapp-header-btn:active {
-  transform: scale(0.95);
+.whatsapp-float-btn:active {
+  transform: translateY(0) scale(0.95);
 }
 
-.whatsapp-header-btn svg {
-  width: 18px;
-  height: 18px;
+.whatsapp-float-btn svg {
+  width: 22px;
+  height: 22px;
 }
 
 /* Back to Top Floating Button */
