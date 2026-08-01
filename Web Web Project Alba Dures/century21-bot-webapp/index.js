@@ -1048,7 +1048,7 @@ function openDetailModal(item) {
   document.getElementById('detailArea').textContent = item.area;
   document.getElementById('detailBedrooms').textContent = item.bedrooms;
   document.getElementById('detailDescription').textContent = item.description;
-  document.getElementById('detailAgentName').textContent = item.agentName;
+  document.getElementById('detailAgentName').textContent = (item.agentName || '').replace(/\s+/g, ' ').trim() || 'Century 21';
   
   updateModalFavBtnState(item.url);
   
@@ -1094,8 +1094,8 @@ function sendInquiryToManager() {
       price: activeProperty.price,
       city: activeProperty.city,
       district: activeProperty.district,
-      agentName: activeProperty.agentName,
-      agentPhone: activeProperty.agentPhone
+      agentName: (activeProperty.agentName || '').replace(/\s+/g, ' ').trim(),
+      agentPhone: (activeProperty.agentPhone || '').replace(/\s+/g, ' ').trim()
     },
     user: tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? {
       id: tg.initDataUnsafe.user.id,
