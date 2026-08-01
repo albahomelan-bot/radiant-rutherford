@@ -491,6 +491,9 @@ function setupEventListeners() {
       translateBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       
+      // Update the inquiry button language dynamically inside the modal page
+      updateInquiryButtonLanguage(targetLang);
+      
       await translatePropertyDetails(activeProperty, targetLang);
     });
   });
