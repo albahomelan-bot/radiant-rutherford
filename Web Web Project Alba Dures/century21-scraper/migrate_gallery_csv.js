@@ -75,20 +75,39 @@ function saveCSV(filePath, headers, rows, delimiter) {
   fs.writeFileSync(filePath, content, 'utf8');
 }
 
-function fetchPage(url) {
+function fetchPage(url, retryCount = 0) {
   return new Promise((resolve) => {
     const options = {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Upgrade-Insecure-Requests': '1'
       },
       timeout: 15000
     };
     
-    https.get(url, options, (res) => {
+    https.get(url, options, async (res) => {
+      // Handle rate limiting (status 429)
+      if (res.statusCode === 429) {
+        if (retryCount < 3) {
+          console.warn(`  [Попередження] Отримано 429 (Too Many Requests). Очікуємо 60 секунд перед спробою #${retryCount + 1}...`);
+          await sleep(60000);
+          resolve(await fetchPage(url, retryCount + 1));
+        } else {
+          console.error(`  [Помилка] Перевищено ліміт спроб (429) для ${url}`);
+          resolve('');
+        }
+        return;
+      }
+      
       if (res.statusCode !== 200) {
         resolve('');
         return;
       }
+      
       let data = '';
       res.on('data', (chunk) => { data += chunk; });
       res.on('end', () => { resolve(data); });
@@ -199,7 +218,7 @@ async function startMigration() {
     }
     
     processedCount++;
-    console.log(`[${processedCount}/${totalToProcess}] Скануємо: ${url} ...`);
+    console.log(`[${processedCount}/${totalToProcess}] Скануємо: { ${url} } ...`);
     
     const html = await fetchPage(url);
     if (html) {
@@ -211,11 +230,13 @@ async function startMigration() {
         console.log('  [Пропущено] Зображень не знайдено.');
       }
     } else {
-      console.log('  [Помилка] Не вдалося завантажити сторінку.');
+      console.log('  [Пропущено] Не вдалося завантажити сторінку або ліміт вичерпано.');
     }
     
-    // Pause for 0.5s to be polite and avoid blocks
-    await sleep(500);
+    // Pause for a random duration between 2s and 4.5s to bypass Cloudflare rate-limiting
+    const randomDelay = Math.floor(Math.random() * (4500 - 2000 + 1)) + 2000;
+    console.log(`  [Пауза] Чекаємо ${randomDelay} мс...`);
+    await sleep(randomDelay);
     
     // Auto-save progress every 10 rows
     if (processedCount % 10 === 0) {
@@ -227,7 +248,6 @@ async function startMigration() {
   // Final save
   saveCSV(outputPath, headers, rows, delimiter);
   console.log(`\n[Успішно] Сканування завершено! Оновлену таблицю збережено в: '${outputPath}'`);
-  console.log('Тепер ви можете завантажити цей файл назад у Google Sheets за допомогою функції "Замінити поточний аркуш".');
 }
 
 startMigration().catch(err => {
