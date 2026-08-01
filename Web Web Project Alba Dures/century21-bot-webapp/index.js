@@ -224,6 +224,7 @@ async function fetchWithTimeout(resource, options = {}) {
 async function init() {
   // Set header language buttons active state based on stored/default language
   const defaultLang = localStorage.getItem('c21_lang') || 'uk';
+  updateInquiryButtonLanguage(defaultLang);
   const headerLangBtns = document.querySelectorAll('.lang-btn');
   headerLangBtns.forEach(btn => {
     if (btn.dataset.lang === defaultLang) {
@@ -531,6 +532,7 @@ function setupEventListeners() {
       
       // Save language & Translate onboarding card
       localStorage.setItem('c21_lang', targetLang);
+      updateInquiryButtonLanguage(targetLang);
       translateOnboarding(targetLang);
       
       // Re-render catalog for translated cards
@@ -557,6 +559,7 @@ function setupEventListeners() {
       
       // Save language
       localStorage.setItem('c21_lang', targetLang);
+      updateInquiryButtonLanguage(targetLang);
       
       // Translate onboarding text in case they open it again
       translateOnboarding(targetLang);
@@ -1428,6 +1431,25 @@ async function translateOnboarding(lang) {
     setTimeout(() => {
       loader.classList.add('hidden');
     }, 150);
+  }
+}
+
+
+// ==========================================
+// LOCALIZED INQUIRY BUTTON TRANSLATIONS
+// ==========================================
+const INQUIRY_BUTTON_TRANSLATIONS = {
+  uk: "🚀 Надіслати запит Вікторії",
+  en: "🚀 Send inquiry to Viktoria",
+  sq: "🚀 Dërgo kërkesë te Viktoria",
+  ru: "🚀 Отправить запрос Виктории",
+  it: "🚀 Invia richiesta a Viktoria"
+};
+
+function updateInquiryButtonLanguage(lang) {
+  const btn = document.getElementById('inquiryBtn');
+  if (btn) {
+    btn.textContent = INQUIRY_BUTTON_TRANSLATIONS[lang] || INQUIRY_BUTTON_TRANSLATIONS['uk'];
   }
 }
 
