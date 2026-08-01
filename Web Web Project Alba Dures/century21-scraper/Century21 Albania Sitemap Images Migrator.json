@@ -48,7 +48,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\n// Filter out rows that ALREADY have an image to prevent unnecessary requests on rerun\nreturn items.filter(item => {\n  const img = item.json[\"Image — посилання на фото.\"];\n  return !img || img.trim() === '';\n});"
+        "jsCode": "const items = $input.all();\n// Фільтруємо рядки, в яких ЩЕ НЕМАЄ галереї фотографій, щоб оновити їх\nreturn items.filter(item => {\n  const gallery = item.json[\"Images — галерея фото.\"];\n  return !gallery || gallery.trim() === '';\n});"
       },
       "id": "2b5252e5-e2d9-4d78-88d8-ed4ebf579aca",
       "name": "Filter Unprocessed",
@@ -115,7 +115,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const item = $input.first().json;\nconst html = item.data || item.body || '';\nlet image = '';\nif (html) {\n  const ogImageRegex = /<meta\\s+property=[\"']og:image[\"']\\s+content=[\"']([^\"']+)[\"']/i;\n  const match = ogImageRegex.exec(html);\n  if (match) {\n    image = match[1];\n  }\n}\n\n// Filter out logo if it's the only one found and try to find the real one\nif (image && image.includes('Century21-nav-logo.png')) {\n  const allMatches = html.match(/content=\"([^\"]*?\\.jpg)\"/g);\n  if (allMatches) {\n    for (const m of allMatches) {\n      if (m.includes('digitaloceanspaces')) {\n        const cleanMatch = /content=\"([^\"]+)\"/.exec(m);\n        if (cleanMatch) {\n          image = cleanMatch[1];\n          break;\n        }\n      }\n    }\n  }\n}\n\nreturn {\n  \"URL — посилання на об'єкт.\": $('Split In Batches').item.json[\"URL — посилання на об'єкт.\"],\n  \"Image — посилання на фото.\": image\n};"
+        "jsCode": "const item = $input.first().json;\nconst html = item.data || item.body || '';\nlet image = '';\nlet additionalImages = [];\n\nif (html) {\n  // Головне фото\n  const ogImageRegex = /<meta\\s+property=[\"']og:image[\"']\\s+content=[\"']([^\"']+)[\"']/i;\n  const match = ogImageRegex.exec(html);\n  if (match) {\n    image = match[1];\n  }\n\n  // Всі додаткові фото (високої роздільної здатності 1024x768)\n  const regex = /https:\\/\\/crm-cdn\\.ams3\\.cdn\\.digitaloceanspaces\\.com\\/c21al\\/storage\\/c21al\\/[\\d\\w\\-\\/]+1024x768\\/[\\d\\w\\-\\_\\.]+\\.jpg/gi;\n  const matches = html.match(regex);\n  if (matches) {\n    additionalImages = [...new Set(matches)];\n  }\n}\n\n// Захист: додаємо головне зображення\nif (additionalImages.length === 0 && image) {\n  additionalImages = [image];\n} else if (image && !additionalImages.includes(image)) {\n  additionalImages.unshift(image);\n}\n\nreturn {\n  \"URL — посилання на об'єкт.\": $('Split In Batches').item.json[\"URL — посилання на об'єкт.\"],\n  \"Image — посилання на фото.\": image,\n  \"Images — галерея фото.\": additionalImages.join(',')\n};"
       },
       "id": "aa13836e-6abc-4299-9ebe-12ad38c159b4",
       "name": "Extract Image URL",
@@ -147,7 +147,8 @@
           "mappingMode": "defineBelow",
           "value": {
             "URL — посилання на об'єкт.": "={{ $json[\"URL — посилання на об'єкт.\"] }}",
-            "Image — посилання на фото.": "={{ $json[\"Image — посилання на фото.\"] }}"
+            "Image — посилання на фото.": "={{ $json[\"Image — посилання на фото.\"] }}",
+            "Images — галерея фото.": "={{ $json[\"Images — галерея фото.\"] }}"
           },
           "matchingColumns": [
             "URL — посилання на об'єкт."
@@ -165,6 +166,15 @@
             {
               "id": "Image — посилання на фото.",
               "displayName": "Image — посилання на фото.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Images — галерея фото.",
+              "displayName": "Images — галерея фото.",
               "required": false,
               "defaultMatch": false,
               "display": true,
