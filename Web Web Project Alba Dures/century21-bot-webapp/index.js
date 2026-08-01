@@ -449,6 +449,27 @@ function setupEventListeners() {
     }, { passive: true });
   }
 
+  // Back to Top Button Event Listeners
+  const backToTopBtn = document.getElementById('backToTopBtn');
+  const appContent = document.querySelector('.app-content');
+  
+  if (backToTopBtn && appContent) {
+    appContent.addEventListener('scroll', () => {
+      if (appContent.scrollTop > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    }, { passive: true });
+    
+    backToTopBtn.addEventListener('click', () => {
+      appContent.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+
   // Keyboard navigation inside gallery
   document.addEventListener('keydown', e => {
     if (galleryModal && galleryModal.classList.contains('active')) {
