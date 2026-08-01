@@ -12,6 +12,11 @@ const FALLBACK_PROPERTIES = [
     "agentPhone": "+355691234567",
     "lastModified": "2026-07-20T08:15:00.000Z",
     "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=600&q=80"
+    ],
     "city": "Durrës",
     "district": "Plazh"
   },
@@ -27,6 +32,11 @@ const FALLBACK_PROPERTIES = [
     "agentPhone": "+355691234567",
     "lastModified": "2026-07-20T08:15:00.000Z",
     "image": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=600&q=80"
+    ],
     "city": "Durrës",
     "district": "Plazh"
   },
@@ -42,6 +52,11 @@ const FALLBACK_PROPERTIES = [
     "agentPhone": "+355697654321",
     "lastModified": "2026-07-20T08:10:00.000Z",
     "image": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80"
+    ],
     "city": "Durrës",
     "district": "Golem"
   },
@@ -57,6 +72,11 @@ const FALLBACK_PROPERTIES = [
     "agentPhone": "+355693334445",
     "lastModified": "2026-07-20T08:00:00.000Z",
     "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=600&q=80"
+    ],
     "city": "Durrës",
     "district": "Vollga"
   },
@@ -72,6 +92,11 @@ const FALLBACK_PROPERTIES = [
     "agentPhone": "+355697654321",
     "lastModified": "2026-07-20T07:30:00.000Z",
     "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=600&q=80"
+    ],
     "city": "Durrës",
     "district": "Qerret"
   },
@@ -87,6 +112,11 @@ const FALLBACK_PROPERTIES = [
     "agentPhone": "+355691112223",
     "lastModified": "2026-07-20T07:20:00.000Z",
     "image": "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80"
+    ],
     "city": "Tirana",
     "district": "Blloku"
   },
@@ -102,6 +132,11 @@ const FALLBACK_PROPERTIES = [
     "agentPhone": "+355693334445",
     "lastModified": "2026-07-20T07:00:00.000Z",
     "image": "https://images.unsplash.com/photo-1545464693-f1798a373343?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1545464693-f1798a373343?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=600&q=80"
+    ],
     "city": "Tirana",
     "district": "Lake Park"
   }
@@ -382,6 +417,46 @@ function setupEventListeners() {
   });
 
   inquiryBtn.addEventListener('click', sendInquiryToManager);
+
+  // Photo Gallery Event Listeners
+  if (viewPhotosBtn) viewPhotosBtn.addEventListener('click', openGalleryModal);
+  if (closeGalleryBtn) closeGalleryBtn.addEventListener('click', closeGalleryModal);
+  if (prevPhotoBtn) prevPhotoBtn.addEventListener('click', prevPhoto);
+  if (nextPhotoBtn) nextPhotoBtn.addEventListener('click', nextPhoto);
+  
+  // Close gallery on overlay click
+  const galleryOverlay = document.querySelector('.gallery-modal-overlay');
+  if (galleryOverlay) galleryOverlay.addEventListener('click', closeGalleryModal);
+  
+  // Touch swipe support for mobile devices
+  let touchStartX = 0;
+  let touchEndX = 0;
+  if (galleryMainImage) {
+    galleryMainImage.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    galleryMainImage.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchEndX - touchStartX;
+      if (Math.abs(diff) > 50) { // Minimum swipe delta
+        if (diff < 0) {
+          nextPhoto();
+        } else {
+          prevPhoto();
+        }
+      }
+    }, { passive: true });
+  }
+
+  // Keyboard navigation inside gallery
+  document.addEventListener('keydown', e => {
+    if (galleryModal && galleryModal.classList.contains('active')) {
+      if (e.key === 'ArrowRight') nextPhoto();
+      else if (e.key === 'ArrowLeft') prevPhoto();
+      else if (e.key === 'Escape') closeGalleryModal();
+    }
+  });
 
   // Realtime Translation Buttons Actions
   const translateBtns = document.querySelectorAll('.translate-btn');
@@ -953,6 +1028,16 @@ function updateFavCount() {
 function openDetailModal(item) {
   activeProperty = item;
   
+  // Set up gallery images list
+  activeImagesList = item.images && item.images.length > 0 ? item.images : [item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80'];
+  
+  // Show view photos button if there are multiple photos
+  if (activeImagesList.length > 1) {
+    viewPhotosBtn.classList.remove('hidden');
+  } else {
+    viewPhotosBtn.classList.add('hidden');
+  }
+  
   document.getElementById('detailImage').src = item.image || 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80';
   document.getElementById('detailCategory').textContent = item.category === 'Sale' ? 'Продаж' : 'Оренда';
   document.getElementById('detailTitle').textContent = item.title;
@@ -1225,6 +1310,65 @@ const ONBOARDING_TRANSLATIONS = {
     btn: "🚀 Inizia la ricerca"
   }
 };
+
+
+// ==========================================
+// PHOTO GALLERY MODAL FUNCTIONS
+// ==========================================
+
+function openGalleryModal() {
+  if (!activeImagesList || activeImagesList.length === 0) return;
+  currentPhotoIndex = 0;
+  updateGalleryView();
+  galleryModal.classList.add('active');
+  galleryModal.classList.remove('hidden');
+}
+
+function closeGalleryModal() {
+  galleryModal.classList.remove('active');
+  setTimeout(() => {
+    if (!galleryModal.classList.contains('active')) {
+      galleryModal.classList.add('hidden');
+    }
+  }, 300);
+}
+
+function updateGalleryView() {
+  galleryMainImage.src = activeImagesList[currentPhotoIndex];
+  galleryCounter.textContent = `${currentPhotoIndex + 1} / ${activeImagesList.length}`;
+  
+  // Render thumbnails strip at the bottom
+  galleryThumbnails.innerHTML = '';
+  activeImagesList.forEach((imgUrl, idx) => {
+    const thumb = document.createElement('img');
+    thumb.className = `gallery-thumb ${idx === currentPhotoIndex ? 'active' : ''}`;
+    thumb.src = imgUrl;
+    thumb.alt = `Photo thumbnail ${idx + 1}`;
+    thumb.addEventListener('click', () => {
+      currentPhotoIndex = idx;
+      updateGalleryView();
+    });
+    galleryThumbnails.appendChild(thumb);
+  });
+  
+  // Smoothly center the active thumbnail in view
+  const activeThumb = galleryThumbnails.children[currentPhotoIndex];
+  if (activeThumb) {
+    activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+}
+
+function nextPhoto() {
+  if (activeImagesList.length <= 1) return;
+  currentPhotoIndex = (currentPhotoIndex + 1) % activeImagesList.length;
+  updateGalleryView();
+}
+
+function prevPhoto() {
+  if (activeImagesList.length <= 1) return;
+  currentPhotoIndex = (currentPhotoIndex - 1 + activeImagesList.length) % activeImagesList.length;
+  updateGalleryView();
+}
 
 async function translateOnboarding(lang) {
   const loader = document.getElementById('onboardingLoader');

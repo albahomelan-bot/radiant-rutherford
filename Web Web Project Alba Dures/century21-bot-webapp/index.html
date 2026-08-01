@@ -184,6 +184,10 @@
         <div class="modal-body">
           <div class="detail-gallery">
             <img id="detailImage" src="" alt="Property Image">
+            <button id="viewPhotosBtn" class="view-photos-btn hidden">
+              <span class="icon">📸</span>
+              <span class="text">Дивитися фото</span>
+            </button>
             <div class="detail-category-badge" id="detailCategory">Sale</div>
           </div>
           
@@ -312,7 +316,27 @@
     </div>
   </div>
 
-  <!-- App Javascript -->
-  <script src="index.js"></script>
+    <!-- Full-screen Photo Gallery Modal -->
+    <div id="galleryModal" class="gallery-modal hidden">
+      <div class="gallery-modal-overlay"></div>
+      <div class="gallery-modal-content">
+        <button id="closeGalleryBtn" class="gallery-close-btn">&times;</button>
+        
+        <div class="gallery-main-view">
+          <button id="prevPhotoBtn" class="gallery-nav-btn prev">&lt;</button>
+          <img id="galleryMainImage" src="" alt="Gallery Image">
+          <button id="nextPhotoBtn" class="gallery-nav-btn next">&gt;</button>
+        </div>
+        
+        <div class="gallery-meta">
+          <span id="galleryCounter" class="gallery-counter">1 / 1</span>
+        </div>
+        
+        <div class="gallery-thumbnails" id="galleryThumbnails"></div>
+      </div>
+    </div>
+
+    <!-- App Javascript -->
+    <script src="index.js"></script>
 </body>
 </html>
