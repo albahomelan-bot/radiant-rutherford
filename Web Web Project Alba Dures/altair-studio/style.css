@@ -394,6 +394,10 @@ nav a:hover {
   .btn-primary, .btn-secondary {
     width: 100%;
   }
+  .section-title span {
+    display: block;
+    margin-top: 8px;
+  }
 }
 
 /* Conditions Section */
