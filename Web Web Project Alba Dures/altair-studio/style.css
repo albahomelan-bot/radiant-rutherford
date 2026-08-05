@@ -366,6 +366,7 @@ nav a:hover {
     margin: 0 auto;
   }
   .floating-badge.b-1 {
+    top: 5%;
     left: -5%;
   }
   .floating-badge.b-2 {
