@@ -68,7 +68,7 @@
     }
     </script>
     
-    <link rel="stylesheet" href="style.css?v=2.3">
+    <link rel="stylesheet" href="style.css?v=2.4">
 </head>
 <body>
     <!-- Header -->
@@ -401,6 +401,40 @@
         </div>
     </section>
 
+    <!-- Interior Compare Section -->
+    <section class="interior-compare-section">
+        <div class="container">
+            <h2 class="section-title">Интерьеры студии: <span>наша vs другие</span></h2>
+            <p class="compare-subtitle" style="text-align: center; max-width: 600px; margin: -30px auto 40px auto; color: var(--text-sec); font-size: 0.95rem; line-height: 1.6;">
+                Потяните за ползунок посередине, чтобы сравнить рабочие места в Altair и в обычных бюджетных вебкам-студиях.
+            </p>
+            
+            <div class="slider-container" id="compare-slider-box">
+                <!-- Before: Other Studios -->
+                <div class="slider-layer before-layer">
+                    <img src="assets/compare_before.jpg" alt="Другие студии">
+                    <div class="slider-label label-left">Другие студии</div>
+                </div>
+                
+                <!-- After: Our Studio -->
+                <div class="slider-layer after-layer" id="after-layer-mask">
+                    <img src="assets/compare_after.webp" alt="Наша студия">
+                    <div class="slider-label label-right">Наша студия</div>
+                </div>
+                
+                <!-- Drag Handle -->
+                <div class="slider-handle" id="slider-handle-bar">
+                    <div class="handle-line"></div>
+                    <div class="handle-button">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </div>
+                    <div class="handle-line"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Video Reviews Section -->
     <section id="reviews" class="reviews-section">
         <div class="container">
@@ -605,6 +639,14 @@
         </div>
     </footer>
 
-    <script src="app.js?v=2.2"></script>
+    <!-- Floating Back to Top Button -->
+    <button id="back-to-top" class="back-to-top-btn" aria-label="Вернуться наверх">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+        </svg>
+    </button>
+
+    <script src="app.js?v=2.4"></script>
 </body>
 </html>

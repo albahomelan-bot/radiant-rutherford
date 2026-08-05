@@ -354,6 +354,115 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Image compare slider logic
+    const sliderBox = document.getElementById('compare-slider-box');
+    if (sliderBox) {
+        const afterLayer = document.getElementById('after-layer-mask');
+        const afterImg = afterLayer.querySelector('img');
+        const handle = document.getElementById('slider-handle-bar');
+        
+        let isDragging = false;
+
+        // Helper function to update slider width and handle position
+        const updateSlider = (clientX) => {
+            const rect = sliderBox.getBoundingClientRect();
+            let x = clientX - rect.left;
+            
+            // Clamp boundaries
+            if (x < 0) x = 0;
+            if (x > rect.width) x = rect.width;
+            
+            const percentage = (x / rect.width) * 100;
+            
+            // Update layer width and handle left position
+            afterLayer.style.width = `${percentage}%`;
+            handle.style.left = `${percentage}%`;
+        };
+
+        // Handle scaling of clipped image to prevent squishing
+        const resizeImage = () => {
+            afterImg.style.width = `${sliderBox.offsetWidth}px`;
+        };
+
+        // Setup resize observer and load event listeners
+        window.addEventListener('resize', resizeImage);
+        afterImg.addEventListener('load', resizeImage);
+        
+        // Initial scale
+        resizeImage();
+
+        // Event Listeners for dragging
+        const startDragging = (e) => {
+            isDragging = true;
+            // Prevent text selection while dragging
+            if (e.cancelable) e.preventDefault();
+        };
+
+        const stopDragging = () => {
+            isDragging = false;
+        };
+
+        const handleMove = (e) => {
+            if (!isDragging) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            updateSlider(clientX);
+        };
+
+        // Mouse Events
+        handle.addEventListener('mousedown', startDragging);
+        window.addEventListener('mouseup', stopDragging);
+        window.addEventListener('mousemove', handleMove);
+
+        // Touch Events (Mobile support!)
+        handle.addEventListener('touchstart', startDragging, { passive: true });
+        window.addEventListener('touchend', stopDragging);
+        window.addEventListener('touchmove', handleMove, { passive: true });
+        
+        // Allow click on container to jump directly to percentage
+        sliderBox.addEventListener('click', (e) => {
+            if (e.target !== handle && !handle.contains(e.target)) {
+                updateSlider(e.clientX);
+            }
+        });
+    }
+
+    // Language switcher toggle
+    const langBtns = document.querySelectorAll('.lang-btn');
+    langBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (btn.classList.contains('active')) return;
+            langBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (btn.textContent === 'KZ') {
+                alert('Казахская версия страницы находится в разработке и будет доступна во второй фазе запуска.');
+                // Revert selection back to RU since KZ translation is not loaded
+                setTimeout(() => {
+                    btn.classList.remove('active');
+                    document.querySelector('.lang-switcher .lang-btn:first-child').classList.add('active');
+                }, 100);
+            }
+        });
+    });
+
+    // Back to top button logic
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 });
 
 
