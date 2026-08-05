@@ -759,7 +759,7 @@ nav a:hover {
   font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--text-sec);
+  color: #ffffff;
   letter-spacing: 1px;
 }
 
@@ -798,7 +798,7 @@ nav a:hover {
 }
 
 .input-field::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .input-field:focus {
@@ -829,7 +829,7 @@ nav a:hover {
 
 .form-disclaimer {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.85);
   text-align: center;
   margin-top: 5px;
   line-height: 1.4;
