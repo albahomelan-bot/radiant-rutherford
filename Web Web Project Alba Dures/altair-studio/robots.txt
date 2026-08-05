@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Allow: /promo.html
 
 # Specifically allow AI search bots to crawl the vacancies and details
 User-agent: ChatGPT-User
