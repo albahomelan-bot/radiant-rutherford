@@ -729,6 +729,13 @@ nav a:hover {
   box-shadow: 0 4px 10px rgba(255, 0, 127, 0.4);
 }
 
+.calc-disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-sec);
+  line-height: 1.45;
+  margin-top: 15px;
+}
+
 /* Result Box Display Card */
 .calc-result-card {
   background: var(--bg-dark);
