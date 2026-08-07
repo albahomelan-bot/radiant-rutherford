@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Telegram Bot Notifications Integration
     const botToken = '8966078008:AAFB5iWBue64JFBuTBgj_8AE10BjXOTjfIE';
-    const chatId = '8799751763';
+    const chatId = '8192054350';
     const botRedirectUrl = 'https://t.me/webcamstudio_top_Bot';
 
     function sendTelegramMessage(text) {
