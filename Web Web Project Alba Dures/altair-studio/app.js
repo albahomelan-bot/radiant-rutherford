@@ -218,6 +218,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 parse_mode: 'HTML'
             })
         });
+      // Helper to sanitize and validate Telegram handles or links
+    function sanitizeAndValidateTelegram(val) {
+        let value = val.trim();
+        if (!value) return null;
+
+        // Check if it is a link containing t.me or telegram.me
+        if (value.startsWith('http://') || value.startsWith('https://') || value.includes('t.me/')) {
+            // Extract the username part
+            const urlParts = value.split('/');
+            let username = urlParts[urlParts.length - 1];
+            // Remove query params if any
+            username = username.split('?')[0];
+            // Strip @ if present in the link
+            if (username.startsWith('@')) {
+                username = username.substring(1);
+            }
+            
+            const regex = /^[a-zA-Z0-9_]{5,32}$/;
+            if (regex.test(username)) {
+                return `https://t.me/${username}`;
+            }
+            return null;
+        }
+
+        // It is a raw username. Remove @ if it starts with it
+        let username = value;
+        if (username.startsWith('@')) {
+            username = username.substring(1);
+        }
+
+        const regex = /^[a-zA-Z0-9_]{5,32}$/;
+        if (regex.test(username)) {
+            return '@' + username;
+        }
+
+        return null;
     }
 
     // Lead Form Submit Hook (Calculator)
@@ -230,8 +266,21 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Отправка...';
             submitBtn.disabled = true;
 
-            const name = document.getElementById('form-name').value;
-            const tg = document.getElementById('form-tg').value;
+            const nameInput = document.getElementById('form-name');
+            const tgInput = document.getElementById('form-tg');
+            const name = nameInput.value.trim();
+            const rawTg = tgInput.value.trim();
+            const validatedTg = sanitizeAndValidateTelegram(rawTg);
+
+            if (!validatedTg) {
+                alert('Пожалуйста, введите корректный Telegram в формате @username или ссылку t.me/username.');
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Write back formatted value to the UI
+            tgInput.value = validatedTg;
 
             // Get selected English level label text
             const activeEnglishBtn = document.querySelector('.english-btn.active');
@@ -243,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const msgText = `🔔 <b>Новая заявка: Расчет дохода Altair</b>\n\n` +
                             `👤 <b>Имя:</b> ${name}\n` +
-                            `📱 <b>Telegram:</b> ${tg}\n\n` +
+                            `📱 <b>Telegram:</b> ${validatedTg}\n\n` +
                             `📊 <b>Параметры расчета:</b>\n` +
                             `• Опыт: ${expText}\n` +
                             `• Английский: ${englishText}\n` +
@@ -284,12 +333,25 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.textContent = 'Отправка...';
             submitBtn.disabled = true;
 
-            const name = document.getElementById('call-name').value;
-            const tg = document.getElementById('call-tg').value;
+            const nameInput = document.getElementById('call-name');
+            const tgInput = document.getElementById('call-tg');
+            const name = nameInput.value.trim();
+            const rawTg = tgInput.value.trim();
+            const validatedTg = sanitizeAndValidateTelegram(rawTg);
+
+            if (!validatedTg) {
+                alert('Пожалуйста, введите корректный Telegram в формате @username или ссылку t.me/username.');
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // Write back formatted value to the UI
+            tgInput.value = validatedTg;
 
             const msgText = `📞 <b>Заявка: Звонок модели Altair</b>\n\n` +
                             `👤 <b>Имя:</b> ${name}\n` +
-                            `📱 <b>Telegram:</b> ${tg}\n\n` +
+                            `📱 <b>Telegram:</b> ${validatedTg}\n\n` +
                             `💬 <i>Модель свяжется для анонимного созвона или переписки в Telegram.</i>`;
 
             sendTelegramMessage(msgText)
