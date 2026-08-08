@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             block.addEventListener('touchstart', (e) => {
                 clearInterval(autoPlayInterval);
                 aptStartX = e.touches[0].clientX;
+                aptCurrentX = aptStartX;
                 aptIsDragging = true;
             }, { passive: true });
             
@@ -879,6 +880,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wrapper.addEventListener('touchstart', (e) => {
                 stopSlideShow();
                 graphsStartX = e.touches[0].clientX;
+                graphsCurrentX = graphsStartX;
                 graphsIsDragging = true;
             }, { passive: true });
             
@@ -1014,6 +1016,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth >= 992) return;
             stopConditionsAutoplay();
             startX = e.touches[0].clientX;
+            currentX = startX;
             isDragging = true;
         }, { passive: true });
         
@@ -1123,6 +1126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth >= 992) return;
             stopProofsAutoplay();
             pStartX = e.touches[0].clientX;
+            pCurrentX = pStartX;
             pIsDragging = true;
         }, { passive: true });
         
@@ -1231,6 +1235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth >= 992) return;
             stopStatsAutoplay();
             sStartX = e.touches[0].clientX;
+            sCurrentX = sStartX;
             sIsDragging = true;
         }, { passive: true });
         
@@ -1475,6 +1480,7 @@ document.addEventListener('DOMContentLoaded', () => {
         vnzhWrapper.addEventListener('touchstart', (e) => {
             stopVnzhAutoplay();
             vStartX = e.touches[0].clientX;
+            vCurrentX = vStartX;
             vIsDragging = true;
         }, { passive: true });
         
@@ -1578,6 +1584,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth >= 992) return;
             stopReviewsAutoplay();
             rStartX = e.touches[0].clientX;
+            rCurrentX = rStartX;
             rIsDragging = true;
             isSwiped = false;
         }, { passive: true });
