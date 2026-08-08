@@ -1714,10 +1714,10 @@ nav a:hover {
 
 /* Footer Section */
 footer {
-  background: var(--bg-dark);
-  color: #ffffff;
+  background: #ffffff;
+  color: var(--text-dark);
   padding: 80px 0 30px 0;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(24, 20, 36, 0.08);
 }
 
 .footer-grid {
@@ -1742,7 +1742,8 @@ footer {
 
 .footer-brand p {
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--text-dark);
+  opacity: 0.8;
   line-height: 1.5;
 }
 
@@ -1753,7 +1754,8 @@ footer {
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 20px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-dark);
+  opacity: 0.9;
 }
 
 .footer-links ul {
@@ -1764,14 +1766,16 @@ footer {
 }
 
 .footer-links ul a {
-  color: var(--text-muted);
+  color: var(--text-dark);
+  opacity: 0.8;
   text-decoration: none;
   font-size: 0.9rem;
   transition: var(--transition);
 }
 
 .footer-links ul a:hover {
-  color: #ffffff;
+  color: var(--accent-violet);
+  opacity: 1;
   padding-left: 5px;
 }
 
@@ -1786,7 +1790,8 @@ footer {
   gap: 10px;
   align-items: center;
   font-size: 0.9rem;
-  color: var(--text-muted);
+  color: var(--text-dark);
+  opacity: 0.85;
 }
 
 .footer-contact-item a {
@@ -1800,12 +1805,13 @@ footer {
   justify-content: space-between;
   align-items: center;
   padding-top: 30px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(24, 20, 36, 0.08);
 }
 
 .footer-copy {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--text-dark);
+  opacity: 0.75;
 }
 
 .footer-legal-links {
@@ -1815,12 +1821,14 @@ footer {
 
 .footer-legal-links a {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--text-dark);
+  opacity: 0.75;
   text-decoration: none;
 }
 
 .footer-legal-links a:hover {
-  color: #ffffff;
+  color: var(--accent-violet);
+  opacity: 1;
 }
 
 @media (max-width: 991px) {
@@ -2029,23 +2037,25 @@ footer {
   }
 }
 
-/* Why Altair Section (Premium Dark) */
+/* Why Altair Section (Premium Light) */
 .why-altair-section {
   padding: 100px 0;
-  background-color: var(--bg-dark); /* #080b16 */
-  color: #ffffff;
+  background-color: #ffffff;
+  color: var(--text-dark);
   position: relative;
   overflow: hidden;
+  border-top: 1px solid rgba(24, 20, 36, 0.08);
 }
 
 .why-altair-section .section-title {
-  color: #ffffff;
+  color: var(--text-dark);
   margin-bottom: 10px;
 }
 
 .why-altair-section .section-subtitle {
   text-align: center;
-  color: var(--text-muted);
+  color: var(--text-dark);
+  opacity: 0.7;
   font-size: 1.1rem;
   margin-bottom: 50px;
   font-weight: 500;
@@ -2059,13 +2069,14 @@ footer {
 }
 
 .why-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(121, 40, 202, 0.15);
+  background: #ffffff;
+  border: 1px solid rgba(121, 40, 202, 0.08);
   border-radius: 24px;
   padding: 35px 30px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(121, 40, 202, 0.03);
 }
 
 .why-card::before {
@@ -2075,7 +2086,7 @@ footer {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(121, 40, 202, 0.1), rgba(255, 0, 127, 0.1));
+  background: linear-gradient(135deg, rgba(121, 40, 202, 0.05), rgba(255, 0, 127, 0.05));
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: 1;
@@ -2096,7 +2107,7 @@ footer {
   font-weight: 700;
   margin-bottom: 15px;
   line-height: 1.4;
-  color: #ffffff;
+  color: var(--text-dark);
   position: relative;
   z-index: 2;
 }
@@ -2104,7 +2115,8 @@ footer {
 .why-card p {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #d1cddb;
+  color: var(--text-dark);
+  opacity: 0.8;
   position: relative;
   z-index: 2;
 }
@@ -2112,8 +2124,8 @@ footer {
 .why-card:hover {
   transform: translateY(-8px);
   border-color: rgba(255, 0, 127, 0.4);
-  box-shadow: 0 15px 35px rgba(121, 40, 202, 0.2), 0 0 15px rgba(255, 0, 127, 0.1);
-  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 15px 35px rgba(121, 40, 202, 0.1), 0 0 15px rgba(255, 0, 127, 0.05);
+  background: #ffffff;
 }
 
 .why-card:hover::before {
@@ -2123,11 +2135,11 @@ footer {
 /* Stats Section ("Мы в цифрах") */
 .stats-section {
   padding: 100px 0;
-  background-color: #080a13;
+  background-color: #ffffff;
   position: relative;
   overflow: hidden;
-  color: #ffffff;
-  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  color: var(--text-dark);
+  border-top: 1px solid rgba(24, 20, 36, 0.08);
 }
 
 .stats-bg-shapes {
@@ -2246,33 +2258,32 @@ footer {
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(121, 40, 202, 0.15);
+  background: #ffffff;
+  border: 1px solid rgba(121, 40, 202, 0.08);
   border-radius: 24px;
   padding: 40px 30px;
   text-align: center;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(121, 40, 202, 0.03);
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
   border-color: rgba(255, 0, 127, 0.4);
-  box-shadow: 0 15px 30px rgba(121, 40, 202, 0.25);
-  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 15px 30px rgba(121, 40, 202, 0.1);
+  background: #ffffff;
 }
 
 .stat-number-wrapper {
   font-family: var(--font-display);
   font-size: 2.8rem;
   font-weight: 800;
-  color: #ffffff;
   margin-bottom: 12px;
   display: flex;
   justify-content: center;
   align-items: baseline;
   gap: 2px;
-  background: linear-gradient(135deg, #ffffff, #d1cddb);
+  background: linear-gradient(135deg, var(--accent-violet), var(--accent-pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -2291,13 +2302,14 @@ footer {
 .stat-label {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #d1cddb;
+  color: var(--text-dark);
+  opacity: 0.85;
 }
 
 /* VNZH proof gallery in stats section */
 .vnzh-container {
   margin-top: 60px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(24, 20, 36, 0.08);
   padding-top: 50px;
 }
 
@@ -2305,7 +2317,7 @@ footer {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-dark);
   text-align: center;
   margin-bottom: 35px;
 }
@@ -2338,8 +2350,8 @@ footer {
   position: relative;
   background: #ffffff;
   cursor: zoom-in;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 25px rgba(121, 40, 202, 0.08);
+  border: 1px solid rgba(121, 40, 202, 0.08);
 }
 
 .vnzh-slide img {
@@ -2368,7 +2380,7 @@ footer {
 /* Graphs proof gallery in stats section */
 .graphs-container {
   margin-top: 60px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(24, 20, 36, 0.08);
   padding-top: 50px;
 }
 
@@ -2376,7 +2388,7 @@ footer {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-dark);
   text-align: center;
   margin-bottom: 35px;
 }
@@ -2387,16 +2399,16 @@ footer {
   position: relative;
   overflow: hidden;
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  border: 1px solid rgba(121, 40, 202, 0.08);
   padding: 30px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 40px rgba(121, 40, 202, 0.04);
   transition: all 0.3s ease;
 }
 
 .graphs-slider-wrapper:hover {
-  border-color: rgba(255, 0, 127, 0.2);
-  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 0, 127, 0.3);
+  background: #ffffff;
 }
 
 .graphs-slider {
@@ -2443,8 +2455,8 @@ footer {
   background: #ffffff;
   cursor: zoom-in;
   margin-bottom: 20px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 15px 30px rgba(121, 40, 202, 0.08);
+  border: 1px solid rgba(121, 40, 202, 0.08);
 }
 
 .graph-slide img {
@@ -2465,13 +2477,14 @@ footer {
 .graph-slide-content h4 {
   font-family: var(--font-display);
   font-size: 1.2rem;
-  color: #ffffff;
+  color: var(--text-dark);
   margin-bottom: 10px;
 }
 
 .graph-slide-content p {
   font-size: 0.95rem;
-  color: var(--text-muted);
+  color: var(--text-dark);
+  opacity: 0.85;
   line-height: 1.5;
 }
 
