@@ -2401,6 +2401,12 @@ footer {
     border: none;
     box-shadow: none;
   }
+  .graph-slide .proof-thumbnail-wrapper {
+    max-width: 260px !important;
+    width: 260px !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .graph-slide .proof-thumbnail-wrapper {

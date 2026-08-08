@@ -191,6 +191,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (modal && modalImg && modalClose) {
         proofThumbnails.forEach(thumb => {
+            let startX = 0;
+            let startY = 0;
+            let moveLimit = 10;
+            let hasMoved = false;
+
+            thumb.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                hasMoved = false;
+            }, { passive: true });
+
+            thumb.addEventListener('touchmove', (e) => {
+                const diffX = Math.abs(e.touches[0].clientX - startX);
+                const diffY = Math.abs(e.touches[0].clientY - startY);
+                if (diffX > moveLimit || diffY > moveLimit) {
+                    hasMoved = true;
+                }
+            }, { passive: true });
+
+            thumb.addEventListener('touchend', () => {
+                if (!hasMoved) {
+                    const imgSrc = thumb.getAttribute('data-modal-src');
+                    modalImg.src = imgSrc;
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+
             thumb.addEventListener('click', () => {
                 const imgSrc = thumb.getAttribute('data-modal-src');
                 modalImg.src = imgSrc;
