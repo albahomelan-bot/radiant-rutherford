@@ -724,6 +724,9 @@ nav a:hover {
 }
 
 @media (max-width: 991px) {
+  .slider-controls {
+    display: none !important;
+  }
   .apartments-slider-wrapper {
     overflow: hidden;
     margin: 0 -15px;
