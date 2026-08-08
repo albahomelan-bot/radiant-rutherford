@@ -1040,8 +1040,8 @@ nav a:hover {
     width: max-content;
   }
   .proof-card {
-    width: calc(100vw - 40px) !important;
-    min-width: calc(100vw - 40px) !important;
+    width: 240px !important;
+    min-width: 240px !important;
     flex-shrink: 0;
     margin: 0 !important;
   }
