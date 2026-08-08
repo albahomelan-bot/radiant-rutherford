@@ -113,16 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const baseRates = {
             noExp: {
-                'beg': 15,
-                'mid': 22,
-                'mid-plus': 28,
-                'adv': 35
+                'beg': 22,
+                'mid': 28,
+                'mid-plus': 35,
+                'adv': 43.75
             },
             withExp: {
-                'beg': 25,
-                'mid': 35,
-                'mid-plus': 45,
-                'adv': 55
+                'beg': 32,
+                'mid': 43.75,
+                'mid-plus': 50,
+                'adv': 62.5
             }
         };
 
