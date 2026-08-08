@@ -2513,11 +2513,10 @@ footer {
 .ticker-wrap {
   width: 100%;
   overflow: hidden;
-  background: linear-gradient(90deg, #120721, #25072d);
-  border-top: 1px solid rgba(255, 0, 127, 0.12);
-  border-bottom: 1px solid rgba(255, 0, 127, 0.12);
-  padding: 14px 0;
-  box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.4);
+  background: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 18px 0;
   position: relative;
   z-index: 5;
 }
