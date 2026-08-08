@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Telegram Bot Notifications Integration
     const botToken = '8966078008:AAFB5iWBue64JFBuTBgj_8AE10BjXOTjfIE';
-    const chatId = '8192054350';
+    const chatId = '5747965677';
     const botRedirectUrl = 'https://t.me/kriss_kiss10';
 
     function sendTelegramMessage(text) {
