@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Telegram Bot Notifications Integration
     const botToken = '8966078008:AAFB5iWBue64JFBuTBgj_8AE10BjXOTjfIE';
     const chatId = '5747965677';
-    const botRedirectUrl = 'https://t.me/kriss_kiss10';
+    const botRedirectUrl = 'https://t.me/Dream_Geo1';
 
     function sendTelegramMessage(text) {
         const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
