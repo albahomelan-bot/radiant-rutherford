@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Telegram Bot Notifications Integration
     const botToken = '8966078008:AAFB5iWBue64JFBuTBgj_8AE10BjXOTjfIE';
     const chatId = '8192054350';
-    const botRedirectUrl = 'https://t.me/webcamstudio_top_Bot';
+    const botRedirectUrl = 'https://t.me/kriss_kiss10';
 
     function sendTelegramMessage(text) {
         const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
@@ -353,9 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
             sendTelegramMessage(msgText)
                 .then(response => {
                     if (response.ok) {
-                        // Open Telegram Bot in a new tab for onboarding greeting message
+                        // Open Telegram Manager in a new tab for direct communication
                         window.open(botRedirectUrl, '_blank');
-                        alert('Расчет успешно отправлен! Менеджер свяжется с вами, а вы можете продолжить общение с ботом в открывшейся вкладке.');
+                        alert('Расчет успешно отправлен! Менеджер свяжется с вами, а в открывшейся вкладке вы можете написать ему лично.');
                         leadForm.reset();
                         submitBtn.textContent = originalBtnText;
                         submitBtn.disabled = false;
