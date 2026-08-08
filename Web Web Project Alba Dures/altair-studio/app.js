@@ -1617,6 +1617,67 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', checkScreenSizeReviews);
         checkScreenSizeReviews();
     }
+
+    // Fireworks Particle Burst Effect for Hero Model Showcase
+    const createFirework = (x, y) => {
+        const container = document.querySelector('.model-showcase-container');
+        if (!container) return;
+        
+        const colors = [
+            '#ff007f', // Hot Pink
+            '#7928ca', // Purple
+            '#ffb800', // Gold
+            '#00f0ff', // Cyan
+            '#ffffff'  // White
+        ];
+        
+        const particleCount = 12;
+        for (let i = 0; i < particleCount; i++) {
+            const p = document.createElement('div');
+            p.className = 'firework-particle';
+            
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            p.style.backgroundColor = color;
+            p.style.boxShadow = `0 0 8px ${color}, 0 0 4px ${color}`;
+            
+            p.style.left = `${x}px`;
+            p.style.top = `${y}px`;
+            
+            const angle = (i * 2 * Math.PI / particleCount) + (Math.random() * 0.4 - 0.2);
+            const distance = 40 + Math.random() * 55;
+            const tx = Math.cos(angle) * distance;
+            const ty = Math.sin(angle) * distance;
+            
+            p.style.setProperty('--tx', `${tx}px`);
+            p.style.setProperty('--ty', `${ty}px`);
+            
+            container.appendChild(p);
+            
+            setTimeout(() => {
+                p.remove();
+            }, 1200);
+        }
+    };
+
+    const startFireworks = () => {
+        const badges = document.querySelectorAll('.floating-badge');
+        const container = document.querySelector('.model-showcase-container');
+        if (badges.length === 0 || !container) return;
+        
+        // Periodic trigger
+        setInterval(() => {
+            const badge = badges[Math.floor(Math.random() * badges.length)];
+            const rect = badge.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            
+            const x = (rect.left + rect.width / 2) - containerRect.left;
+            const y = (rect.top + rect.height / 2) - containerRect.top;
+            
+            createFirework(x, y);
+        }, 2200);
+    };
+    
+    startFireworks();
 });
 
 
