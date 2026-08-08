@@ -68,7 +68,30 @@
     }
     </script>
     
-    <link rel="stylesheet" href="style.css?v=3.2">
+    <link rel="stylesheet" href="style.css?v=3.24">
+    
+    <style>
+    /* Force 4 columns on desktop and prevent caching issues */
+    @media (min-width: 992px) {
+        .proofs-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 15px !important;
+        }
+        .proof-card {
+            padding: 15px 10px !important;
+        }
+        .proof-card h4 {
+            font-size: 0.95rem !important;
+            margin-top: 10px !important;
+            margin-bottom: 5px !important;
+        }
+        .proof-card p {
+            font-size: 0.8rem !important;
+            line-height: 1.4 !important;
+        }
+    }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -88,29 +111,32 @@
             <div class="lang-switcher">
                 <button class="lang-btn active">RU</button>
                 <button class="lang-btn">KZ</button>
+                <button class="lang-btn">KG</button>
+                <button class="lang-btn">EN</button>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <!-- Premium Ambient Video Background -->
-        <div class="hero-video-bg">
-            <video autoplay muted loop playsinline poster="assets/model_showcase.jpg">
-                <source src="assets/review_video.mp4" type="video/mp4">
-            </video>
-            <div class="hero-video-overlay"></div>
+        <!-- Premium Animated Glow Mesh Background -->
+        <div class="hero-glow" aria-hidden="true">
+            <div class="hero-glow-inner">
+                <div class="hero-glow-blob hero-glow-blob--violet"></div>
+                <div class="hero-glow-blob hero-glow-blob--gold"></div>
+                <div class="hero-glow-blob hero-glow-blob--pink"></div>
+            </div>
         </div>
         
         <div class="container hero-grid">
             <!-- Hero Left: Content -->
             <div class="hero-content">
-                <span class="hero-tagline">Altair Adult Agency</span>
+                <span class="hero-tagline">ALTAIR AGENCY</span>
                 <h1 class="hero-title">
-                    Выйди на доход <br><span>от $2500+ в Батуми</span> <br>с первого месяца работы стримером
+                    Работа для моделей: <br>доход <span>от $2500 в месяц</span>, бесплатное жилье и оплата перелета
                 </h1>
                 <p class="hero-desc">
-                    Предоставляем стильные апартаменты у моря, оплачиваем авиабилеты до студии и гарантируем 100% анонимность по DMCA.
+                    Оплачиваем переезд, предоставляем личные премиум-апартаменты и берем на себя всю раскрутку твоих аккаунтов. Обеспечиваем полное техническое, продюсерское и юридическое сопровождение: блокируем трафик из стран СНГ, удаляем любые утечки в интернете по DMCA и выплачиваем заработок каждый день. Опыт работы не требуется.
                 </p>
                 
                 <div class="hero-actions" style="margin-top: 35px;">
@@ -125,7 +151,7 @@
             <!-- Hero Right: Image Collage -->
             <div class="hero-visual">
                 <div class="model-showcase-container">
-                    <img src="assets/model_showcase.jpg" alt="Altair Model Showcase" class="model-photo">
+                    <img src="assets/model_showcase_asian.jpg" alt="Altair Model Showcase" class="model-photo">
                     <!-- Floating Bubbles with Custom Bobbing Animations -->
                     <div class="floating-badge b-1">
                         <span>🌊</span> Жилье у моря
@@ -146,40 +172,42 @@
         <div class="container">
             <h2 class="section-title">Наши <span>условия работы</span></h2>
             
-            <div class="conditions-grid">
-                <!-- Card 1: Start -->
-                <div class="condition-card">
-                    <span class="condition-icon">🚀</span>
-                    <h3>Повышенный старт</h3>
-                    <p>Новеньким моделям предоставляется платное продвижение на старте и повышенный процент. Зарплата от $2500 на руки с первого месяца. Для опытных моделей делаем повторные промо и выплачиваем до 50% дохода.</p>
-                </div>
-                
-                <!-- Card 2: Bonus -->
-                <div class="condition-card">
-                    <span class="condition-icon">🎁</span>
-                    <h3>Приветственный бонус</h3>
-                    <p>Забирай $150 приветственного бонуса после успешного завершения регистрации и запуска аккаунтов на стриминг-платформах.</p>
-                </div>
-                
-                <!-- Card 3: CRM -->
-                <div class="condition-card">
-                    <span class="condition-icon">📊</span>
-                    <h3>Прозрачная зарплата</h3>
-                    <p>Единый доступ у всей команды к CRM-системе в режиме реального времени. Вы можете отслеживать свой прогресс и доходы самостоятельно — без стороннего надзора и скрытых комиссий.</p>
-                </div>
-                
-                <!-- Card 4: DMCA -->
-                <div class="condition-card">
-                    <span class="condition-icon">🔒</span>
-                    <h3>Полная анонимность</h3>
-                    <p>Работа ведется под ником исключительно на зарубежные страны. Защита по закону DMCA гарантирует, что любые незаконные скриншоты или записи трансляций будут навсегда удалены из интернета.</p>
-                </div>
-                
-                <!-- Card 5: Relocation -->
-                <div class="condition-card">
-                    <span class="condition-icon">🏠</span>
-                    <h3>Переезд и проживание</h3>
-                    <p>Мы оплачиваем билеты из Вашего города до Батуми, выдаем подъемный аванс на старте и предоставляем комфортабельное жилье у моря с видеонаблюдением.</p>
+            <div class="conditions-slider-wrapper">
+                <div class="conditions-grid">
+                    <!-- Card 1: Start -->
+                    <div class="condition-card">
+                        <span class="condition-icon">🚀</span>
+                        <h3>Повышенный старт</h3>
+                        <p>Новеньким моделям предоставляется платное продвижение на старте и повышенный процент. Зарплата от $2500 на руки с первого месяца. Для опытных моделей делаем повторные промо и выплачиваем до 50% дохода.</p>
+                    </div>
+                    
+                    <!-- Card 2: Bonus -->
+                    <div class="condition-card">
+                        <span class="condition-icon">🎁</span>
+                        <h3>Приветственный бонус</h3>
+                        <p>Забирай $150 приветственного бонуса после успешного завершения регистрации и запуска аккаунтов на стриминг-платформах.</p>
+                    </div>
+                    
+                    <!-- Card 3: CRM -->
+                    <div class="condition-card">
+                        <span class="condition-icon">📊</span>
+                        <h3>Прозрачная зарплата</h3>
+                        <p>Единый доступ у всей команды к CRM-системе в режиме реального времени. Вы можете отслеживать свой прогресс и доходы самостоятельно — без стороннего надзора и скрытых комиссий.</p>
+                    </div>
+                    
+                    <!-- Card 4: DMCA -->
+                    <div class="condition-card">
+                        <span class="condition-icon">🔒</span>
+                        <h3>Полная анонимность</h3>
+                        <p>Работа ведется под ником исключительно на зарубежные страны. Защита по закону DMCA гарантирует, что любые незаконные скриншоты или записи трансляций будут навсегда удалены из интернета.</p>
+                    </div>
+                    
+                    <!-- Card 5: Relocation -->
+                    <div class="condition-card">
+                        <span class="condition-icon">🏠</span>
+                        <h3>Переезд и проживание</h3>
+                        <p>Мы оплачиваем билеты из Вашего города до Батуми, выдаем подъемный аванс на старте и предоставляем комфортабельное жилье у моря с видеонаблюдением.</p>
+                    </div>
                 </div>
             </div>
 
@@ -198,6 +226,15 @@
                 </div>
                 <div class="apartments-slider-wrapper">
                     <div class="apartments-slider" id="apartments-slider">
+                        <div class="slide-item">
+                            <img src="assets/apartment_1.jpg" alt="Altair Apartment Bedroom">
+                        </div>
+                        <div class="slide-item">
+                            <img src="assets/apartment_2.jpg" alt="Altair Studio Vanity Mirror">
+                        </div>
+                        <div class="slide-item">
+                            <img src="assets/apartment_3.jpg" alt="Altair Studio Workplace">
+                        </div>
                         <div class="slide-item">
                             <img src="assets/apartment_1.jpg" alt="Altair Apartment Bedroom">
                         </div>
@@ -268,7 +305,7 @@
                         <input type="text" placeholder="Ваше имя" class="input-field" id="form-name" required>
                         <input type="text" placeholder="Ваш Telegram (@username или ссылка)" class="input-field" id="form-tg" required>
                         <button type="submit" class="btn-submit">
-                            Получить расчет и начать
+                            Получить консультацию
                         </button>
                         <div class="form-disclaimer">
                             Нажимая кнопку, Вы соглашаетесь на обработку персональных данных и сохранение полной конфиденциальности.
@@ -284,44 +321,59 @@
         <div class="container">
             <h2 class="section-title">Примеры реальных <span>зачислений и выплат</span></h2>
             
-            <div class="proofs-grid">
-                <!-- Proof 1: Kaspi Gold -->
-                <div class="proof-card">
-                    <div class="proof-thumbnail-wrapper" data-modal-src="assets/receipt_kaspi.jpg">
-                        <img src="assets/receipt_kaspi.jpg" alt="Чек Kaspi Gold">
-                        <div class="proof-overlay">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-                            Развернуть чек
+            <div class="proofs-slider-wrapper">
+                <div class="proofs-grid">
+                    <!-- Proof 1: Kaspi Gold -->
+                    <div class="proof-card">
+                        <div class="proof-thumbnail-wrapper" data-modal-src="assets/receipt_kaspi.jpg">
+                            <img src="assets/receipt_kaspi.jpg" alt="Чек Kaspi Gold">
+                            <div class="proof-overlay">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                Развернуть чек
+                            </div>
                         </div>
+                        <h4>Казахстан (Kaspi Gold — 200 000 ₸)</h4>
+                        <p>Прямые выплаты в тенге без задержек и скрытых комиссий для моделей из Казахстана.</p>
                     </div>
-                    <h4>Казахстан (Kaspi Gold)</h4>
-                    <p>Реальные выплаты в тенге напрямую на карты моделей из Казахстана. Пример зачисления: 200,000 ₸.</p>
-                </div>
-                
-                <!-- Proof 2: MBANK -->
-                <div class="proof-card">
-                    <div class="proof-thumbnail-wrapper" data-modal-src="assets/receipt_mbank.jpg">
-                        <img src="assets/receipt_mbank.jpg" alt="Чек МБАНК">
-                        <div class="proof-overlay">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-                            Развернуть чек
+
+                    <!-- Proof 2: MBANK 63k -->
+                    <div class="proof-card">
+                        <div class="proof-thumbnail-wrapper" data-modal-src="assets/receipt_mbank_63k.jpg">
+                            <img src="assets/receipt_mbank_63k.jpg" alt="Чек МБАНК 63200">
+                            <div class="proof-overlay">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                Развернуть чек
+                            </div>
                         </div>
+                        <h4>Кыргызстан (МБАНК — 63 200 C)</h4>
+                        <p>Конфиденциальные выплаты в сомах напрямую на карты и кошельки моделей без скрытых комиссий.</p>
                     </div>
-                    <h4>Кыргызстан (МБАНК)</h4>
-                    <p>Безопасные и конфиденциальные выплаты в сомах для моделей из Кыргызстана без комиссий и задержек.</p>
-                </div>
-                
-                <!-- Proof 3: Crypto USDT -->
-                <div class="proof-card">
-                    <div class="proof-thumbnail-wrapper" data-modal-src="assets/receipt_crypto.jpg">
-                        <img src="assets/receipt_crypto.jpg" alt="Чек Криптовалюта">
-                        <div class="proof-overlay">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-                            Развернуть чек
+
+                    <!-- Proof 3: MBANK 2700 -->
+                    <div class="proof-card">
+                        <div class="proof-thumbnail-wrapper" data-modal-src="assets/receipt_mbank_2700.jpg">
+                            <img src="assets/receipt_mbank_2700.jpg" alt="Чек МБАНК 2700">
+                            <div class="proof-overlay">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                Развернуть чек
+                            </div>
                         </div>
+                        <h4>Кыргызстан (МБАНК — 2 700 C)</h4>
+                        <p>Быстрые и регулярные выплаты по номеру телефона для комфортного вывода средств в любое время.</p>
                     </div>
-                    <h4>Криптовалюта (USDT / Crypto)</h4>
-                    <p>Моментальный вывод средств на любые криптокошельки. Полная независимость от банков и географии.</p>
+
+                    <!-- Proof 4: Bank Transfer GEL -->
+                    <div class="proof-card">
+                        <div class="proof-thumbnail-wrapper" data-modal-src="assets/receipt_transfer.jpg">
+                            <img src="assets/receipt_transfer.jpg" alt="Банковский перевод GEL">
+                            <div class="proof-overlay">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                Развернуть документ
+                            </div>
+                        </div>
+                        <h4>Банковский перевод (8 766 GEL)</h4>
+                        <p>Прямые банковские переводы на личные счета в лари через Bank of Georgia с гарантией 100% безопасности.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -355,6 +407,244 @@
             <!-- OpenStreetMap / Google Maps Embed -->
             <div class="map-container">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000.38006899732!2d41.61463118928821!3d41.636603176585184!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40678619bcbb72f5%3A0xe54d2dc1e6a1f1aa!2sSherif%20Khimshiashvili%20St%2C%20Batumi!5e0!3m2!1sen!2sge!4v1785928000000!5m2!1sen!2sge" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section ("Мы в цифрах") -->
+    <section class="stats-section" id="stats">
+        <div class="stats-bg-shapes">
+            <div class="floating-balance-card card-1"><img src="assets/bg_balance_1.jpg" alt="Баланс OnlyFans"></div>
+            <div class="floating-balance-card card-2"><img src="assets/bg_balance_2.jpg" alt="Баланс OnlyFans"></div>
+            <div class="floating-balance-card card-3"><img src="assets/bg_balance_3.jpg" alt="Баланс OnlyFans"></div>
+        </div>
+        <div class="container">
+            <h2 class="section-title text-light">Студия Altair <span>в цифрах</span></h2>
+            <p class="section-subtitle">Реальные показатели работы нашей команды и моделей</p>
+            
+            <div class="stats-slider-wrapper">
+                <div class="stats-grid">
+                    <!-- Stat 1 -->
+                    <div class="stat-card">
+                        <div class="stat-number-wrapper">
+                            <span class="stat-number" data-target="4">0</span>
+                            <span class="stat-suffix">года</span>
+                        </div>
+                        <p class="stat-label">на рынке Adult-услуг</p>
+                    </div>
+                    <!-- Stat 2 -->
+                    <div class="stat-card">
+                        <div class="stat-number-wrapper">
+                            <span class="stat-number" data-target="60">0</span>
+                            <span class="stat-suffix">+</span>
+                        </div>
+                        <p class="stat-label">моделей прошли регистрацию на OnlyFans по нашим европейским ID</p>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div class="stat-card">
+                        <div class="stat-number-wrapper">
+                            <span class="stat-prefix">$</span>
+                            <span class="stat-number" data-target="338">0</span>
+                        </div>
+                        <p class="stat-label">средний чек за смену модели</p>
+                    </div>
+                    <!-- Stat 4 -->
+                    <div class="stat-card">
+                        <div class="stat-number-wrapper">
+                            <span class="stat-number" data-target="2">0</span>
+                            <span class="stat-suffix">ч.</span>
+                        </div>
+                        <p class="stat-label">в неделю в среднем уходит на создание контента</p>
+                    </div>
+                    <!-- Stat 5 -->
+                    <div class="stat-card">
+                        <div class="stat-number-wrapper">
+                            <span class="stat-prefix">$</span>
+                            <span class="stat-number" data-target="1219">0</span>
+                        </div>
+                        <p class="stat-label">средний пассивный доход в месяц с контент-площадок</p>
+                    </div>
+                    <!-- Stat 6 -->
+                    <div class="stat-card">
+                        <div class="stat-number-wrapper">
+                            <span class="stat-prefix">от $</span>
+                            <span class="stat-number" data-target="3500">0</span>
+                        </div>
+                        <p class="stat-label">инвестируем в модель в первый месяц работы</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VNZH Documents proof gallery (Auto-sliding Carousel) -->
+            <div class="vnzh-container">
+                <h3 class="vnzh-title">Примеры документов ВНЖ европейского формата</h3>
+                <div class="vnzh-slider-wrapper">
+                    <div class="vnzh-slider">
+                        <!-- Slide 1 -->
+                        <div class="vnzh-slide">
+                            <div class="proof-thumbnail-wrapper" data-modal-src="assets/vnzh_1.jpg">
+                                <img src="assets/vnzh_1.jpg" alt="Документ ВНЖ 1">
+                                <div class="proof-overlay">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                    Увеличить документ
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 2 -->
+                        <div class="vnzh-slide">
+                            <div class="proof-thumbnail-wrapper" data-modal-src="assets/vnzh_2.jpg">
+                                <img src="assets/vnzh_2.jpg" alt="Документ ВНЖ 2">
+                                <div class="proof-overlay">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                    Увеличить документ
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 3 -->
+                        <div class="vnzh-slide">
+                            <div class="proof-thumbnail-wrapper" data-modal-src="assets/vnzh_3.jpg">
+                                <img src="assets/vnzh_3.jpg" alt="Документ ВНЖ 3">
+                                <div class="proof-overlay">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                    Увеличить документ
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 4 -->
+                        <div class="vnzh-slide">
+                            <div class="proof-thumbnail-wrapper" data-modal-src="assets/vnzh_4.jpg">
+                                <img src="assets/vnzh_4.jpg" alt="Документ ВНЖ 4">
+                                <div class="proof-overlay">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                    Увеличить документ
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 5 -->
+                        <div class="vnzh-slide">
+                            <div class="proof-thumbnail-wrapper" data-modal-src="assets/vnzh_5.jpg">
+                                <img src="assets/vnzh_5.jpg" alt="Документ ВНЖ 5">
+                                <div class="proof-overlay">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                    Увеличить документ
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphs Proof Gallery (Auto-sliding Carousel) -->
+            <div class="graphs-container">
+                <h3 class="graphs-title">Подтвержденная статистика доходов наших моделей</h3>
+                <div class="graphs-slider-wrapper">
+                    <div class="graphs-slider">
+                        <!-- Slide 1: OnlyFans June -->
+                        <div class="graph-slide active">
+                            <div class="proof-thumbnail-wrapper" data-modal-src="assets/graph_of_june.jpg">
+                                <img src="assets/graph_of_june.jpg" alt="Статистика OnlyFans Июнь">
+                                <div class="proof-overlay">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                    Увеличить график
+                                </div>
+                            </div>
+                            <div class="graph-slide-content">
+                                <h4>Общий заработок за Июнь ($7 891.33)</h4>
+                                <p>Динамика роста доходов модели OnlyFans с первого дня запуска рекламной кампании.</p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: Fansly Monthly -->
+                        <div class="graph-slide">
+                            <div class="proof-thumbnail-wrapper" data-modal-src="assets/graph_fansly.jpg">
+                                <img src="assets/graph_fansly.jpg" alt="Статистика Fansly">
+                                <div class="proof-overlay">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                    Увеличить график
+                                </div>
+                            </div>
+                            <div class="graph-slide-content">
+                                <h4>Ежемесячный отчет по Fansly</h4>
+                                <p>Стабильный и прозрачный рост выплат модели на платформе Fansly по месяцам.</p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: OnlyFans Feb (Converted to light theme) -->
+                        <div class="graph-slide">
+                            <div class="proof-thumbnail-wrapper" data-modal-src="assets/graph_of_feb.jpg">
+                                <img src="assets/graph_of_feb.jpg" alt="Статистика OnlyFans Февраль">
+                                <div class="proof-overlay">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                    Увеличить график
+                                </div>
+                            </div>
+                            <div class="graph-slide-content">
+                                <h4>Детализация начислений ($3 753.50)</h4>
+                                <p>Чистый доход анкеты с контента за месяц при долгосрочном сотрудничестве (Net Income).</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slider Dots -->
+                    <div class="slider-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Altair Section (Premium Dark Theme) -->
+    <section class="why-altair-section" id="why-altair">
+        <div class="container">
+            <h2 class="section-title text-light">Почему студия <span>Altair — твой лучший выбор?</span></h2>
+            <p class="section-subtitle">То, чего нет у других студий, но есть у нас</p>
+            
+            <div class="why-altair-grid">
+                <!-- Card 1 -->
+                <div class="why-card">
+                    <span class="why-card-icon">🇬🇪</span>
+                    <h3>ВНЖ и ИП в Грузии под ключ</h3>
+                    <p>Помогаем быстро оформить индивидуальное предпринимательство и вид на жительство для полностью легальной жизни и получения выплат без стресса.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="why-card">
+                    <span class="why-card-icon">🇪🇺</span>
+                    <h3>Европейские документы для OnlyFans</h3>
+                    <p>Предоставляем оригинальные европейские ID-карты и документы для подтверждения адреса, гарантирующие успешное прохождение верификации OnlyFans.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="why-card">
+                    <span class="why-card-icon">🌐</span>
+                    <h3>Доп. сайты без прокси и VPN</h3>
+                    <p>Работайте на эксклюзивных международных платформах, которые в Грузии функционируют стабильно и напрямую, без необходимости использовать VPN.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="why-card">
+                    <span class="why-card-icon">❤️</span>
+                    <h3>Личный психолог и косметолог</h3>
+                    <p>Студия оплачивает личные сессии с КПТ/МФТ-терапевтом и профессионального косметолога, помогая вам сохранять ментальное здоровье и привлекательность.</p>
+                </div>
+                <!-- Card 5 -->
+                <div class="why-card">
+                    <span class="why-card-icon">🏢</span>
+                    <h3>Апартаменты у моря с охраной</h3>
+                    <p>Предоставляем стильное современное жилье бизнес-класса в Батуми. Вы живете и работаете в одном месте — никаких расходов на дорогу.</p>
+                </div>
+                <!-- Card 6 -->
+                <div class="why-card">
+                    <span class="why-card-icon">💸</span>
+                    <h3>Аванс на старте и гибкие выплаты</h3>
+                    <p>Выдаем первый аванс на личные расходы уже в день приезда. Выплаты производятся каждую неделю на MBANK или банковские карты.</p>
+                </div>
+                <!-- Card 7 -->
+                <div class="why-card">
+                    <span class="why-card-icon">🎰</span>
+                    <h3>Тимбилдинги и яркий досуг</h3>
+                    <p>Мы умеем круто отдыхать: регулярные экскурсии по Грузии, еженедельные тимбилдинги, рестораны и походы в казино полностью за счет агентства.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -437,46 +727,48 @@
         <div class="container">
             <h2 class="section-title">Анонимные <span>видеоотзывы моделей</span></h2>
             
-            <div class="reviews-grid">
-                <!-- Video 1 -->
-                <div class="review-video-card">
-                    <div class="video-thumbnail-container" data-video-src="assets/review_1.mp4">
-                        <img src="assets/model_review_1.jpg" alt="Модель Карина" class="blurred-model-face">
-                        <div class="play-video-btn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <div class="reviews-slider-wrapper">
+                <div class="reviews-grid">
+                    <!-- Video 1 -->
+                    <div class="review-video-card">
+                        <div class="video-thumbnail-container" data-video-src="assets/review_1.mp4">
+                            <img src="assets/model_review_1.jpg" alt="Модель Карина" class="blurred-model-face">
+                            <div class="play-video-btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            </div>
+                        </div>
+                        <div class="review-meta">
+                            <h4>Карина, 21 год</h4>
+                            <p>«Приехала в Батуми из Казахстана год назад. Сначала переживала из-за анонимности, но команда настроила DMCA блок, и мои трансляции полностью скрыты. Сейчас зарабатываю более $3500/мес.»</p>
                         </div>
                     </div>
-                    <div class="review-meta">
-                        <h4>Карина, 21 год</h4>
-                        <p>«Приехала в Батуми из Казахстана год назад. Сначала переживала из-за анонимности, но команда настроила DMCA блок, и мои трансляции полностью скрыты. Сейчас зарабатываю более $3500/мес.»</p>
-                    </div>
-                </div>
-                
-                <!-- Video 2 -->
-                <div class="review-video-card">
-                    <div class="video-thumbnail-container" data-video-src="assets/review_2.mp4">
-                        <img src="assets/model_review_2.jpg" alt="Модель Алина" class="blurred-model-face">
-                        <div class="play-video-btn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    
+                    <!-- Video 2 -->
+                    <div class="review-video-card">
+                        <div class="video-thumbnail-container" data-video-src="assets/review_2.mp4">
+                            <img src="assets/model_review_2.jpg" alt="Модель Алина" class="blurred-model-face">
+                            <div class="play-video-btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            </div>
+                        </div>
+                        <div class="review-meta">
+                            <h4>Алина, 23 года</h4>
+                            <p>«Раньше работала в офисе за копейки. В Altair мне помогли зарегистрироваться на OnlyFans и Fansly, предоставили психолога и крутые апартаменты. Выплаты получаю сразу на крипту.»</p>
                         </div>
                     </div>
-                    <div class="review-meta">
-                        <h4>Алина, 23 года</h4>
-                        <p>«Раньше работала в офисе за копейки. В Altair мне помогли зарегистрироваться на OnlyFans и Fansly, предоставили психолога и крутые апартаменты. Выплаты получаю сразу на крипту.»</p>
-                    </div>
-                </div>
-                
-                <!-- Video 3 -->
-                <div class="review-video-card">
-                    <div class="video-thumbnail-container" data-video-src="assets/review_3.mp4">
-                        <img src="assets/model_review_3.jpg" alt="Модель Мия" class="blurred-model-face">
-                        <div class="play-video-btn">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    
+                    <!-- Video 3 -->
+                    <div class="review-video-card">
+                        <div class="video-thumbnail-container" data-video-src="assets/review_3.mp4">
+                            <img src="assets/model_review_3.jpg" alt="Модель Мия" class="blurred-model-face">
+                            <div class="play-video-btn">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            </div>
                         </div>
-                    </div>
-                    <div class="review-meta">
-                        <h4>Мия, 20 лет</h4>
-                        <p>«Команда Altair — это супер-поддерживающее украино-азиатское комьюнити. С переездом помогли от А до Я, включая билеты и ВНЖ в Грузии. Безумно счастлива, что решилась приехать!»</p>
+                        <div class="review-meta">
+                            <h4>Мия, 20 лет</h4>
+                            <p>«Команда Altair — это супер-поддерживающее украино-азиатское комьюнити. С переездом помогли от А до Я, включая билеты и ВНЖ в Грузии. Безумно счастлива, что решилась приехать!»</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -539,7 +831,7 @@
                     </button>
                     <div class="faq-content">
                         <div class="faq-content-inner">
-                            Первый аванс на личные расходы мы можем выдать Вам уже в день приезда и заселения в Батуми. Регулярные выплаты заработанных средств осуществляются каждую неделю на Ваши карты (Kaspi Gold для Казахстана, МБАНК для Кыргызстана) или криптовалютный кошелек в USDT.
+                            Первый аванс на личные расходы мы можем выдать Вам уже в день приезда и заселения в Батуми. Регулярные выплаты заработанных средств осуществляются каждую неделю на Ваши карты (Kaspi Gold для Казахстана, МБАНК для Кыргызстана) или банковские счета.
                         </div>
                     </div>
                 </div>
@@ -574,7 +866,7 @@
                     <input type="text" placeholder="Ваше имя" class="input-field" id="call-name" required>
                     <input type="text" placeholder="Ваш Telegram (@username)" class="input-field" id="call-tg" required>
                     <button type="submit" class="btn-submit">
-                        Заказать звонок модели
+                        Получить консультацию
                     </button>
                 </form>
             </div>
@@ -644,6 +936,6 @@
         </svg>
     </button>
 
-    <script src="app.js?v=2.8"></script>
+    <script src="app.js?v=3.16"></script>
 </body>
 </html>
