@@ -881,7 +881,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const revealElements = document.querySelectorAll('.why-card, .stat-card, .compare-card, .faq-item, .reviews-slider-wrapper, .graphs-slider-wrapper, .condition-card, .slide-item, .reveal-title, .proof-card');
+    const revealElements = document.querySelectorAll('.why-card, .compare-card, .faq-item, .reviews-slider-wrapper, .graphs-slider-wrapper, .condition-card, .slide-item, .reveal-title, .proof-card');
     
     if (revealElements.length > 0) {
         const revealObserver = new IntersectionObserver((entries, observer) => {
