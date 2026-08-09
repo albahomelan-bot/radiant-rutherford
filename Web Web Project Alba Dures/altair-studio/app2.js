@@ -881,8 +881,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Scroll Reveal IntersectionObserver
-    const revealElements = document.querySelectorAll('.why-card, .stat-card, .compare-card, .faq-item, .reviews-slider-wrapper, .graphs-slider-wrapper, .condition-card, .slide-item, .reveal-title');
+    const revealElements = document.querySelectorAll('.why-card, .stat-card, .compare-card, .faq-item, .reviews-slider-wrapper, .graphs-slider-wrapper, .condition-card, .slide-item, .reveal-title, .proof-card');
     
     if (revealElements.length > 0) {
         const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -910,7 +909,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const proofsGrid = document.querySelector('.proofs-grid');
     const proofsWrapper = document.querySelector('.proofs-slider-wrapper');
     
-    if (proofsGrid && proofsWrapper) {
+    if (proofsGrid && proofsWrapper && window.innerWidth >= 992) {
         let proofsInterval;
         let isTransitioningProofs = false;
         let pStartX = 0;
