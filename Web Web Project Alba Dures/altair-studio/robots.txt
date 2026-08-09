@@ -1,7 +1,13 @@
+# -------------------------------------------------------------
+# Altair Studio Batumi Website Configuration
+# Technical Support & Template Developer: sever.redcross@gmail.com
+# For inquiries or technical support, contact the email above.
+# -------------------------------------------------------------
+
 User-agent: *
 Allow: /
 
-# Specifically allow AI search bots to crawl the vacancies and details
+# Specifically allow AI search bots to crawl vacancies and details
 User-agent: ChatGPT-User
 Allow: /
 
@@ -13,5 +19,48 @@ Allow: /
 
 User-agent: Google-Extended
 Allow: /
+
+# Block known email collectors, malicious scrapers, and spam bots
+User-agent: EmailCollector
+Disallow: /
+
+User-agent: EmailSiphon
+Disallow: /
+
+User-agent: EmailWolf
+Disallow: /
+
+User-agent: WebBandit
+Disallow: /
+
+User-agent: ExtractorPro
+Disallow: /
+
+User-agent: CopyRightCheck
+Disallow: /
+
+User-agent: HTTrack
+Disallow: /
+
+User-agent: wget
+Disallow: /
+
+User-agent: curl
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: Rogerbot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
 
 Sitemap: https://webcamstudio.top/sitemap.xml
