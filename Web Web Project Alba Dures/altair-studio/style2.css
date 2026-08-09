@@ -2222,86 +2222,11 @@ footer {
 /* Stats Section ("Мы в цифрах") */
 .stats-section {
   padding: 100px 0;
-  background-color: #ffffff;
+  background-color: #0a0a0a;
   position: relative;
   overflow: hidden;
-  color: var(--text-dark);
-  border-top: 1px solid rgba(24, 20, 36, 0.08);
-}
-
-.stats-bg-shapes {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-}
-
-#stats-particles-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.floating-balance-card {
-  position: absolute;
-  width: 250px;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  opacity: 0.15;
-  transition: all 0.5s ease;
-  pointer-events: none;
-}
-
-.floating-balance-card img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.floating-balance-card.card-1 {
-  top: 15%;
-  left: 5%;
-  transform: rotate(-10deg);
-  animation: floatCard1 25s infinite ease-in-out;
-}
-
-.floating-balance-card.card-2 {
-  bottom: 10%;
-  right: 5%;
-  transform: rotate(15deg);
-  animation: floatCard2 30s infinite ease-in-out;
-}
-
-.floating-balance-card.card-3 {
-  top: 40%;
-  left: 75%;
-  transform: rotate(-5deg);
-  animation: floatCard3 28s infinite ease-in-out;
-}
-
-@keyframes floatCard1 {
-  0%, 100% { transform: translateY(0) rotate(-10deg) scale(1); }
-  50% { transform: translateY(-25px) rotate(-8deg) scale(1.03); }
-}
-
-@keyframes floatCard2 {
-  0%, 100% { transform: translateY(0) rotate(15deg) scale(1); }
-  50% { transform: translateY(30px) rotate(18deg) scale(0.97); }
-}
-
-@keyframes floatCard3 {
-  0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
-  50% { transform: translateY(-20px) rotate(-7deg) scale(1.02); }
+  color: #ffffff;
+  border-top: 1px solid rgba(121, 40, 202, 0.15);
 }
 
 .stats-section .container {
@@ -2309,56 +2234,51 @@ footer {
   z-index: 2;
 }
 
-.stats-slider-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
+/* Vertical stacked grid for stat cards */
+.stats-grid-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
   margin-top: 50px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-@media (max-width: 991px) {
-  .stats-slider-wrapper {
-    overflow: hidden;
-    padding: 10px 5px;
-    margin: 0 -15px;
+@media (min-width: 768px) {
+  .stats-grid-vertical {
+    max-width: 700px;
   }
-  .stats-grid {
-    display: flex !important;
-    grid-template-columns: none !important;
-    gap: 20px !important;
-    margin-top: 30px !important;
-    margin-bottom: 30px !important;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    width: max-content;
-  }
-  .stat-card {
-    width: calc(100vw - 40px) !important;
-    min-width: calc(100vw - 40px) !important;
-    flex-shrink: 0;
-    margin: 0 !important;
-  }
+}
+
+/* Reveal-left animation for stat cards */
+.stat-card.reveal-left {
+  opacity: 0;
+  transform: translateX(-80px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.stat-card.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .stat-card {
-  background: #ffffff;
-  border: 1px solid rgba(121, 40, 202, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(121, 40, 202, 0.15);
   border-radius: 24px;
-  padding: 40px 30px;
+  padding: 35px 30px;
   text-align: center;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(121, 40, 202, 0.03);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
   border-color: rgba(255, 0, 127, 0.4);
-  box-shadow: 0 15px 30px rgba(121, 40, 202, 0.1);
-  background: #ffffff;
+  box-shadow: 0 15px 40px rgba(121, 40, 202, 0.2);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .stat-number-wrapper {
@@ -2389,8 +2309,7 @@ footer {
 .stat-label {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: var(--text-dark);
-  opacity: 0.85;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* VNZH proof gallery in stats section */

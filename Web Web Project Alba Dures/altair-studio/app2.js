@@ -903,6 +903,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Reveal-left observer for stat cards (slide in from left)
+    const revealLeftElements = document.querySelectorAll('.reveal-left');
+    if (revealLeftElements.length > 0) {
+        const revealLeftObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        revealLeftElements.forEach((el, index) => {
+            el.style.transitionDelay = (index * 0.12) + 's';
+            revealLeftObserver.observe(el);
+        });
+    }
 
 
     // Proofs Slider Logic for Mobile
