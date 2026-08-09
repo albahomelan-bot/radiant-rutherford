@@ -647,6 +647,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Dynamically create and inject the canvas overlay
         const canvas = document.createElement('canvas');
         canvas.id = 'stats-particles-canvas';
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '1';
         statsSection.appendChild(canvas);
         
         const ctx = canvas.getContext('2d');
@@ -850,7 +857,7 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(statsSection);
     }
 
-    const revealElements = document.querySelectorAll('.why-card, .compare-card, .faq-item, .reviews-slider-wrapper, .condition-card, .slide-item, .reveal-title, .proof-card');
+    const revealElements = document.querySelectorAll('.condition-card, .slide-item, .reveal-title, .proof-card');
     
     if (revealElements.length > 0) {
         const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -862,8 +869,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, {
             root: null,
-            threshold: 0.25, // Require 25% of the element to be visible
-            rootMargin: '0px 0px -40% 0px' // Dead zone: starts animating only when the card is 40% up from the bottom of the viewport
+            threshold: 0.1, // Trigger as soon as it enters
+            rootMargin: '0px 0px -60px 0px' // Very small offset so headers/cards appear immediately without creating blank spaces
         });
         
         revealElements.forEach(el => {
@@ -872,7 +879,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Reveal-left observer for stat cards (slide in from left)
+    // Reveal-left observer for stat cards, VNZH cards, and graph cards (slide in from left closer to center)
     const revealLeftElements = document.querySelectorAll('.reveal-left');
     if (revealLeftElements.length > 0) {
         const revealLeftObserver = new IntersectionObserver((entries, observer) => {
@@ -884,12 +891,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, {
             root: null,
-            threshold: 0.25, // Require 25% of the element to be visible
-            rootMargin: '0px 0px -40% 0px' // Dead zone: starts animating only when the card is 40% up from the bottom of the viewport
+            threshold: 0.15, // Require 15% of the card to be visible
+            rootMargin: '0px 0px -30% 0px' // Trigger when the sliding card is 30% up from the bottom of the screen
         });
         
-        revealLeftElements.forEach((el, index) => {
-            el.style.transitionDelay = (index * 0.12) + 's';
+        revealLeftElements.forEach((el) => {
+            // Reset delay by grouping within its parent container
+            const parent = el.parentElement;
+            if (parent) {
+                const siblings = Array.from(parent.querySelectorAll('.reveal-left'));
+                const index = siblings.indexOf(el);
+                if (index !== -1) {
+                    el.style.transitionDelay = (index * 0.15) + 's';
+                }
+            } else {
+                el.style.transitionDelay = '0s';
+            }
             revealLeftObserver.observe(el);
         });
     }
@@ -1257,119 +1274,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // Reviews Slider Logic for Mobile
-    const reviewsGrid = document.querySelector('.reviews-grid');
-    const reviewsWrapper = document.querySelector('.reviews-slider-wrapper');
-    
-    if (reviewsGrid && reviewsWrapper) {
-        let reviewsInterval;
-        let isTransitioningReviews = false;
-        let rStartX = 0;
-        let rCurrentX = 0;
-        let rIsDragging = false;
-        
-        // Disable click play conflict when swiping/dragging
-        let isSwiped = false;
-        
-        function slideNextReview() {
-            if (window.innerWidth >= 992) return;
-            if (isTransitioningReviews) return;
-            isTransitioningReviews = true;
-            
-            const firstChild = reviewsGrid.children[0];
-            const cardWidth = firstChild.clientWidth;
-            const gap = 20;
-            
-            reviewsGrid.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            reviewsGrid.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            setTimeout(() => {
-                reviewsGrid.style.transition = 'none';
-                reviewsGrid.appendChild(firstChild);
-                reviewsGrid.style.transform = 'translateX(0)';
-                isTransitioningReviews = false;
-            }, 600);
-        }
-        
-        function slidePrevReview() {
-            if (window.innerWidth >= 992) return;
-            if (isTransitioningReviews) return;
-            isTransitioningReviews = true;
-            
-            const lastChild = reviewsGrid.children[reviewsGrid.children.length - 1];
-            const cardWidth = lastChild.clientWidth;
-            const gap = 20;
-            
-            reviewsGrid.style.transition = 'none';
-            reviewsGrid.insertBefore(lastChild, reviewsGrid.children[0]);
-            reviewsGrid.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            reviewsGrid.offsetHeight; // reflow
-            
-            reviewsGrid.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            reviewsGrid.style.transform = 'translateX(0)';
-            
-            setTimeout(() => {
-                isTransitioningReviews = false;
-            }, 600);
-        }
-        
-        function startReviewsAutoplay() {
-            clearInterval(reviewsInterval);
-            reviewsInterval = setInterval(slideNextReview, 3000);
-        }
-        
-        function stopReviewsAutoplay() {
-            clearInterval(reviewsInterval);
-        }
-        
-        function checkScreenSizeReviews() {
-            if (window.innerWidth < 992) {
-                startReviewsAutoplay();
-            } else {
-                stopReviewsAutoplay();
-                reviewsGrid.style.transform = 'none';
-                reviewsGrid.style.transition = 'none';
-            }
-        }
-        
-        reviewsWrapper.addEventListener('touchstart', (e) => {
-            if (window.innerWidth >= 992) return;
-            stopReviewsAutoplay();
-            rStartX = e.touches[0].clientX;
-            rCurrentX = rStartX;
-            rIsDragging = true;
-            isSwiped = false;
-        }, { passive: true });
-        
-        reviewsWrapper.addEventListener('touchmove', (e) => {
-            if (!rIsDragging || window.innerWidth >= 992) return;
-            rCurrentX = e.touches[0].clientX;
-            isSwiped = true;
-        }, { passive: true });
-        
-        reviewsWrapper.addEventListener('touchend', () => {
-            if (!rIsDragging || window.innerWidth >= 992) return;
-            rIsDragging = false;
-            const diffX = rStartX - rCurrentX;
-            if (Math.abs(diffX) > 50) {
-                if (diffX > 0) {
-                    slideNextReview();
-                } else {
-                    slidePrevReview();
-                }
-            }
-            startReviewsAutoplay();
-        });
-        
-        reviewsWrapper.addEventListener('mouseenter', stopReviewsAutoplay);
-        reviewsWrapper.addEventListener('mouseleave', () => {
-            if (window.innerWidth < 992) startReviewsAutoplay();
-        });
-        
-        window.addEventListener('resize', checkScreenSizeReviews);
-        checkScreenSizeReviews();
-    }
+
 
     // Fireworks Particle Burst Effect for Hero Model Showcase
     const createFirework = (x, y) => {

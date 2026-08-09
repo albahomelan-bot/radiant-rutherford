@@ -1421,6 +1421,18 @@ nav a:hover {
   gap: 20px;
 }
 
+/* Reveal-left animation for compare cards */
+.compare-card.reveal-left {
+  opacity: 0;
+  transform: translateX(-80px);
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.compare-card.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .compare-card.no-altair {
   background: var(--bg-light);
   border-color: rgba(255, 0, 0, 0.05);
@@ -1539,24 +1551,38 @@ nav a:hover {
 
 @media (max-width: 991px) {
   .reviews-slider-wrapper {
-    overflow: hidden;
+    overflow: visible;
     padding: 10px 5px;
-    margin: 0 -15px;
+    margin: 0;
   }
   .reviews-grid {
     display: flex !important;
-    grid-template-columns: none !important;
-    gap: 20px !important;
-    margin-bottom: 30px !important;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    width: max-content;
+    flex-direction: column !important;
+    gap: 30px !important;
+    align-items: center !important;
+    width: 100% !important;
+    transform: none !important;
   }
   .review-video-card {
-    width: calc(100vw - 40px) !important;
-    min-width: calc(100vw - 40px) !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
     flex-shrink: 0;
-    margin: 0 !important;
+    margin: 0 auto !important;
+    box-sizing: border-box;
   }
+}
+
+/* Reveal-left animation for review video cards */
+.review-video-card.reveal-left {
+  opacity: 0;
+  transform: translateX(-80px);
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.review-video-card.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .review-video-card {
@@ -1659,6 +1685,13 @@ nav a:hover {
   .compare-grid {
     grid-template-columns: 1fr;
   }
+  .compare-card {
+    width: 280px !important;
+    max-width: 280px !important;
+    margin: 0 auto 25px auto !important;
+    box-sizing: border-box;
+    padding: 30px 20px !important;
+  }
 }
 
 /* FAQ Section */
@@ -1682,6 +1715,18 @@ nav a:hover {
   border: 1px solid rgba(121, 40, 202, 0.05);
   overflow: hidden;
   transition: var(--transition);
+}
+
+/* Reveal-left animation for FAQ items */
+.faq-item.reveal-left {
+  opacity: 0;
+  transform: translateX(-80px);
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.faq-item.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .faq-trigger {
@@ -2219,6 +2264,27 @@ footer {
   opacity: 1;
 }
 
+/* Reveal-left animation for why cards */
+.why-card.reveal-left {
+  opacity: 0;
+  transform: translateX(-80px);
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.why-card.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 991px) {
+  .why-card {
+    width: 280px !important;
+    max-width: 280px !important;
+    margin: 0 auto 20px auto !important;
+    box-sizing: border-box;
+  }
+}
+
 /* Stats Section ("Мы в цифрах") */
 .stats-section {
   padding: 100px 0;
@@ -2255,7 +2321,7 @@ footer {
 .stat-card.reveal-left {
   opacity: 0;
   transform: translateX(-80px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .stat-card.reveal-left.revealed {
@@ -2339,7 +2405,7 @@ footer {
 .vnzh-card.reveal-left {
   opacity: 0;
   transform: translateX(-80px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .vnzh-card.reveal-left.revealed {
@@ -2401,7 +2467,7 @@ footer {
 .graph-card.reveal-left {
   opacity: 0;
   transform: translateX(-80px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .graph-card.reveal-left.revealed {
@@ -2626,13 +2692,13 @@ footer {
 }
 
 /* Scroll Reveal animations for cards */
-.why-card, .stat-card, .compare-card, .faq-item, .reviews-slider-wrapper {
+.faq-item {
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-.why-card.revealed, .stat-card.revealed, .compare-card.revealed, .faq-item.revealed, .reviews-slider-wrapper.revealed {
+.faq-item.revealed {
   opacity: 1;
   transform: translateY(0);
 }
