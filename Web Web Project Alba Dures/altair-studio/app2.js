@@ -850,38 +850,7 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(statsSection);
     }
 
-    // Swiper Graphs Slider (Creative Effect Stack)
-    if (document.querySelector('.graphs-swiper')) {
-        new Swiper('.graphs-swiper', {
-            grabCursor: true,
-            effect: 'creative',
-            creativeEffect: {
-                prev: {
-                    shadow: true,
-                    translate: ['-120%', 0, -500],
-                    rotate: [0, 0, -15],
-                    opacity: 0
-                },
-                next: {
-                    shadow: true,
-                    translate: ['120%', 0, -500],
-                    rotate: [0, 0, 15],
-                    opacity: 0
-                },
-            },
-            loop: true,
-            autoplay: {
-                delay: 4500,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.graphs-pagination',
-                clickable: true,
-            }
-        });
-    }
-
-    const revealElements = document.querySelectorAll('.why-card, .compare-card, .faq-item, .reviews-slider-wrapper, .graphs-slider-wrapper, .condition-card, .slide-item, .reveal-title, .proof-card');
+    const revealElements = document.querySelectorAll('.why-card, .compare-card, .faq-item, .reviews-slider-wrapper, .condition-card, .slide-item, .reveal-title, .proof-card');
     
     if (revealElements.length > 0) {
         const revealObserver = new IntersectionObserver((entries, observer) => {
