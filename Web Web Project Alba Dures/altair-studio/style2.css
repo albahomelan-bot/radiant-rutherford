@@ -1140,17 +1140,24 @@ nav a:hover {
     width: 100% !important;
   }
   .proof-card {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 240px !important;
+    max-width: 240px !important;
     min-width: 0 !important;
     flex-shrink: 0;
-    margin: 0 !important;
+    margin: 0 auto 25px auto !important;
+    box-sizing: border-box;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .proofs-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .proofs-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
