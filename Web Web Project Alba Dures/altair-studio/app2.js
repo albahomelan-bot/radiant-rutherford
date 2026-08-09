@@ -1286,41 +1286,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resizeCanvas);
     }
 
-    // Swiper VNZH Slider
-    if (document.querySelector('.vnzh-swiper')) {
-        new Swiper('.vnzh-swiper', {
-            grabCursor: true,
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.vnzh-pagination',
-                clickable: true,
-            },
-            breakpoints: {
-                // Mobile
-                320: {
-                    slidesPerView: 1.2,
-                    spaceBetween: 15,
-                    centeredSlides: true,
-                },
-                // Tablet
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                    centeredSlides: false,
-                },
-                // Desktop
-                992: {
-                    slidesPerView: 3,
-                    spaceBetween: 20,
-                    centeredSlides: false,
-                }
-            }
-        });
-    }
+
 
     // Reviews Slider Logic for Mobile
     const reviewsGrid = document.querySelector('.reviews-grid');
