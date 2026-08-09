@@ -894,7 +894,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, {
             root: null,
             threshold: 0.25, // Require 25% of the element to be visible
-            rootMargin: '0px 0px -25% 0px' // Dead zone: starts animating only when the card is 25% up from the bottom of the viewport
+            rootMargin: '0px 0px -40% 0px' // Dead zone: starts animating only when the card is 40% up from the bottom of the viewport
         });
         
         revealElements.forEach(el => {
@@ -916,7 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, {
             root: null,
             threshold: 0.25, // Require 25% of the element to be visible
-            rootMargin: '0px 0px -25% 0px' // Dead zone: starts animating only when the card is 25% up from the bottom of the viewport
+            rootMargin: '0px 0px -40% 0px' // Dead zone: starts animating only when the card is 40% up from the bottom of the viewport
         });
         
         revealLeftElements.forEach((el, index) => {
