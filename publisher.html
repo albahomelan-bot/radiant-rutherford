@@ -674,26 +674,32 @@
         metaTime.textContent = `${hh}:${mm}`;
       }
 
-      // Simplistic custom Markdown to HTML parser for live preview
-      function parseMarkdown(text) {
-        if (!text) return 'Ваш продающий текст поста...';
+      // Robust Markdown-to-HTML parser protecting underscores in usernames/links
+      function parseMarkdown(text, isForTelegram = false) {
+        if (!text) return isForTelegram ? '' : 'Ваш продающий текст поста...';
         
         let html = text
           .replace(/&/g, "&amp;")
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;");
 
-        // Bold: *text*
-        html = html.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+        // Bold: **text** or *text*
+        html = html.replace(/(^|[^a-zA-Z0-9\\])\*\*(?=\S)(.*?)(?<=\S)\*\*(?![a-zA-Z0-9])/g, '$1<strong>$2</strong>');
+        html = html.replace(/(^|[^a-zA-Z0-9\\])\*(?=\S)(.*?)(?<=\S)\*(?![a-zA-Z0-9])/g, '$1<strong>$2</strong>');
         
-        // Italic: _text_
-        html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+        // Italic: __text__ or _text_
+        html = html.replace(/(^|[^a-zA-Z0-9\\])__(?=\S)(.*?)(?<=\S)__(?![a-zA-Z0-9])/g, '$1<em>$2</em>');
+        html = html.replace(/(^|[^a-zA-Z0-9\\])_(?=\S)(.*?)(?<=\S)_(?![a-zA-Z0-9])/g, '$1<em>$2</em>');
         
         // Code: `code`
         html = html.replace(/`(.*?)`/g, '<code>$1</code>');
         
         // Links: [text](url)
-        html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+        if (isForTelegram) {
+          html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+        } else {
+          html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+        }
 
         return html;
       }
@@ -810,7 +816,7 @@
           let url = '';
           let payload = {
             chat_id: chatId,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
           };
 
           if (replyMarkup) {
@@ -821,11 +827,11 @@
             // Photo message API
             url = `https://api.telegram.org/bot${token}/sendPhoto`;
             payload.photo = imageUrl;
-            payload.caption = text;
+            payload.caption = parseMarkdown(text, true);
           } else {
             // Text message API
             url = `https://api.telegram.org/bot${token}/sendMessage`;
-            payload.text = text;
+            payload.text = parseMarkdown(text, true);
           }
 
           const response = await fetch(url, {
