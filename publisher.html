@@ -221,17 +221,17 @@
 
     /* Buttons */
     .btn-publish {
-      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-hover) 100%);
-      color: white;
-      border: none;
+      background-color: #0057B7; /* Ukrainian Blue */
+      color: #FFD700;            /* Ukrainian Yellow */
+      border: 2px solid #FFD700;
       border-radius: 8px;
       padding: 0.9rem 1.5rem;
       font-family: var(--font-sans);
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 4px 15px rgba(36, 161, 222, 0.25);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 87, 183, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -240,8 +240,11 @@
     }
 
     .btn-publish:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(36, 161, 222, 0.35);
+      background-color: #FFD700;
+      color: #0057B7;
+      border-color: #0057B7;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
     }
 
     .btn-publish:active {
