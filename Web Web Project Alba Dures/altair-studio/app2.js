@@ -122,35 +122,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (hasExperience) {
                 if (englishLevel === 'adv' || englishLevel === 'mid-plus') {
-                    // Top model ($500 shift rate, +- 15%)
-                    rateMin = 425; // 500 - 15%
-                    rateMax = 575; // 500 + 15%
+                    // Top model (maximum 12-15k per month with content at 60 hours)
+                    rateMin = 350;
+                    rateMax = 400;
                 } else {
                     // Experienced intermediate
-                    rateMin = 370;
-                    rateMax = 500;
+                    rateMin = 300;
+                    rateMax = 350;
                 }
             } else {
                 if (englishLevel === 'adv') {
                     // No experience, but perfect English
-                    rateMin = 370;
-                    rateMax = 500;
+                    rateMin = 300;
+                    rateMax = 350;
                 } else if (englishLevel === 'mid-plus' || englishLevel === 'mid') {
                     // No experience, intermediate English
-                    rateMin = 340;
-                    rateMax = 440;
+                    rateMin = 260;
+                    rateMax = 320;
                 } else {
-                    // No experience, basic English ($350 shift rate, +- 10%)
-                    rateMin = 315; // 350 - 10%
-                    rateMax = 385; // 350 + 10%
+                    // No experience, basic English (maximum 8500 per month with content at 35-40 hours)
+                    rateMin = 230;
+                    rateMax = 300;
                 }
             }
 
             // Standard shift is 7 hours. Calculate shifts per month (assuming 4 weeks)
             const shiftsPerMonth = (weeklyHours / 7) * 4;
 
-            // Monthly content income addition
-            const contentMin = 1220;
+            // Monthly content income addition (up to $1,500)
+            const contentMin = 1000;
             const contentMax = 1500;
 
             const minIncome = Math.round(shiftsPerMonth * rateMin + contentMin);
