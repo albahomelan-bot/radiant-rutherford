@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let isTransitioning = false;
         
         function slideNext() {
+            if (window.innerWidth < 992) return;
             if (isTransitioning) return;
             isTransitioning = true;
             
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         function slidePrev() {
+            if (window.innerWidth < 992) return;
             if (isTransitioning) return;
             isTransitioning = true;
             
@@ -52,25 +54,29 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.addEventListener('click', slideNext);
         prevBtn.addEventListener('click', slidePrev);
         
-        // Autoplay every 4 seconds
-        let autoPlayInterval = setInterval(slideNext, 4000);
+        // Autoplay every 4 seconds (only on desktop)
+        let autoPlayInterval;
+        if (window.innerWidth >= 992) {
+            autoPlayInterval = setInterval(slideNext, 4000);
+        }
         
         // Pause autoplay on mouse enter, resume on mouse leave
         const block = document.getElementById('apartments');
         if (block) {
             block.addEventListener('mouseenter', () => {
-                clearInterval(autoPlayInterval);
+                if (window.innerWidth >= 992) clearInterval(autoPlayInterval);
             });
             block.addEventListener('mouseleave', () => {
-                autoPlayInterval = setInterval(slideNext, 4000);
+                if (window.innerWidth >= 992) autoPlayInterval = setInterval(slideNext, 4000);
             });
             
-            // Touch events for mobile dragging / swipe
+            // Touch events for mobile dragging / swipe (only on desktop if dragging)
             let aptStartX = 0;
             let aptCurrentX = 0;
             let aptIsDragging = false;
             
             block.addEventListener('touchstart', (e) => {
+                if (window.innerWidth < 992) return;
                 clearInterval(autoPlayInterval);
                 aptStartX = e.touches[0].clientX;
                 aptCurrentX = aptStartX;
@@ -78,12 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }, { passive: true });
             
             block.addEventListener('touchmove', (e) => {
-                if (!aptIsDragging) return;
+                if (window.innerWidth < 992 || !aptIsDragging) return;
                 aptCurrentX = e.touches[0].clientX;
             }, { passive: true });
             
             block.addEventListener('touchend', () => {
-                if (!aptIsDragging) return;
+                if (window.innerWidth < 992 || !aptIsDragging) return;
                 aptIsDragging = false;
                 const diffX = aptStartX - aptCurrentX;
                 if (Math.abs(diffX) > 50) {
@@ -111,32 +117,44 @@ document.addEventListener('DOMContentLoaded', () => {
         let englishLevel = 'beg';
         let weeklyHours = 40;
 
-        const baseRates = {
-            noExp: {
-                'beg': 22,
-                'mid': 28,
-                'mid-plus': 35,
-                'adv': 43.75
-            },
-            withExp: {
-                'beg': 32,
-                'mid': 43.75,
-                'mid-plus': 50,
-                'adv': 62.5
-            }
-        };
-
         function calculateIncome() {
-            const rates = hasExperience ? baseRates.withExp : baseRates.noExp;
-            const hourlyRate = rates[englishLevel];
-            
-            // Monthly calculation: hours/week * rate/hour * 4 weeks
-            // Add +10% marketing multiplier as requested by Lina
-            let baseIncome = weeklyHours * hourlyRate * 4 * 1.1;
+            let rateMin, rateMax;
 
-            // Generate range: min is 90%, max is 110%
-            let minIncome = Math.round(baseIncome * 0.9);
-            let maxIncome = Math.round(baseIncome * 1.1);
+            if (hasExperience) {
+                if (englishLevel === 'adv' || englishLevel === 'mid-plus') {
+                    // Top model ($500 shift rate, +- 15%)
+                    rateMin = 425; // 500 - 15%
+                    rateMax = 575; // 500 + 15%
+                } else {
+                    // Experienced intermediate
+                    rateMin = 370;
+                    rateMax = 500;
+                }
+            } else {
+                if (englishLevel === 'adv') {
+                    // No experience, but perfect English
+                    rateMin = 370;
+                    rateMax = 500;
+                } else if (englishLevel === 'mid-plus' || englishLevel === 'mid') {
+                    // No experience, intermediate English
+                    rateMin = 340;
+                    rateMax = 440;
+                } else {
+                    // No experience, basic English ($350 shift rate, +- 10%)
+                    rateMin = 315; // 350 - 10%
+                    rateMax = 385; // 350 + 10%
+                }
+            }
+
+            // Standard shift is 7 hours. Calculate shifts per month (assuming 4 weeks)
+            const shiftsPerMonth = (weeklyHours / 7) * 4;
+
+            // Monthly content income addition
+            const contentMin = 1220;
+            const contentMax = 1500;
+
+            const minIncome = Math.round(shiftsPerMonth * rateMin + contentMin);
+            const maxIncome = Math.round(shiftsPerMonth * rateMax + contentMax);
 
             // Format numbers with comma separator
             const formatter = new Intl.NumberFormat('en-US', {
@@ -298,15 +316,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-      // Helper to sanitize and validate Telegram handles or links
+    // Helper to sanitize and validate Telegram handles or links
     function sanitizeAndValidateTelegram(val) {
         let value = val.trim();
         if (!value) return null;
 
-        // Check if it is a link containing t.me or telegram.me
-        if (value.startsWith('http://') || value.startsWith('https://') || value.includes('t.me/')) {
+        // Check if it is a link or starts with t.me / telegram.me
+        if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('t.me/') || value.startsWith('telegram.me/')) {
             // Extract the username part
-            const urlParts = value.split('/');
+            let cleanVal = value.replace('https://', '').replace('http://', '');
+            const urlParts = cleanVal.split('/');
             let username = urlParts[urlParts.length - 1];
             // Remove query params if any
             username = username.split('?')[0];
@@ -322,15 +341,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return null;
         }
 
-        // It is a raw username. Remove @ if it starts with it
-        let username = value;
-        if (username.startsWith('@')) {
-            username = username.substring(1);
-        }
-
-        const regex = /^[a-zA-Z0-9_]{5,32}$/;
-        if (regex.test(username)) {
-            return '@' + username;
+        // Must start with @ to be considered a valid username
+        if (value.startsWith('@')) {
+            let username = value.substring(1);
+            const regex = /^[a-zA-Z0-9_]{5,32}$/;
+            if (regex.test(username)) {
+                return '@' + username;
+            }
         }
 
         return null;
@@ -865,7 +882,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Scroll Reveal IntersectionObserver
-    const revealElements = document.querySelectorAll('.why-card, .stat-card, .compare-card, .faq-item, .reviews-slider-wrapper, .graphs-slider-wrapper');
+    const revealElements = document.querySelectorAll('.why-card, .stat-card, .compare-card, .faq-item, .reviews-slider-wrapper, .graphs-slider-wrapper, .condition-card, .slide-item, .reveal-title');
     
     if (revealElements.length > 0) {
         const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -887,117 +904,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Conditions Slider Logic for Mobile
-    const conditionsGrid = document.querySelector('.conditions-grid');
-    const conditionsWrapper = document.querySelector('.conditions-slider-wrapper');
-    
-    if (conditionsGrid && conditionsWrapper) {
-        let conditionsInterval;
-        let isTransitioning = false;
-        let startX = 0;
-        let currentX = 0;
-        let isDragging = false;
-        
-        function slideNextCondition() {
-            if (window.innerWidth >= 992) return;
-            if (isTransitioning) return;
-            isTransitioning = true;
-            
-            const firstChild = conditionsGrid.children[0];
-            const cardWidth = firstChild.clientWidth;
-            const gap = 20; // Matches CSS gap
-            
-            conditionsGrid.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            conditionsGrid.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            setTimeout(() => {
-                conditionsGrid.style.transition = 'none';
-                conditionsGrid.appendChild(firstChild);
-                conditionsGrid.style.transform = 'translateX(0)';
-                isTransitioning = false;
-            }, 600);
-        }
-        
-        function slidePrevCondition() {
-            if (window.innerWidth >= 992) return;
-            if (isTransitioning) return;
-            isTransitioning = true;
-            
-            const lastChild = conditionsGrid.children[conditionsGrid.children.length - 1];
-            const cardWidth = lastChild.clientWidth;
-            const gap = 20;
-            
-            conditionsGrid.style.transition = 'none';
-            conditionsGrid.insertBefore(lastChild, conditionsGrid.children[0]);
-            conditionsGrid.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            // Force reflow
-            conditionsGrid.offsetHeight;
-            
-            conditionsGrid.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            conditionsGrid.style.transform = 'translateX(0)';
-            
-            setTimeout(() => {
-                isTransitioning = false;
-            }, 600);
-        }
-        
-        function startConditionsAutoplay() {
-            clearInterval(conditionsInterval);
-            conditionsInterval = setInterval(slideNextCondition, 3000); // 3 seconds
-        }
-        
-        function stopConditionsAutoplay() {
-            clearInterval(conditionsInterval);
-        }
-        
-        function checkScreenSize() {
-            if (window.innerWidth < 992) {
-                startConditionsAutoplay();
-            } else {
-                stopConditionsAutoplay();
-                conditionsGrid.style.transform = 'none';
-                conditionsGrid.style.transition = 'none';
-            }
-        }
-        
-        // Touch events for mobile dragging / swipe
-        conditionsWrapper.addEventListener('touchstart', (e) => {
-            if (window.innerWidth >= 992) return;
-            stopConditionsAutoplay();
-            startX = e.touches[0].clientX;
-            currentX = startX;
-            isDragging = true;
-        }, { passive: true });
-        
-        conditionsWrapper.addEventListener('touchmove', (e) => {
-            if (!isDragging || window.innerWidth >= 992) return;
-            currentX = e.touches[0].clientX;
-        }, { passive: true });
-        
-        conditionsWrapper.addEventListener('touchend', () => {
-            if (!isDragging || window.innerWidth >= 992) return;
-            isDragging = false;
-            const diffX = startX - currentX;
-            if (Math.abs(diffX) > 50) {
-                if (diffX > 0) {
-                    slideNextCondition();
-                } else {
-                    slidePrevCondition();
-                }
-            }
-            startConditionsAutoplay();
-        });
-        
-        // Mouse hover pause on desktop (if resized)
-        conditionsWrapper.addEventListener('mouseenter', stopConditionsAutoplay);
-        conditionsWrapper.addEventListener('mouseleave', () => {
-            if (window.innerWidth < 992) startConditionsAutoplay();
-        });
-        
-        window.addEventListener('resize', checkScreenSize);
-        checkScreenSize();
-    }
+
 
     // Proofs Slider Logic for Mobile
     const proofsGrid = document.querySelector('.proofs-grid');
