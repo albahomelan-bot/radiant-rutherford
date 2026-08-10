@@ -851,11 +851,11 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(statsSection);
     }
 
-    // ONLY apply scroll reveal to the first block (.conditions-section)
-    const revealElements = document.querySelectorAll('.conditions-section .condition-card, .conditions-section .reveal-title');
+    // Observe all reveal titles and conditions cards for scroll animations
+    const revealElements = document.querySelectorAll('.reveal-title, .conditions-section .condition-card');
     
-    // For all other reveal titles and slides, activate them immediately on load
-    document.querySelectorAll('.reveal-title, .slide-item, .proof-card').forEach(el => {
+    // For all other slides and proof cards, activate them immediately on load
+    document.querySelectorAll('.slide-item, .proof-card').forEach(el => {
         if (!el.closest('.conditions-section')) {
             el.classList.add('active');
         }
@@ -872,7 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, {
             root: null,
             threshold: 0.1, // Trigger as soon as it enters
-            rootMargin: '0px 0px -60px 0px' // Very small offset so headers/cards appear immediately without creating blank spaces
+            rootMargin: '0px 0px -60px 0px' // Very small offset so headers appear immediately when they enter viewport
         });
         
         revealElements.forEach(el => {
@@ -881,14 +881,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Reveal-left observer for elements inside conditions-section (none exist, but we keep structure)
+    // Reveal-left observer (none exist inside conditions-section, but kept for structure)
     const revealLeftElements = document.querySelectorAll('.conditions-section .reveal-left');
     
     // Activate all other reveal-left elements immediately
     document.querySelectorAll('.reveal-left').forEach(el => {
-        if (!el.closest('.conditions-section')) {
-            el.classList.add('revealed');
-        }
+        el.classList.add('revealed');
     });
     
     if (revealLeftElements.length > 0) {
