@@ -581,7 +581,7 @@ nav a:hover {
 
 /* Conditions Section */
 .conditions-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background: #ffffff;
   border-top: 1px solid rgba(121, 40, 202, 0.05);
   overflow: hidden;
@@ -822,7 +822,7 @@ nav a:hover {
 
 /* Calculator Section */
 .calculator-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background: var(--bg-light);
   border-top: 1px solid rgba(121, 40, 202, 0.05);
   overflow: hidden;
@@ -1108,7 +1108,7 @@ nav a:hover {
 
 /* Proofs Section */
 .proofs-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background: #ffffff;
   border-top: 1px solid rgba(121, 40, 202, 0.05);
 }
@@ -1299,7 +1299,7 @@ nav a:hover {
 
 /* Map Section */
 .map-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background: var(--bg-light);
   border-top: 1px solid rgba(121, 40, 202, 0.05);
 }
@@ -1389,7 +1389,7 @@ nav a:hover {
 
 /* Compare Section */
 .compare-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background: #ffffff;
   border-top: 1px solid rgba(121, 40, 202, 0.05);
 }
@@ -1544,7 +1544,7 @@ nav a:hover {
 
 /* Video Reviews Section */
 .reviews-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background: var(--bg-light);
   border-top: 1px solid rgba(121, 40, 202, 0.05);
 }
@@ -1709,7 +1709,7 @@ nav a:hover {
 
 /* FAQ Section */
 .faq-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background: #ffffff;
   border-top: 1px solid rgba(121, 40, 202, 0.05);
 }
@@ -1800,7 +1800,7 @@ nav a:hover {
 
 /* Call Request Section */
 .call-section {
-  padding: 80px 0;
+  padding: 40px 0;
   background: #ffffff;
   color: var(--text-dark);
   border-top: 1px solid rgba(24, 20, 36, 0.08);
@@ -1993,7 +1993,7 @@ footer {
 
 /* Interior Compare Slider Section */
 .interior-compare-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background: var(--bg-light);
   border-top: 1px solid rgba(121, 40, 202, 0.05);
   border-bottom: 1px solid rgba(121, 40, 202, 0.05);
@@ -2184,7 +2184,7 @@ footer {
 
 /* Why Altair Section (Premium Light) */
 .why-altair-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background-color: #ffffff;
   color: var(--text-dark);
   position: relative;
@@ -2300,7 +2300,7 @@ footer {
 
 /* Stats Section ("Мы в цифрах") */
 .stats-section {
-  padding: 100px 0;
+  padding: 50px 0;
   background-color: #0a0a0a;
   position: relative;
   overflow: hidden;
