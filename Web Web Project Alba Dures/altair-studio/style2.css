@@ -501,6 +501,10 @@ nav a:hover {
 
 /* Mobile Responsiveness for Header & Hero */
 @media (max-width: 991px) {
+  .hero-section {
+    padding-top: 15px !important;
+    padding-bottom: 10px !important;
+  }
   .hero-grid {
     grid-template-columns: 1fr;
     gap: 40px;
