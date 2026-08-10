@@ -2795,3 +2795,42 @@ footer {
     transform: translateX(0) !important;
   }
 }
+
+/* Comprehensive Mobile Spacing Optimization (15px spacing rules) */
+@media (max-width: 991px) {
+  .conditions-section,
+  .calculator-section,
+  .proofs-section,
+  .stats-section,
+  .why-altair-section,
+  .compare-section,
+  .interior-compare-section,
+  .reviews-section,
+  .faq-section,
+  .call-section,
+  .map-section {
+    padding: 15px 0 !important;
+  }
+  
+  .apartments-block {
+    margin-top: 15px !important;
+    padding: 20px 15px !important;
+  }
+  
+  .section-title {
+    margin-bottom: 15px !important;
+  }
+  
+  .calc-grid,
+  .call-wrapper {
+    padding: 20px 15px !important;
+    gap: 15px !important;
+  }
+  
+  .vnzh-container,
+  .proofs-slider-wrapper,
+  .why-altair-section .why-grid {
+    margin-top: 15px !important;
+  }
+}
+
