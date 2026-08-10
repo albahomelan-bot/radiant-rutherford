@@ -851,7 +851,15 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(statsSection);
     }
 
-    const revealElements = document.querySelectorAll('.condition-card, .slide-item, .reveal-title, .proof-card');
+    // ONLY apply scroll reveal to the first block (.conditions-section)
+    const revealElements = document.querySelectorAll('.conditions-section .condition-card, .conditions-section .reveal-title');
+    
+    // For all other reveal titles and slides, activate them immediately on load
+    document.querySelectorAll('.reveal-title, .slide-item, .proof-card').forEach(el => {
+        if (!el.closest('.conditions-section')) {
+            el.classList.add('active');
+        }
+    });
     
     if (revealElements.length > 0) {
         const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -873,8 +881,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Reveal-left observer for stat cards, VNZH cards, and graph cards (slide in from left closer to center)
-    const revealLeftElements = document.querySelectorAll('.reveal-left');
+    // Reveal-left observer for elements inside conditions-section (none exist, but we keep structure)
+    const revealLeftElements = document.querySelectorAll('.conditions-section .reveal-left');
+    
+    // Activate all other reveal-left elements immediately
+    document.querySelectorAll('.reveal-left').forEach(el => {
+        if (!el.closest('.conditions-section')) {
+            el.classList.add('revealed');
+        }
+    });
+    
     if (revealLeftElements.length > 0) {
         const revealLeftObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
