@@ -2383,35 +2383,31 @@ footer {
   padding-top: 50px;
 }
 
-.vnzh-list-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  margin-top: 40px;
-  align-items: center;
+/* VNZH Slider Styles */
+.vnzh-slider-wrapper {
+  overflow: hidden !important;
+  position: relative;
   width: 100%;
 }
 
-.vnzh-card {
-  width: 280px !important;
-  max-width: 280px !important;
-  min-width: 0 !important;
-  flex-shrink: 0;
+.vnzh-list-new {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 20px !important;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  width: max-content !important;
+  margin-top: 40px !important;
+  margin-bottom: 30px !important;
+}
+
+.vnzh-card-new {
+  min-width: calc(33.333% - 13.333px) !important;
+  width: calc(33.333% - 13.333px) !important;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
-.vnzh-card.reveal-left {
-  opacity: 0;
-  transform: translateX(-80px);
-  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.vnzh-card.reveal-left.revealed {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.vnzh-card .proof-thumbnail-wrapper {
+.vnzh-card-new .proof-thumbnail-wrapper {
   width: 100%;
   aspect-ratio: 16 / 10;
   border-radius: 16px;
@@ -2423,15 +2419,33 @@ footer {
   border: 1px solid rgba(121, 40, 202, 0.15);
 }
 
-.vnzh-card img {
+.vnzh-card-new img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.4s ease;
 }
 
-.vnzh-card:hover img {
+.vnzh-card-new:hover img {
   transform: scale(1.03);
+}
+
+@media (max-width: 991px) {
+  .vnzh-slider-wrapper {
+    overflow: hidden !important;
+    padding: 10px 5px !important;
+    margin: 0 !important;
+  }
+  .vnzh-list-new {
+    gap: 15px !important;
+    margin-top: 20px !important;
+  }
+  .vnzh-card-new {
+    min-width: 280px !important;
+    width: 280px !important;
+    max-width: 280px !important;
+    margin: 0 !important;
+  }
 }
 
 /* Graphs proof gallery in stats section */

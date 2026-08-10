@@ -1001,6 +1001,101 @@ document.addEventListener('DOMContentLoaded', () => {
         proofsWrapper.addEventListener('mouseleave', startProofsAutoplay);
     }
 
+    // VNZH Slider Logic (Infinite Auto-sliding Carousel for Mobile and Desktop)
+    const vnzhList = document.querySelector('.vnzh-list-new');
+    const vnzhWrapper = document.querySelector('.vnzh-slider-wrapper');
+    
+    if (vnzhList && vnzhWrapper) {
+        let vnzhInterval;
+        let isTransitioningVnzh = false;
+        let vStartX = 0;
+        let vCurrentX = 0;
+        let vIsDragging = false;
+        
+        function slideNextVnzh() {
+            if (isTransitioningVnzh) return;
+            isTransitioningVnzh = true;
+            
+            const firstChild = vnzhList.children[0];
+            const cardWidth = firstChild.clientWidth;
+            const gap = 20; // Matches CSS gap
+            
+            vnzhList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            vnzhList.style.transform = `translateX(-${cardWidth + gap}px)`;
+            
+            setTimeout(() => {
+                vnzhList.style.transition = 'none';
+                vnzhList.appendChild(firstChild);
+                vnzhList.style.transform = 'translateX(0)';
+                isTransitioningVnzh = false;
+            }, 600);
+        }
+        
+        function slidePrevVnzh() {
+            if (isTransitioningVnzh) return;
+            isTransitioningVnzh = true;
+            
+            const lastChild = vnzhList.children[vnzhList.children.length - 1];
+            const cardWidth = lastChild.clientWidth;
+            const gap = 20;
+            
+            vnzhList.style.transition = 'none';
+            vnzhList.insertBefore(lastChild, vnzhList.children[0]);
+            vnzhList.style.transform = `translateX(-${cardWidth + gap}px)`;
+            
+            vnzhList.offsetHeight; // reflow
+            
+            vnzhList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            vnzhList.style.transform = 'translateX(0)';
+            
+            setTimeout(() => {
+                isTransitioningVnzh = false;
+            }, 600);
+        }
+        
+        function startVnzhAutoplay() {
+            clearInterval(vnzhInterval);
+            vnzhInterval = setInterval(slideNextVnzh, 3000);
+        }
+        
+        function stopVnzhAutoplay() {
+            clearInterval(vnzhInterval);
+        }
+        
+        // Start autoplay on load
+        startVnzhAutoplay();
+        
+        // Touch events for mobile dragging / swipe
+        vnzhWrapper.addEventListener('touchstart', (e) => {
+            stopVnzhAutoplay();
+            vStartX = e.touches[0].clientX;
+            vCurrentX = vStartX;
+            vIsDragging = true;
+        }, { passive: true });
+        
+        vnzhWrapper.addEventListener('touchmove', (e) => {
+            if (!vIsDragging) return;
+            vCurrentX = e.touches[0].clientX;
+        }, { passive: true });
+        
+        vnzhWrapper.addEventListener('touchend', () => {
+            if (!vIsDragging) return;
+            vIsDragging = false;
+            const diffX = vStartX - vCurrentX;
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    slideNextVnzh();
+                } else {
+                    slidePrevVnzh();
+                }
+            }
+            startVnzhAutoplay();
+        });
+        
+        vnzhWrapper.addEventListener('mouseenter', stopVnzhAutoplay);
+        vnzhWrapper.addEventListener('mouseleave', startVnzhAutoplay);
+    }
+
     // Stats Slider Logic for Mobile
     const statsGrid = document.querySelector('.stats-grid');
     const statsWrapper = document.querySelector('.stats-slider-wrapper');
