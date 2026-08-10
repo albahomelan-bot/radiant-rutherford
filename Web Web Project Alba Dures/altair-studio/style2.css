@@ -573,10 +573,7 @@ nav a:hover {
   .lang-switcher {
     gap: 4px !important;
   }
-  .section-title span {
-    display: block;
-    margin-top: 8px;
-  }
+
 }
 
 /* Conditions Section */
