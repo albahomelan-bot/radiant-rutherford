@@ -1096,6 +1096,101 @@ document.addEventListener('DOMContentLoaded', () => {
         vnzhWrapper.addEventListener('mouseleave', startVnzhAutoplay);
     }
 
+    // Graphs Slider Logic (Infinite Auto-sliding Carousel for Mobile and Desktop)
+    const graphsList = document.querySelector('.graphs-list-new');
+    const graphsWrapper = document.querySelector('.graphs-slider-wrapper');
+    
+    if (graphsList && graphsWrapper) {
+        let graphsInterval;
+        let isTransitioningGraphs = false;
+        let gStartX = 0;
+        let gCurrentX = 0;
+        let gIsDragging = false;
+        
+        function slideNextGraphs() {
+            if (isTransitioningGraphs) return;
+            isTransitioningGraphs = true;
+            
+            const firstChild = graphsList.children[0];
+            const cardWidth = firstChild.clientWidth;
+            const gap = 20; // Matches CSS gap
+            
+            graphsList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            graphsList.style.transform = `translateX(-${cardWidth + gap}px)`;
+            
+            setTimeout(() => {
+                graphsList.style.transition = 'none';
+                graphsList.appendChild(firstChild);
+                graphsList.style.transform = 'translateX(0)';
+                isTransitioningGraphs = false;
+            }, 600);
+        }
+        
+        function slidePrevGraphs() {
+            if (isTransitioningGraphs) return;
+            isTransitioningGraphs = true;
+            
+            const lastChild = graphsList.children[graphsList.children.length - 1];
+            const cardWidth = lastChild.clientWidth;
+            const gap = 20;
+            
+            graphsList.style.transition = 'none';
+            graphsList.insertBefore(lastChild, graphsList.children[0]);
+            graphsList.style.transform = `translateX(-${cardWidth + gap}px)`;
+            
+            graphsList.offsetHeight; // reflow
+            
+            graphsList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            graphsList.style.transform = 'translateX(0)';
+            
+            setTimeout(() => {
+                isTransitioningGraphs = false;
+            }, 600);
+        }
+        
+        function startGraphsAutoplay() {
+            clearInterval(graphsInterval);
+            graphsInterval = setInterval(slideNextGraphs, 3000);
+        }
+        
+        function stopGraphsAutoplay() {
+            clearInterval(graphsInterval);
+        }
+        
+        // Start autoplay on load
+        startGraphsAutoplay();
+        
+        // Touch events for mobile dragging / swipe
+        graphsWrapper.addEventListener('touchstart', (e) => {
+            stopGraphsAutoplay();
+            gStartX = e.touches[0].clientX;
+            gCurrentX = gStartX;
+            gIsDragging = true;
+        }, { passive: true });
+        
+        graphsWrapper.addEventListener('touchmove', (e) => {
+            if (!gIsDragging) return;
+            gCurrentX = e.touches[0].clientX;
+        }, { passive: true });
+        
+        graphsWrapper.addEventListener('touchend', () => {
+            if (!gIsDragging) return;
+            gIsDragging = false;
+            const diffX = gStartX - gCurrentX;
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    slideNextGraphs();
+                } else {
+                    slidePrevGraphs();
+                }
+            }
+            startGraphsAutoplay();
+        });
+        
+        graphsWrapper.addEventListener('mouseenter', stopGraphsAutoplay);
+        graphsWrapper.addEventListener('mouseleave', startGraphsAutoplay);
+    }
+
     // Stats Slider Logic for Mobile
     const statsGrid = document.querySelector('.stats-grid');
     const statsWrapper = document.querySelector('.stats-slider-wrapper');

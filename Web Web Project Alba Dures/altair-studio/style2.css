@@ -2455,39 +2455,35 @@ footer {
   padding-top: 50px;
 }
 
-.graphs-list-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 35px;
-  margin-top: 40px;
-  align-items: center;
+/* Graphs Slider Styles */
+.graphs-slider-wrapper {
+  overflow: hidden !important;
+  position: relative;
   width: 100%;
 }
 
-.graph-card {
-  width: 280px !important;
-  max-width: 280px !important;
-  min-width: 0 !important;
-  flex-shrink: 0;
+.graphs-list-new {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 20px !important;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  width: max-content !important;
+  margin-top: 40px !important;
+  margin-bottom: 30px !important;
+}
+
+.graph-card-new {
+  min-width: calc(33.333% - 13.333px) !important;
+  width: calc(33.333% - 13.333px) !important;
   box-sizing: border-box;
+  flex-shrink: 0;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.graph-card.reveal-left {
-  opacity: 0;
-  transform: translateX(-80px);
-  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.graph-card.reveal-left.revealed {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.graph-card .proof-thumbnail-wrapper {
+.graph-card-new .proof-thumbnail-wrapper {
   width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: 16px;
@@ -2500,22 +2496,22 @@ footer {
   border: 1px solid rgba(121, 40, 202, 0.15);
 }
 
-.graph-card img {
+.graph-card-new img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   transition: transform 0.4s ease;
 }
 
-.graph-card:hover img {
+.graph-card-new:hover img {
   transform: scale(1.03);
 }
 
-.graph-card-content {
+.graph-card-new .graph-card-content {
   max-width: 100%;
 }
 
-.graph-card-content h4 {
+.graph-card-new .graph-card-content h4 {
   font-family: var(--font-display);
   font-size: 0.95rem;
   font-weight: 700;
@@ -2523,10 +2519,28 @@ footer {
   margin-bottom: 6px;
 }
 
-.graph-card-content p {
+.graph-card-new .graph-card-content p {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.4;
+}
+
+@media (max-width: 991px) {
+  .graphs-slider-wrapper {
+    overflow: hidden !important;
+    padding: 10px 5px !important;
+    margin: 0 !important;
+  }
+  .graphs-list-new {
+    gap: 15px !important;
+    margin-top: 20px !important;
+  }
+  .graph-card-new {
+    min-width: 280px !important;
+    width: 280px !important;
+    max-width: 280px !important;
+    margin: 0 !important;
+  }
 }
 
 .slider-dots {
