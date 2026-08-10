@@ -1545,54 +1545,27 @@ nav a:hover {
   border-top: 1px solid rgba(121, 40, 202, 0.05);
 }
 
+/* Reviews Slider Styles */
 .reviews-slider-wrapper {
+  overflow: hidden !important;
   position: relative;
   width: 100%;
 }
 
-.reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 35px;
+.reviews-list-new {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 20px !important;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  width: max-content !important;
+  margin-bottom: 30px !important;
 }
 
-@media (max-width: 991px) {
-  .reviews-slider-wrapper {
-    overflow: visible;
-    padding: 10px 5px;
-    margin: 0;
-  }
-  .reviews-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 30px !important;
-    align-items: center !important;
-    width: 100% !important;
-    transform: none !important;
-  }
-  .review-video-card {
-    width: 280px !important;
-    min-width: 280px !important;
-    max-width: 280px !important;
-    flex-shrink: 0;
-    margin: 0 auto !important;
-    box-sizing: border-box;
-  }
-}
-
-/* Reveal-left animation for review video cards */
-.review-video-card.reveal-left {
-  opacity: 0;
-  transform: translateX(-80px);
-  transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.review-video-card.reveal-left.revealed {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.review-video-card {
+.review-video-card-new {
+  min-width: calc(33.333% - 13.333px) !important;
+  width: calc(33.333% - 13.333px) !important;
+  box-sizing: border-box;
+  flex-shrink: 0;
   background: #ffffff;
   border-radius: 25px;
   overflow: hidden;
@@ -1601,11 +1574,30 @@ nav a:hover {
   transition: var(--transition);
 }
 
-.review-video-card:hover {
+.review-video-card-new:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-soft);
   border-color: rgba(121, 40, 202, 0.15);
 }
+
+@media (max-width: 991px) {
+  .reviews-slider-wrapper {
+    overflow: hidden !important;
+    padding: 10px 5px !important;
+    margin: 0 !important;
+  }
+  .reviews-list-new {
+    gap: 15px !important;
+  }
+  .review-video-card-new {
+    min-width: 280px !important;
+    width: 280px !important;
+    max-width: 280px !important;
+    margin: 0 !important;
+  }
+}
+
+
 
 .video-thumbnail-container {
   width: 100%;

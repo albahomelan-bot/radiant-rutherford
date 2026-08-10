@@ -1301,6 +1301,101 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Reviews Slider Logic (Infinite Auto-sliding Carousel for Mobile and Desktop)
+    const reviewsList = document.querySelector('.reviews-list-new');
+    const reviewsWrapper = document.querySelector('.reviews-slider-wrapper');
+    
+    if (reviewsList && reviewsWrapper) {
+        let reviewsInterval;
+        let isTransitioningReviews = false;
+        let rStartX = 0;
+        let rCurrentX = 0;
+        let rIsDragging = false;
+        
+        function slideNextReviews() {
+            if (isTransitioningReviews) return;
+            isTransitioningReviews = true;
+            
+            const firstChild = reviewsList.children[0];
+            const cardWidth = firstChild.clientWidth;
+            const gap = 20; // Matches CSS gap
+            
+            reviewsList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            reviewsList.style.transform = `translateX(-${cardWidth + gap}px)`;
+            
+            setTimeout(() => {
+                reviewsList.style.transition = 'none';
+                reviewsList.appendChild(firstChild);
+                reviewsList.style.transform = 'translateX(0)';
+                isTransitioningReviews = false;
+            }, 600);
+        }
+        
+        function slidePrevReviews() {
+            if (isTransitioningReviews) return;
+            isTransitioningReviews = true;
+            
+            const lastChild = reviewsList.children[reviewsList.children.length - 1];
+            const cardWidth = lastChild.clientWidth;
+            const gap = 20;
+            
+            reviewsList.style.transition = 'none';
+            reviewsList.insertBefore(lastChild, reviewsList.children[0]);
+            reviewsList.style.transform = `translateX(-${cardWidth + gap}px)`;
+            
+            reviewsList.offsetHeight; // reflow
+            
+            reviewsList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            reviewsList.style.transform = 'translateX(0)';
+            
+            setTimeout(() => {
+                isTransitioningReviews = false;
+            }, 600);
+        }
+        
+        function startReviewsAutoplay() {
+            clearInterval(reviewsInterval);
+            reviewsInterval = setInterval(slideNextReviews, 3000);
+        }
+        
+        function stopReviewsAutoplay() {
+            clearInterval(reviewsInterval);
+        }
+        
+        // Start autoplay on load
+        startReviewsAutoplay();
+        
+        // Touch events for mobile dragging / swipe
+        reviewsWrapper.addEventListener('touchstart', (e) => {
+            stopReviewsAutoplay();
+            rStartX = e.touches[0].clientX;
+            rCurrentX = rStartX;
+            rIsDragging = true;
+        }, { passive: true });
+        
+        reviewsWrapper.addEventListener('touchmove', (e) => {
+            if (!rIsDragging) return;
+            rCurrentX = e.touches[0].clientX;
+        }, { passive: true });
+        
+        reviewsWrapper.addEventListener('touchend', () => {
+            if (!rIsDragging) return;
+            rIsDragging = false;
+            const diffX = rStartX - rCurrentX;
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    slideNextReviews();
+                } else {
+                    slidePrevReviews();
+                }
+            }
+            startReviewsAutoplay();
+        });
+        
+        reviewsWrapper.addEventListener('mouseenter', stopReviewsAutoplay);
+        reviewsWrapper.addEventListener('mouseleave', startReviewsAutoplay);
+    }
+
     // Stats Slider Logic for Mobile
     const statsGrid = document.querySelector('.stats-grid');
     const statsWrapper = document.querySelector('.stats-slider-wrapper');
