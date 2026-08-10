@@ -796,26 +796,23 @@ nav a:hover {
     display: none !important;
   }
   .apartments-slider-wrapper {
-    overflow: visible;
+    overflow: hidden !important;
+    padding: 10px 5px;
     margin: 0;
-    padding: 0;
   }
   .apartments-slider {
     display: flex !important;
-    flex-direction: column !important;
-    gap: 20px !important;
-    transform: none !important;
-    transition: none !important;
-    width: 100% !important;
+    flex-direction: row !important;
+    gap: 15px !important;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    width: max-content !important;
   }
   .slide-item {
-    min-width: 0 !important;
-    width: 100% !important;
+    min-width: 280px !important;
+    width: 280px !important;
+    max-width: 280px !important;
     margin: 0 !important;
-  }
-  /* Hide duplicates (4th, 5th, 6th items) on mobile screen sizes */
-  .slide-item:nth-child(n + 4) {
-    display: none !important;
+    display: block !important;
   }
 }
 

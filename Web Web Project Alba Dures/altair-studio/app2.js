@@ -8,13 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let isTransitioning = false;
         
         function slideNext() {
-            if (window.innerWidth < 992) return;
             if (isTransitioning) return;
             isTransitioning = true;
             
             const firstChild = slider.children[0];
             const slideWidth = firstChild.clientWidth;
-            const gap = 20; // Matches CSS gap
+            const gap = 15; // Matches mobile gap
             
             slider.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
             slider.style.transform = `translateX(-${slideWidth + gap}px)`;
@@ -28,13 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         function slidePrev() {
-            if (window.innerWidth < 992) return;
             if (isTransitioning) return;
             isTransitioning = true;
             
             const lastChild = slider.children[slider.children.length - 1];
             const slideWidth = lastChild.clientWidth;
-            const gap = 20;
+            const gap = 15;
             
             slider.style.transition = 'none';
             slider.insertBefore(lastChild, slider.children[0]);
@@ -54,29 +52,25 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.addEventListener('click', slideNext);
         prevBtn.addEventListener('click', slidePrev);
         
-        // Autoplay every 4 seconds (only on desktop)
-        let autoPlayInterval;
-        if (window.innerWidth >= 992) {
-            autoPlayInterval = setInterval(slideNext, 4000);
-        }
+        // Autoplay every 3 seconds (both desktop and mobile)
+        let autoPlayInterval = setInterval(slideNext, 3000);
         
         // Pause autoplay on mouse enter, resume on mouse leave
         const block = document.getElementById('apartments');
         if (block) {
             block.addEventListener('mouseenter', () => {
-                if (window.innerWidth >= 992) clearInterval(autoPlayInterval);
+                clearInterval(autoPlayInterval);
             });
             block.addEventListener('mouseleave', () => {
-                if (window.innerWidth >= 992) autoPlayInterval = setInterval(slideNext, 4000);
+                autoPlayInterval = setInterval(slideNext, 3000);
             });
             
-            // Touch events for mobile dragging / swipe (only on desktop if dragging)
+            // Touch events for mobile dragging / swipe
             let aptStartX = 0;
             let aptCurrentX = 0;
             let aptIsDragging = false;
             
             block.addEventListener('touchstart', (e) => {
-                if (window.innerWidth < 992) return;
                 clearInterval(autoPlayInterval);
                 aptStartX = e.touches[0].clientX;
                 aptCurrentX = aptStartX;
@@ -84,12 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }, { passive: true });
             
             block.addEventListener('touchmove', (e) => {
-                if (window.innerWidth < 992 || !aptIsDragging) return;
+                if (!aptIsDragging) return;
                 aptCurrentX = e.touches[0].clientX;
             }, { passive: true });
             
             block.addEventListener('touchend', () => {
-                if (window.innerWidth < 992 || !aptIsDragging) return;
+                if (!aptIsDragging) return;
                 aptIsDragging = false;
                 const diffX = aptStartX - aptCurrentX;
                 if (Math.abs(diffX) > 50) {
@@ -99,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         slidePrev();
                     }
                 }
-                autoPlayInterval = setInterval(slideNext, 4000);
+                autoPlayInterval = setInterval(slideNext, 3000);
             });
         }
     }
