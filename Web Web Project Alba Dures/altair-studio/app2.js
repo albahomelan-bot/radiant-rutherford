@@ -906,11 +906,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // Proofs Slider Logic for Mobile
+    // Proofs Slider Logic (Infinite Auto-sliding Carousel for Mobile and Desktop)
     const proofsGrid = document.querySelector('.proofs-grid');
     const proofsWrapper = document.querySelector('.proofs-slider-wrapper');
     
-    if (proofsGrid && proofsWrapper && window.innerWidth >= 992) {
+    if (proofsGrid && proofsWrapper) {
         let proofsInterval;
         let isTransitioningProofs = false;
         let pStartX = 0;
@@ -918,13 +918,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let pIsDragging = false;
         
         function slideNextProof() {
-            if (window.innerWidth >= 992) return;
             if (isTransitioningProofs) return;
             isTransitioningProofs = true;
             
             const firstChild = proofsGrid.children[0];
             const cardWidth = firstChild.clientWidth;
-            const gap = 20;
+            const gap = 20; // Matches CSS gap
             
             proofsGrid.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
             proofsGrid.style.transform = `translateX(-${cardWidth + gap}px)`;
@@ -938,7 +937,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         function slidePrevProof() {
-            if (window.innerWidth >= 992) return;
             if (isTransitioningProofs) return;
             isTransitioningProofs = true;
             
@@ -969,18 +967,11 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(proofsInterval);
         }
         
-        function checkScreenSizeProofs() {
-            if (window.innerWidth < 992) {
-                startProofsAutoplay();
-            } else {
-                stopProofsAutoplay();
-                proofsGrid.style.transform = 'none';
-                proofsGrid.style.transition = 'none';
-            }
-        }
+        // Start autoplay on load
+        startProofsAutoplay();
         
+        // Touch events for mobile dragging / swipe
         proofsWrapper.addEventListener('touchstart', (e) => {
-            if (window.innerWidth >= 992) return;
             stopProofsAutoplay();
             pStartX = e.touches[0].clientX;
             pCurrentX = pStartX;
@@ -988,12 +979,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: true });
         
         proofsWrapper.addEventListener('touchmove', (e) => {
-            if (!pIsDragging || window.innerWidth >= 992) return;
+            if (!pIsDragging) return;
             pCurrentX = e.touches[0].clientX;
         }, { passive: true });
         
         proofsWrapper.addEventListener('touchend', () => {
-            if (!pIsDragging || window.innerWidth >= 992) return;
+            if (!pIsDragging) return;
             pIsDragging = false;
             const diffX = pStartX - pCurrentX;
             if (Math.abs(diffX) > 50) {
@@ -1007,12 +998,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         proofsWrapper.addEventListener('mouseenter', stopProofsAutoplay);
-        proofsWrapper.addEventListener('mouseleave', () => {
-            if (window.innerWidth < 992) startProofsAutoplay();
-        });
-        
-        window.addEventListener('resize', checkScreenSizeProofs);
-        checkScreenSizeProofs();
+        proofsWrapper.addEventListener('mouseleave', startProofsAutoplay);
     }
 
     // Stats Slider Logic for Mobile
