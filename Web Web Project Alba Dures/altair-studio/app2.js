@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Stats Count Up Animation & Hearts Background Canvas
     const statsSection = document.getElementById('stats');
-    const statNumbers = document.querySelectorAll('.stat-number');
+    const statNumbers = document.querySelectorAll('.stat-count');
     
     if (statsSection && statNumbers.length > 0) {
         // Dynamically create and inject the canvas overlay
