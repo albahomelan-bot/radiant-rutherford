@@ -1191,6 +1191,116 @@ document.addEventListener('DOMContentLoaded', () => {
         graphsWrapper.addEventListener('mouseleave', startGraphsAutoplay);
     }
 
+    // Compare Slider Logic (Infinite Auto-sliding Carousel for Mobile)
+    const compareList = document.querySelector('.compare-list-new');
+    const compareWrapper = document.querySelector('.compare-slider-wrapper');
+    
+    if (compareList && compareWrapper) {
+        let compareInterval;
+        let isTransitioningCompare = false;
+        let cStartX = 0;
+        let cCurrentX = 0;
+        let cIsDragging = false;
+        
+        function slideNextCompare() {
+            if (window.innerWidth >= 992) return; // Only slide on mobile
+            if (isTransitioningCompare) return;
+            isTransitioningCompare = true;
+            
+            const firstChild = compareList.children[0];
+            const cardWidth = firstChild.clientWidth;
+            const gap = 15; // Matches mobile gap
+            
+            compareList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            compareList.style.transform = `translateX(-${cardWidth + gap}px)`;
+            
+            setTimeout(() => {
+                compareList.style.transition = 'none';
+                compareList.appendChild(firstChild);
+                compareList.style.transform = 'translateX(0)';
+                isTransitioningCompare = false;
+            }, 600);
+        }
+        
+        function slidePrevCompare() {
+            if (window.innerWidth >= 992) return;
+            if (isTransitioningCompare) return;
+            isTransitioningCompare = true;
+            
+            const lastChild = compareList.children[compareList.children.length - 1];
+            const cardWidth = lastChild.clientWidth;
+            const gap = 15;
+            
+            compareList.style.transition = 'none';
+            compareList.insertBefore(lastChild, compareList.children[0]);
+            compareList.style.transform = `translateX(-${cardWidth + gap}px)`;
+            
+            compareList.offsetHeight; // reflow
+            
+            compareList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            compareList.style.transform = 'translateX(0)';
+            
+            setTimeout(() => {
+                isTransitioningCompare = false;
+            }, 600);
+        }
+        
+        function startCompareAutoplay() {
+            clearInterval(compareInterval);
+            if (window.innerWidth < 992) {
+                compareInterval = setInterval(slideNextCompare, 3000);
+            }
+        }
+        
+        function stopCompareAutoplay() {
+            clearInterval(compareInterval);
+        }
+        
+        // Start autoplay on load
+        startCompareAutoplay();
+        
+        // Touch events for mobile dragging / swipe
+        compareWrapper.addEventListener('touchstart', (e) => {
+            if (window.innerWidth >= 992) return;
+            stopCompareAutoplay();
+            cStartX = e.touches[0].clientX;
+            cCurrentX = cStartX;
+            cIsDragging = true;
+        }, { passive: true });
+        
+        compareWrapper.addEventListener('touchmove', (e) => {
+            if (!cIsDragging || window.innerWidth >= 992) return;
+            cCurrentX = e.touches[0].clientX;
+        }, { passive: true });
+        
+        compareWrapper.addEventListener('touchend', () => {
+            if (!cIsDragging || window.innerWidth >= 992) return;
+            cIsDragging = false;
+            const diffX = cStartX - cCurrentX;
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    slideNextCompare();
+                } else {
+                    slidePrevCompare();
+                }
+            }
+            startCompareAutoplay();
+        });
+        
+        compareWrapper.addEventListener('mouseenter', stopCompareAutoplay);
+        compareWrapper.addEventListener('mouseleave', startCompareAutoplay);
+        
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 992) {
+                stopCompareAutoplay();
+                compareList.style.transform = 'none';
+                compareList.style.transition = 'none';
+            } else {
+                startCompareAutoplay();
+            }
+        });
+    }
+
     // Stats Slider Logic for Mobile
     const statsGrid = document.querySelector('.stats-grid');
     const statsWrapper = document.querySelector('.stats-slider-wrapper');
