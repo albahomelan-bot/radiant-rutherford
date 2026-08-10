@@ -507,7 +507,7 @@ nav a:hover {
   }
   .hero-grid {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 25px;
     text-align: center;
     padding: 0 10px !important;
   }
@@ -529,7 +529,7 @@ nav a:hover {
   }
   .model-showcase-container {
     max-width: 365px !important;
-    margin: 55px auto 0 auto !important;
+    margin: 25px auto 0 auto !important;
     width: 100%;
     padding: 0 !important;
     box-sizing: border-box;
