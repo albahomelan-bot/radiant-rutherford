@@ -317,6 +317,7 @@ async function init() {
     } finally {
       isBackgroundLoading = false;
       render();
+      openPropertyFromUrlParams();
     }
   })();
 }
@@ -787,6 +788,25 @@ function parseUrlParams() {
   const isFiltered = filterState.category !== 'all' || filterState.city !== 'all' || filterState.rooms !== 'all' || filterState.priceMax || filterState.priceMin;
   if (isFiltered) {
     filterBtn.classList.add('active');
+  }
+}
+
+function openPropertyFromUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const targetProp = params.get('property');
+  if (targetProp) {
+    const targetSlug = decodeURIComponent(targetProp).trim().toLowerCase();
+    const matched = listings.find(item => {
+      if (!item.url) return false;
+      const itemSlug = item.url.toLowerCase();
+      return itemSlug.endsWith(targetSlug) || itemSlug.includes(targetSlug) || itemSlug === targetSlug;
+    });
+    if (matched) {
+      console.log("Deep link: Automatically opening details for", matched.title);
+      openDetailModal(matched);
+    } else {
+      console.warn("Deep link: Property slug not found:", targetSlug);
+    }
   }
 }
 
