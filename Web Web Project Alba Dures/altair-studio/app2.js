@@ -904,7 +904,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const observerOptions = {
             root: null,
-            threshold: 0.15
+            threshold: 0.02
         };
         
         let animated = false;

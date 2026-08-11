@@ -1128,8 +1128,9 @@ nav a:hover {
 }
 
 .proof-card {
-  min-width: calc(25% - 15px) !important;
-  width: calc(25% - 15px) !important;
+  min-width: 300px !important;
+  width: 300px !important;
+  max-width: 300px !important;
   box-sizing: border-box;
   flex-shrink: 0;
 }
@@ -2440,8 +2441,9 @@ footer {
 }
 
 .vnzh-card-new {
-  min-width: calc(33.333% - 13.333px) !important;
-  width: calc(33.333% - 13.333px) !important;
+  min-width: 380px !important;
+  width: 380px !important;
+  max-width: 380px !important;
   box-sizing: border-box;
   flex-shrink: 0;
 }
@@ -2512,8 +2514,9 @@ footer {
 }
 
 .graph-card-new {
-  min-width: calc(33.333% - 13.333px) !important;
-  width: calc(33.333% - 13.333px) !important;
+  min-width: 380px !important;
+  width: 380px !important;
+  max-width: 380px !important;
   box-sizing: border-box;
   flex-shrink: 0;
   text-align: center;
