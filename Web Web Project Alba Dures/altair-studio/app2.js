@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentX = 0;
         let isPaused = false;
         let isDragging = false;
+        let hasDragged = false;
         let startX = 0;
         let touchStartTargetX = 0;
         let animationFrameId = null;
@@ -58,16 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     targetX = 0;
                     currentX = currentX + origWidth;
                 }
-            }
-            
-            // Lerp currentX to targetX unless paused or dragging
-            if (!isPaused && !isDragging) {
                 currentX = currentX + (targetX - currentX) * 0.1;
             } else {
                 currentX = targetX; // Instantly freeze position
             }
             
-            // Apply loop containment to currentX as well
+            // Apply loop containment to currentX
             const origWidth = getOriginalWidth();
             if (Math.abs(currentX) >= origWidth) {
                 currentX = currentX % origWidth;
@@ -83,10 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.addEventListener('mouseenter', () => { isPaused = true; });
         wrapper.addEventListener('mouseleave', () => { if (!isDragging) isPaused = false; });
 
-        // Touch drag logic
+        // Touch drag logic (register touchmove with passive: false to prevent native page scroll conflicts)
         wrapper.addEventListener('touchstart', (e) => {
             isDragging = true;
             isPaused = true;
+            hasDragged = false;
             startX = e.touches[0].clientX;
             touchStartTargetX = targetX;
         }, { passive: true });
@@ -94,6 +92,12 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
             const diffX = e.touches[0].clientX - startX;
+            if (Math.abs(diffX) > 10) {
+                hasDragged = true;
+            }
+            if (e.cancelable) {
+                e.preventDefault(); // Block browser native panning/scrolling
+            }
             targetX = touchStartTargetX + diffX;
             
             const origWidth = getOriginalWidth();
@@ -104,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             currentX = targetX; // sync instantly
             slider.style.transform = `translateX(${currentX}px)`;
-        }, { passive: true });
+        }, { passive: false });
 
         wrapper.addEventListener('touchend', () => {
             isDragging = false;
@@ -119,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             isDragging = true;
             isPaused = true;
+            hasDragged = false;
             startX = e.clientX;
             touchStartTargetX = targetX;
             wrapper.style.cursor = 'grabbing';
@@ -127,6 +132,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             const diffX = e.clientX - startX;
+            if (Math.abs(diffX) > 10) {
+                hasDragged = true;
+            }
             targetX = touchStartTargetX + diffX;
 
             const origWidth = getOriginalWidth();
@@ -146,6 +154,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 wrapper.style.cursor = 'grab';
             }
         });
+
+        // Intercept clicks in capture phase to suppress them if a drag occurred
+        wrapper.addEventListener('click', (e) => {
+            if (hasDragged) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }, true);
 
         // Buttons
         if (prevBtnSelector && nextBtnSelector) {
@@ -167,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initialize Apartments Slider
-    initContinuousSlider('#apartments-slider', '.apartments-slider-wrapper', '#slide-prev', '#slide-next', 0.6);
+    initContinuousSlider('#apartments-slider', '.apartments-slider-wrapper', '#slide-prev', '#slide-next', 1.2);
 
     // Interactive Calculator Logic
     const expNo = document.getElementById('exp-no');
@@ -274,65 +290,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const proofThumbnails = document.querySelectorAll('.proof-thumbnail-wrapper');
 
     if (modal && modalImg && modalClose) {
-        let startX = 0;
-        let startY = 0;
-        let isClickAllowed = true;
-
-        document.addEventListener('mousedown', (e) => {
-            const thumb = e.target.closest('.proof-thumbnail-wrapper, #apartments-slider img');
-            if (!thumb) return;
-            startX = e.clientX;
-            startY = e.clientY;
-            isClickAllowed = true;
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (startX === 0 && startY === 0) return;
-            const diffX = Math.abs(e.clientX - startX);
-            const diffY = Math.abs(e.clientY - startY);
-            if (diffX > 15 || diffY > 15) {
-                isClickAllowed = false;
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            startX = 0;
-            startY = 0;
-        });
-
-        document.addEventListener('touchstart', (e) => {
-            const thumb = e.target.closest('.proof-thumbnail-wrapper, #apartments-slider .slide-item');
-            if (!thumb) return;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            isClickAllowed = true;
-        }, { passive: true });
-
-        document.addEventListener('touchmove', (e) => {
-            if (startX === 0 && startY === 0) return;
-            const diffX = Math.abs(e.touches[0].clientX - startX);
-            const diffY = Math.abs(e.touches[0].clientY - startY);
-            if (diffX > 15 || diffY > 15) {
-                isClickAllowed = false;
-            }
-        }, { passive: true });
-
-        document.addEventListener('touchend', () => {
-            startX = 0;
-            startY = 0;
-        });
-
         document.addEventListener('click', (e) => {
             const thumb = e.target.closest('.proof-thumbnail-wrapper');
-            if (thumb && isClickAllowed) {
+            if (thumb) {
                 const imgSrc = thumb.getAttribute('data-modal-src');
                 modalImg.src = imgSrc;
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
+                return;
             }
 
             const aptSlide = e.target.closest('#apartments-slider .slide-item');
-            if (aptSlide && isClickAllowed) {
+            if (aptSlide) {
                 const img = aptSlide.querySelector('img');
                 const imgSrc = img.getAttribute('src');
                 modalImg.src = imgSrc;
@@ -1022,13 +991,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Proofs Slider Logic
-    initContinuousSlider('.proofs-grid', '.proofs-slider-wrapper', null, null, 0.5);
+    initContinuousSlider('.proofs-grid', '.proofs-slider-wrapper', null, null, 0.9);
 
     // VNZH Slider Logic
-    initContinuousSlider('.vnzh-list-new', '.vnzh-slider-wrapper', null, null, 0.5);
+    initContinuousSlider('.vnzh-list-new', '.vnzh-slider-wrapper', null, null, 0.9);
 
     // Graphs Slider Logic
-    initContinuousSlider('.graphs-list-new', '.graphs-slider-wrapper', null, null, 0.5);
+    initContinuousSlider('.graphs-list-new', '.graphs-slider-wrapper', null, null, 0.9);
 
     // Compare Slider Logic (Infinite Auto-sliding Carousel for Mobile)
     const compareList = document.querySelector('.compare-list-new');
@@ -1141,7 +1110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Reviews Slider Logic
-    initContinuousSlider('.reviews-list-new', '.reviews-slider-wrapper', null, null, 0.5);
+    initContinuousSlider('.reviews-list-new', '.reviews-slider-wrapper', null, null, 0.9);
 
     // Stats Slider Logic for Mobile
     const statsGrid = document.querySelector('.stats-grid');
