@@ -1,102 +1,171 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Apartments Slider Logic (Infinite Auto-sliding Carousel)
-    const slider = document.getElementById('apartments-slider');
-    const prevBtn = document.getElementById('slide-prev');
-    const nextBtn = document.getElementById('slide-next');
+        // Generic Continuous Slider Helper (Infinite smooth marquee with drag and hover pause)
+    function initContinuousSlider(sliderSelector, wrapperSelector, prevBtnSelector = null, nextBtnSelector = null, speed = 0.5) {
+        const slider = document.querySelector(sliderSelector);
+        const wrapper = document.querySelector(wrapperSelector);
+        if (!slider || !wrapper) return;
 
-    if (slider && prevBtn && nextBtn) {
-        let isTransitioning = false;
-        
-        function slideNext() {
-            if (isTransitioning) return;
-            isTransitioning = true;
-            
-            const firstChild = slider.children[0];
-            const slideWidth = firstChild.clientWidth;
-            const gap = 15; // Matches mobile gap
-            
-            slider.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            slider.style.transform = `translateX(-${slideWidth + gap}px)`;
-            
-            setTimeout(() => {
-                slider.style.transition = 'none';
-                slider.appendChild(firstChild);
-                slider.style.transform = 'translateX(0)';
-                isTransitioning = false;
-            }, 600);
-        }
-        
-        function slidePrev() {
-            if (isTransitioning) return;
-            isTransitioning = true;
-            
-            const lastChild = slider.children[slider.children.length - 1];
-            const slideWidth = lastChild.clientWidth;
-            const gap = 15;
-            
-            slider.style.transition = 'none';
-            slider.insertBefore(lastChild, slider.children[0]);
-            slider.style.transform = `translateX(-${slideWidth + gap}px)`;
-            
-            // Force reflow
-            slider.offsetHeight;
-            
-            slider.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            slider.style.transform = 'translateX(0)';
-            
-            setTimeout(() => {
-                isTransitioning = false;
-            }, 600);
-        }
-        
-        nextBtn.addEventListener('click', slideNext);
-        prevBtn.addEventListener('click', slidePrev);
-        
-        // Autoplay every 3 seconds (both desktop and mobile)
-        let autoPlayInterval = setInterval(slideNext, 3000);
-        
-        // Pause autoplay on mouse enter, resume on mouse leave
-        const block = document.getElementById('apartments');
-        if (block) {
-            block.addEventListener('mouseenter', () => {
-                clearInterval(autoPlayInterval);
+        let targetX = 0;
+        let currentX = 0;
+        let isPaused = false;
+        let isDragging = false;
+        let startX = 0;
+        let touchStartTargetX = 0;
+        let animationFrameId = null;
+
+        // Clone children once to create double length for seamless loop
+        const originalChildren = Array.from(slider.children);
+        originalChildren.forEach(child => {
+            const clone = child.cloneNode(true);
+            if (clone.id) clone.removeAttribute('id');
+            clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+            slider.appendChild(clone);
+        });
+
+        // Styles
+        slider.style.display = 'flex';
+        slider.style.flexWrap = 'nowrap';
+        slider.style.willChange = 'transform';
+        slider.style.transition = 'none';
+        wrapper.style.cursor = 'grab';
+
+        let originalWidth = 0;
+        function getOriginalWidth() {
+            if (originalWidth > 0) return originalWidth;
+            const gap = parseInt(window.getComputedStyle(slider).gap) || 0;
+            let width = 0;
+            let allLoaded = true;
+            originalChildren.forEach((child) => {
+                if (child.offsetWidth === 0) allLoaded = false;
+                width += child.offsetWidth + gap;
             });
-            block.addEventListener('mouseleave', () => {
-                autoPlayInterval = setInterval(slideNext, 3000);
-            });
-            
-            // Touch events for mobile dragging / swipe
-            let aptStartX = 0;
-            let aptCurrentX = 0;
-            let aptIsDragging = false;
-            
-            block.addEventListener('touchstart', (e) => {
-                clearInterval(autoPlayInterval);
-                aptStartX = e.touches[0].clientX;
-                aptCurrentX = aptStartX;
-                aptIsDragging = true;
-            }, { passive: true });
-            
-            block.addEventListener('touchmove', (e) => {
-                if (!aptIsDragging) return;
-                aptCurrentX = e.touches[0].clientX;
-            }, { passive: true });
-            
-            block.addEventListener('touchend', () => {
-                if (!aptIsDragging) return;
-                aptIsDragging = false;
-                const diffX = aptStartX - aptCurrentX;
-                if (Math.abs(diffX) > 50) {
-                    if (diffX > 0) {
-                        slideNext();
-                    } else {
-                        slidePrev();
-                    }
+            if (allLoaded && width > 0) {
+                originalWidth = width;
+            }
+            return width || 1000;
+        }
+
+        window.addEventListener('resize', () => {
+            originalWidth = 0;
+        });
+
+        function update() {
+            if (!isPaused && !isDragging) {
+                targetX -= speed; // Move right to left
+                
+                const origWidth = getOriginalWidth();
+                if (Math.abs(targetX) >= origWidth) {
+                    targetX = 0;
+                    currentX = currentX + origWidth;
                 }
-                autoPlayInterval = setInterval(slideNext, 3000);
-            });
+            }
+            
+            // Lerp currentX to targetX
+            currentX = currentX + (targetX - currentX) * 0.1;
+            
+            // Apply loop containment to currentX as well
+            const origWidth = getOriginalWidth();
+            if (Math.abs(currentX) >= origWidth) {
+                currentX = currentX % origWidth;
+            }
+            
+            slider.style.transform = `translateX(${currentX}px)`;
+            animationFrameId = requestAnimationFrame(update);
+        }
+
+        update();
+
+        // Pause on hover
+        wrapper.addEventListener('mouseenter', () => { isPaused = true; });
+        wrapper.addEventListener('mouseleave', () => { if (!isDragging) isPaused = false; });
+
+        // Touch drag logic
+        wrapper.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            isPaused = true;
+            startX = e.touches[0].clientX;
+            touchStartTargetX = targetX;
+        }, { passive: true });
+
+        wrapper.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const diffX = e.touches[0].clientX - startX;
+            targetX = touchStartTargetX + diffX;
+            
+            const origWidth = getOriginalWidth();
+            if (targetX > 0) {
+                targetX = -origWidth + (targetX % origWidth);
+            } else if (Math.abs(targetX) >= origWidth) {
+                targetX = targetX % origWidth;
+            }
+            currentX = targetX; // sync instantly
+            slider.style.transform = `translateX(${currentX}px)`;
+        }, { passive: true });
+
+        wrapper.addEventListener('touchend', () => {
+            isDragging = false;
+            isPaused = false;
+        });
+
+        // Mouse drag logic
+        wrapper.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.proof-thumbnail-wrapper') || e.target.closest('.video-thumbnail-container')) {
+                return; // let click pass through to modals
+            }
+            if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+                e.preventDefault();
+            }
+            isDragging = true;
+            isPaused = true;
+            startX = e.clientX;
+            touchStartTargetX = targetX;
+            wrapper.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const diffX = e.clientX - startX;
+            targetX = touchStartTargetX + diffX;
+
+            const origWidth = getOriginalWidth();
+            if (targetX > 0) {
+                targetX = -origWidth + (targetX % origWidth);
+            } else if (Math.abs(targetX) >= origWidth) {
+                targetX = targetX % origWidth;
+            }
+            currentX = targetX; // sync instantly
+            slider.style.transform = `translateX(${currentX}px)`;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                isPaused = false;
+                wrapper.style.cursor = 'grab';
+            }
+        });
+
+        // Buttons
+        if (prevBtnSelector && nextBtnSelector) {
+            const nextBtn = document.querySelector(nextBtnSelector);
+            const prevBtn = document.querySelector(prevBtnSelector);
+            if (nextBtn && prevBtn) {
+                nextBtn.addEventListener('click', () => {
+                    const firstChild = originalChildren[0];
+                    const slideWidth = firstChild.offsetWidth + (parseInt(window.getComputedStyle(slider).gap) || 0);
+                    targetX -= slideWidth;
+                });
+                prevBtn.addEventListener('click', () => {
+                    const firstChild = originalChildren[0];
+                    const slideWidth = firstChild.offsetWidth + (parseInt(window.getComputedStyle(slider).gap) || 0);
+                    targetX += slideWidth;
+                });
+            }
         }
     }
+
+    // Initialize Apartments Slider
+    initContinuousSlider('#apartments-slider', '.apartments-slider-wrapper', '#slide-prev', '#slide-next', 0.5);
 
     // Interactive Calculator Logic
     const expNo = document.getElementById('exp-no');
@@ -203,41 +272,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const proofThumbnails = document.querySelectorAll('.proof-thumbnail-wrapper');
 
     if (modal && modalImg && modalClose) {
-        proofThumbnails.forEach(thumb => {
-            let startX = 0;
-            let startY = 0;
-            let moveLimit = 10;
-            let hasMoved = false;
+        let startX = 0;
+        let startY = 0;
+        let moveLimit = 10;
+        let hasMoved = false;
 
-            thumb.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                hasMoved = false;
-            }, { passive: true });
+        document.addEventListener('touchstart', (e) => {
+            const thumb = e.target.closest('.proof-thumbnail-wrapper');
+            if (!thumb) return;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            hasMoved = false;
+        }, { passive: true });
 
-            thumb.addEventListener('touchmove', (e) => {
-                const diffX = Math.abs(e.touches[0].clientX - startX);
-                const diffY = Math.abs(e.touches[0].clientY - startY);
-                if (diffX > moveLimit || diffY > moveLimit) {
-                    hasMoved = true;
-                }
-            }, { passive: true });
+        document.addEventListener('touchmove', (e) => {
+            const thumb = e.target.closest('.proof-thumbnail-wrapper');
+            if (!thumb) return;
+            const diffX = Math.abs(e.touches[0].clientX - startX);
+            const diffY = Math.abs(e.touches[0].clientY - startY);
+            if (diffX > moveLimit || diffY > moveLimit) {
+                hasMoved = true;
+            }
+        }, { passive: true });
 
-            thumb.addEventListener('touchend', () => {
-                if (!hasMoved) {
-                    const imgSrc = thumb.getAttribute('data-modal-src');
-                    modalImg.src = imgSrc;
-                    modal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                }
-            });
-
-            thumb.addEventListener('click', () => {
+        document.addEventListener('touchend', (e) => {
+            const thumb = e.target.closest('.proof-thumbnail-wrapper');
+            if (!thumb) return;
+            if (!hasMoved) {
                 const imgSrc = thumb.getAttribute('data-modal-src');
                 modalImg.src = imgSrc;
                 modal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Lock scrolling
-            });
+                document.body.style.overflow = 'hidden';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            const thumb = e.target.closest('.proof-thumbnail-wrapper');
+            if (!thumb) return;
+            const imgSrc = thumb.getAttribute('data-modal-src');
+            modalImg.src = imgSrc;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Lock scrolling
         });
 
         const closeModal = () => {
@@ -467,45 +542,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Video reviews playback logic
-    const videoContainers = document.querySelectorAll('.video-thumbnail-container');
-    videoContainers.forEach(container => {
-        container.addEventListener('click', () => {
-            const videoSrc = container.getAttribute('data-video-src');
-            if (videoSrc) {
-                // If a video element is already present, do nothing
-                if (container.querySelector('video')) return;
+    // Video reviews playback logic using event delegation
+    document.addEventListener('click', (e) => {
+        const container = e.target.closest('.video-thumbnail-container');
+        if (!container) return;
 
-                // Create video element
-                const videoEl = document.createElement('video');
-                videoEl.src = videoSrc;
-                videoEl.autoplay = true;
-                videoEl.muted = false; // Enable audio for user-triggered click play!
-                videoEl.loop = true;
-                videoEl.controls = true; // Show native volume and timeline controls
-                videoEl.playsInline = true;
-                videoEl.className = 'blurred-model-face'; // Direct CSS filter blur on the entire video frame
-                videoEl.style.width = '100%';
-                videoEl.style.height = '100%';
-                videoEl.style.objectFit = 'cover';
+        const videoSrc = container.getAttribute('data-video-src');
+        if (videoSrc) {
+            // If a video element is already present, do nothing
+            if (container.querySelector('video')) return;
 
-                // Error logger
-                videoEl.addEventListener('error', (e) => {
-                    console.error("Video loading error:", videoEl.error);
-                });
+            // Create video element
+            const videoEl = document.createElement('video');
+            videoEl.src = videoSrc;
+            videoEl.autoplay = true;
+            videoEl.muted = false; // Enable audio for user-triggered click play!
+            videoEl.loop = true;
+            videoEl.controls = true; // Show native volume and timeline controls
+            videoEl.playsInline = true;
+            videoEl.className = 'blurred-model-face'; // Direct CSS filter blur on the entire video frame
+            videoEl.style.width = '100%';
+            videoEl.style.height = '100%';
+            videoEl.style.objectFit = 'cover';
 
-                // Clear container and insert video
-                container.innerHTML = '';
-                container.appendChild(videoEl);
+            // Error logger
+            videoEl.addEventListener('error', (e) => {
+                console.error("Video loading error:", videoEl.error);
+            });
 
-                // Explicit play call with error catch
-                videoEl.play().catch(err => {
-                    console.warn("Playback with audio failed, trying muted play:", err);
-                    videoEl.muted = true;
-                    videoEl.play().catch(e => console.error("Muted play failed too:", e));
-                });
-            }
-        });
+            // Clear container and insert video
+            container.innerHTML = '';
+            container.appendChild(videoEl);
+
+            // Explicit play call with error catch
+            videoEl.play().catch(err => {
+                console.warn("Playback with audio failed, trying muted play:", err);
+                videoEl.muted = true;
+                videoEl.play().catch(e => console.error("Muted play failed too:", e));
+            });
+        }
     });
 
     // Image compare slider logic
@@ -920,290 +995,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // Proofs Slider Logic (Infinite Auto-sliding Carousel for Mobile and Desktop)
-    const proofsGrid = document.querySelector('.proofs-grid');
-    const proofsWrapper = document.querySelector('.proofs-slider-wrapper');
-    
-    if (proofsGrid && proofsWrapper) {
-        let proofsInterval;
-        let isTransitioningProofs = false;
-        let pStartX = 0;
-        let pCurrentX = 0;
-        let pIsDragging = false;
-        
-        function slideNextProof() {
-            if (isTransitioningProofs) return;
-            isTransitioningProofs = true;
-            
-            const firstChild = proofsGrid.children[0];
-            const cardWidth = firstChild.clientWidth;
-            const gap = 20; // Matches CSS gap
-            
-            proofsGrid.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            proofsGrid.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            setTimeout(() => {
-                proofsGrid.style.transition = 'none';
-                proofsGrid.appendChild(firstChild);
-                proofsGrid.style.transform = 'translateX(0)';
-                isTransitioningProofs = false;
-            }, 600);
-        }
-        
-        function slidePrevProof() {
-            if (isTransitioningProofs) return;
-            isTransitioningProofs = true;
-            
-            const lastChild = proofsGrid.children[proofsGrid.children.length - 1];
-            const cardWidth = lastChild.clientWidth;
-            const gap = 20;
-            
-            proofsGrid.style.transition = 'none';
-            proofsGrid.insertBefore(lastChild, proofsGrid.children[0]);
-            proofsGrid.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            proofsGrid.offsetHeight; // reflow
-            
-            proofsGrid.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            proofsGrid.style.transform = 'translateX(0)';
-            
-            setTimeout(() => {
-                isTransitioningProofs = false;
-            }, 600);
-        }
-        
-        function startProofsAutoplay() {
-            clearInterval(proofsInterval);
-            proofsInterval = setInterval(slideNextProof, 3000);
-        }
-        
-        function stopProofsAutoplay() {
-            clearInterval(proofsInterval);
-        }
-        
-        // Start autoplay on load
-        startProofsAutoplay();
-        
-        // Touch events for mobile dragging / swipe
-        proofsWrapper.addEventListener('touchstart', (e) => {
-            stopProofsAutoplay();
-            pStartX = e.touches[0].clientX;
-            pCurrentX = pStartX;
-            pIsDragging = true;
-        }, { passive: true });
-        
-        proofsWrapper.addEventListener('touchmove', (e) => {
-            if (!pIsDragging) return;
-            pCurrentX = e.touches[0].clientX;
-        }, { passive: true });
-        
-        proofsWrapper.addEventListener('touchend', () => {
-            if (!pIsDragging) return;
-            pIsDragging = false;
-            const diffX = pStartX - pCurrentX;
-            if (Math.abs(diffX) > 50) {
-                if (diffX > 0) {
-                    slideNextProof();
-                } else {
-                    slidePrevProof();
-                }
-            }
-            startProofsAutoplay();
-        });
-        
-        proofsWrapper.addEventListener('mouseenter', stopProofsAutoplay);
-        proofsWrapper.addEventListener('mouseleave', startProofsAutoplay);
-    }
+    // Proofs Slider Logic
+    initContinuousSlider('.proofs-grid', '.proofs-slider-wrapper', null, null, 0.5);
 
-    // VNZH Slider Logic (Infinite Auto-sliding Carousel for Mobile and Desktop)
-    const vnzhList = document.querySelector('.vnzh-list-new');
-    const vnzhWrapper = document.querySelector('.vnzh-slider-wrapper');
-    
-    if (vnzhList && vnzhWrapper) {
-        let vnzhInterval;
-        let isTransitioningVnzh = false;
-        let vStartX = 0;
-        let vCurrentX = 0;
-        let vIsDragging = false;
-        
-        function slideNextVnzh() {
-            if (isTransitioningVnzh) return;
-            isTransitioningVnzh = true;
-            
-            const firstChild = vnzhList.children[0];
-            const cardWidth = firstChild.clientWidth;
-            const gap = 20; // Matches CSS gap
-            
-            vnzhList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            vnzhList.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            setTimeout(() => {
-                vnzhList.style.transition = 'none';
-                vnzhList.appendChild(firstChild);
-                vnzhList.style.transform = 'translateX(0)';
-                isTransitioningVnzh = false;
-            }, 600);
-        }
-        
-        function slidePrevVnzh() {
-            if (isTransitioningVnzh) return;
-            isTransitioningVnzh = true;
-            
-            const lastChild = vnzhList.children[vnzhList.children.length - 1];
-            const cardWidth = lastChild.clientWidth;
-            const gap = 20;
-            
-            vnzhList.style.transition = 'none';
-            vnzhList.insertBefore(lastChild, vnzhList.children[0]);
-            vnzhList.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            vnzhList.offsetHeight; // reflow
-            
-            vnzhList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            vnzhList.style.transform = 'translateX(0)';
-            
-            setTimeout(() => {
-                isTransitioningVnzh = false;
-            }, 600);
-        }
-        
-        function startVnzhAutoplay() {
-            clearInterval(vnzhInterval);
-            vnzhInterval = setInterval(slideNextVnzh, 3000);
-        }
-        
-        function stopVnzhAutoplay() {
-            clearInterval(vnzhInterval);
-        }
-        
-        // Start autoplay on load
-        startVnzhAutoplay();
-        
-        // Touch events for mobile dragging / swipe
-        vnzhWrapper.addEventListener('touchstart', (e) => {
-            stopVnzhAutoplay();
-            vStartX = e.touches[0].clientX;
-            vCurrentX = vStartX;
-            vIsDragging = true;
-        }, { passive: true });
-        
-        vnzhWrapper.addEventListener('touchmove', (e) => {
-            if (!vIsDragging) return;
-            vCurrentX = e.touches[0].clientX;
-        }, { passive: true });
-        
-        vnzhWrapper.addEventListener('touchend', () => {
-            if (!vIsDragging) return;
-            vIsDragging = false;
-            const diffX = vStartX - vCurrentX;
-            if (Math.abs(diffX) > 50) {
-                if (diffX > 0) {
-                    slideNextVnzh();
-                } else {
-                    slidePrevVnzh();
-                }
-            }
-            startVnzhAutoplay();
-        });
-        
-        vnzhWrapper.addEventListener('mouseenter', stopVnzhAutoplay);
-        vnzhWrapper.addEventListener('mouseleave', startVnzhAutoplay);
-    }
+    // VNZH Slider Logic
+    initContinuousSlider('.vnzh-list-new', '.vnzh-slider-wrapper', null, null, 0.5);
 
-    // Graphs Slider Logic (Infinite Auto-sliding Carousel for Mobile and Desktop)
-    const graphsList = document.querySelector('.graphs-list-new');
-    const graphsWrapper = document.querySelector('.graphs-slider-wrapper');
-    
-    if (graphsList && graphsWrapper) {
-        let graphsInterval;
-        let isTransitioningGraphs = false;
-        let gStartX = 0;
-        let gCurrentX = 0;
-        let gIsDragging = false;
-        
-        function slideNextGraphs() {
-            if (isTransitioningGraphs) return;
-            isTransitioningGraphs = true;
-            
-            const firstChild = graphsList.children[0];
-            const cardWidth = firstChild.clientWidth;
-            const gap = 20; // Matches CSS gap
-            
-            graphsList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            graphsList.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            setTimeout(() => {
-                graphsList.style.transition = 'none';
-                graphsList.appendChild(firstChild);
-                graphsList.style.transform = 'translateX(0)';
-                isTransitioningGraphs = false;
-            }, 600);
-        }
-        
-        function slidePrevGraphs() {
-            if (isTransitioningGraphs) return;
-            isTransitioningGraphs = true;
-            
-            const lastChild = graphsList.children[graphsList.children.length - 1];
-            const cardWidth = lastChild.clientWidth;
-            const gap = 20;
-            
-            graphsList.style.transition = 'none';
-            graphsList.insertBefore(lastChild, graphsList.children[0]);
-            graphsList.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            graphsList.offsetHeight; // reflow
-            
-            graphsList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            graphsList.style.transform = 'translateX(0)';
-            
-            setTimeout(() => {
-                isTransitioningGraphs = false;
-            }, 600);
-        }
-        
-        function startGraphsAutoplay() {
-            clearInterval(graphsInterval);
-            graphsInterval = setInterval(slideNextGraphs, 3000);
-        }
-        
-        function stopGraphsAutoplay() {
-            clearInterval(graphsInterval);
-        }
-        
-        // Start autoplay on load
-        startGraphsAutoplay();
-        
-        // Touch events for mobile dragging / swipe
-        graphsWrapper.addEventListener('touchstart', (e) => {
-            stopGraphsAutoplay();
-            gStartX = e.touches[0].clientX;
-            gCurrentX = gStartX;
-            gIsDragging = true;
-        }, { passive: true });
-        
-        graphsWrapper.addEventListener('touchmove', (e) => {
-            if (!gIsDragging) return;
-            gCurrentX = e.touches[0].clientX;
-        }, { passive: true });
-        
-        graphsWrapper.addEventListener('touchend', () => {
-            if (!gIsDragging) return;
-            gIsDragging = false;
-            const diffX = gStartX - gCurrentX;
-            if (Math.abs(diffX) > 50) {
-                if (diffX > 0) {
-                    slideNextGraphs();
-                } else {
-                    slidePrevGraphs();
-                }
-            }
-            startGraphsAutoplay();
-        });
-        
-        graphsWrapper.addEventListener('mouseenter', stopGraphsAutoplay);
-        graphsWrapper.addEventListener('mouseleave', startGraphsAutoplay);
-    }
+    // Graphs Slider Logic
+    initContinuousSlider('.graphs-list-new', '.graphs-slider-wrapper', null, null, 0.5);
 
     // Compare Slider Logic (Infinite Auto-sliding Carousel for Mobile)
     const compareList = document.querySelector('.compare-list-new');
@@ -1315,100 +1114,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Reviews Slider Logic (Infinite Auto-sliding Carousel for Mobile and Desktop)
-    const reviewsList = document.querySelector('.reviews-list-new');
-    const reviewsWrapper = document.querySelector('.reviews-slider-wrapper');
-    
-    if (reviewsList && reviewsWrapper) {
-        let reviewsInterval;
-        let isTransitioningReviews = false;
-        let rStartX = 0;
-        let rCurrentX = 0;
-        let rIsDragging = false;
-        
-        function slideNextReviews() {
-            if (isTransitioningReviews) return;
-            isTransitioningReviews = true;
-            
-            const firstChild = reviewsList.children[0];
-            const cardWidth = firstChild.clientWidth;
-            const gap = 20; // Matches CSS gap
-            
-            reviewsList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            reviewsList.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            setTimeout(() => {
-                reviewsList.style.transition = 'none';
-                reviewsList.appendChild(firstChild);
-                reviewsList.style.transform = 'translateX(0)';
-                isTransitioningReviews = false;
-            }, 600);
-        }
-        
-        function slidePrevReviews() {
-            if (isTransitioningReviews) return;
-            isTransitioningReviews = true;
-            
-            const lastChild = reviewsList.children[reviewsList.children.length - 1];
-            const cardWidth = lastChild.clientWidth;
-            const gap = 20;
-            
-            reviewsList.style.transition = 'none';
-            reviewsList.insertBefore(lastChild, reviewsList.children[0]);
-            reviewsList.style.transform = `translateX(-${cardWidth + gap}px)`;
-            
-            reviewsList.offsetHeight; // reflow
-            
-            reviewsList.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            reviewsList.style.transform = 'translateX(0)';
-            
-            setTimeout(() => {
-                isTransitioningReviews = false;
-            }, 600);
-        }
-        
-        function startReviewsAutoplay() {
-            clearInterval(reviewsInterval);
-            reviewsInterval = setInterval(slideNextReviews, 3000);
-        }
-        
-        function stopReviewsAutoplay() {
-            clearInterval(reviewsInterval);
-        }
-        
-        // Start autoplay on load
-        startReviewsAutoplay();
-        
-        // Touch events for mobile dragging / swipe
-        reviewsWrapper.addEventListener('touchstart', (e) => {
-            stopReviewsAutoplay();
-            rStartX = e.touches[0].clientX;
-            rCurrentX = rStartX;
-            rIsDragging = true;
-        }, { passive: true });
-        
-        reviewsWrapper.addEventListener('touchmove', (e) => {
-            if (!rIsDragging) return;
-            rCurrentX = e.touches[0].clientX;
-        }, { passive: true });
-        
-        reviewsWrapper.addEventListener('touchend', () => {
-            if (!rIsDragging) return;
-            rIsDragging = false;
-            const diffX = rStartX - rCurrentX;
-            if (Math.abs(diffX) > 50) {
-                if (diffX > 0) {
-                    slideNextReviews();
-                } else {
-                    slidePrevReviews();
-                }
-            }
-            startReviewsAutoplay();
-        });
-        
-        reviewsWrapper.addEventListener('mouseenter', stopReviewsAutoplay);
-        reviewsWrapper.addEventListener('mouseleave', startReviewsAutoplay);
-    }
+    // Reviews Slider Logic
+    initContinuousSlider('.reviews-list-new', '.reviews-slider-wrapper', null, null, 0.5);
 
     // Stats Slider Logic for Mobile
     const statsGrid = document.querySelector('.stats-grid');
