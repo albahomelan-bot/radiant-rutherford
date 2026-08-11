@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
             const diffX = e.touches[0].clientX - startX;
-            if (Math.abs(diffX) > 10) {
+            if (Math.abs(diffX) > 25) {
                 hasDragged = true;
             }
             if (e.cancelable) {
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             const diffX = e.clientX - startX;
-            if (Math.abs(diffX) > 10) {
+            if (Math.abs(diffX) > 25) {
                 hasDragged = true;
             }
             targetX = touchStartTargetX + diffX;
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initialize Apartments Slider
-    initContinuousSlider('#apartments-slider', '.apartments-slider-wrapper', '#slide-prev', '#slide-next', 1.2);
+    initContinuousSlider('#apartments-slider', '.apartments-slider-wrapper', '#slide-prev', '#slide-next', 1.4);
 
     // Interactive Calculator Logic
     const expNo = document.getElementById('exp-no');
@@ -991,13 +991,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Proofs Slider Logic
-    initContinuousSlider('.proofs-grid', '.proofs-slider-wrapper', null, null, 0.9);
+    initContinuousSlider('.proofs-grid', '.proofs-slider-wrapper', null, null, 1.2);
 
     // VNZH Slider Logic
-    initContinuousSlider('.vnzh-list-new', '.vnzh-slider-wrapper', null, null, 0.9);
+    initContinuousSlider('.vnzh-list-new', '.vnzh-slider-wrapper', null, null, 1.2);
 
     // Graphs Slider Logic
-    initContinuousSlider('.graphs-list-new', '.graphs-slider-wrapper', null, null, 0.9);
+    initContinuousSlider('.graphs-list-new', '.graphs-slider-wrapper', null, null, 1.2);
 
     // Compare Slider Logic (Infinite Auto-sliding Carousel for Mobile)
     const compareList = document.querySelector('.compare-list-new');
@@ -1110,7 +1110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Reviews Slider Logic
-    initContinuousSlider('.reviews-list-new', '.reviews-slider-wrapper', null, null, 0.9);
+    initContinuousSlider('.reviews-list-new', '.reviews-slider-wrapper', null, null, 1.2);
 
     // Stats Slider Logic for Mobile
     const statsGrid = document.querySelector('.stats-grid');
