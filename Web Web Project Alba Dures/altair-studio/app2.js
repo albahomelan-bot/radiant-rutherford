@@ -113,12 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Mouse drag logic
         wrapper.addEventListener('mousedown', (e) => {
-            if (e.target.closest('.proof-thumbnail-wrapper') || e.target.closest('.video-thumbnail-container') || e.target.closest('#apartments-slider img')) {
-                return; // let click pass through to modals
+            if (e.target.closest('.video-thumbnail-container') || e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                return; // let click pass through for videos/buttons
             }
-            if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
-                e.preventDefault();
-            }
+            e.preventDefault();
             isDragging = true;
             isPaused = true;
             startX = e.clientX;
@@ -278,88 +276,68 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modal && modalImg && modalClose) {
         let startX = 0;
         let startY = 0;
-        let moveLimit = 10;
-        let hasMoved = false;
+        let isClickAllowed = true;
+
+        document.addEventListener('mousedown', (e) => {
+            const thumb = e.target.closest('.proof-thumbnail-wrapper, #apartments-slider img');
+            if (!thumb) return;
+            startX = e.clientX;
+            startY = e.clientY;
+            isClickAllowed = true;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (startX === 0 && startY === 0) return;
+            const diffX = Math.abs(e.clientX - startX);
+            const diffY = Math.abs(e.clientY - startY);
+            if (diffX > 15 || diffY > 15) {
+                isClickAllowed = false;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            startX = 0;
+            startY = 0;
+        });
 
         document.addEventListener('touchstart', (e) => {
-            const thumb = e.target.closest('.proof-thumbnail-wrapper');
+            const thumb = e.target.closest('.proof-thumbnail-wrapper, #apartments-slider img');
             if (!thumb) return;
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
-            hasMoved = false;
+            isClickAllowed = true;
         }, { passive: true });
 
         document.addEventListener('touchmove', (e) => {
-            const thumb = e.target.closest('.proof-thumbnail-wrapper');
-            if (!thumb) return;
+            if (startX === 0 && startY === 0) return;
             const diffX = Math.abs(e.touches[0].clientX - startX);
             const diffY = Math.abs(e.touches[0].clientY - startY);
-            if (diffX > moveLimit || diffY > moveLimit) {
-                hasMoved = true;
+            if (diffX > 15 || diffY > 15) {
+                isClickAllowed = false;
             }
         }, { passive: true });
 
-        document.addEventListener('touchend', (e) => {
+        document.addEventListener('touchend', () => {
+            startX = 0;
+            startY = 0;
+        });
+
+        document.addEventListener('click', (e) => {
             const thumb = e.target.closest('.proof-thumbnail-wrapper');
-            if (!thumb) return;
-            if (!hasMoved) {
+            if (thumb && isClickAllowed) {
                 const imgSrc = thumb.getAttribute('data-modal-src');
                 modalImg.src = imgSrc;
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
-        });
 
-        document.addEventListener('click', (e) => {
-            const thumb = e.target.closest('.proof-thumbnail-wrapper');
-            if (!thumb) return;
-            const imgSrc = thumb.getAttribute('data-modal-src');
-            modalImg.src = imgSrc;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Lock scrolling
-        });
-
-        // Apartments lightbox triggers
-        let aptStartX = 0;
-        let aptStartY = 0;
-        let aptHasMoved = false;
-
-        document.addEventListener('touchstart', (e) => {
-            const img = e.target.closest('#apartments-slider img');
-            if (!img) return;
-            aptStartX = e.touches[0].clientX;
-            aptStartY = e.touches[0].clientY;
-            aptHasMoved = false;
-        }, { passive: true });
-
-        document.addEventListener('touchmove', (e) => {
-            const img = e.target.closest('#apartments-slider img');
-            if (!img) return;
-            const diffX = Math.abs(e.touches[0].clientX - aptStartX);
-            const diffY = Math.abs(e.touches[0].clientY - aptStartY);
-            if (diffX > 10 || diffY > 10) {
-                aptHasMoved = true;
-            }
-        }, { passive: true });
-
-        document.addEventListener('touchend', (e) => {
-            const img = e.target.closest('#apartments-slider img');
-            if (!img) return;
-            if (!aptHasMoved) {
-                const imgSrc = img.getAttribute('src');
+            const aptImg = e.target.closest('#apartments-slider img');
+            if (aptImg && isClickAllowed) {
+                const imgSrc = aptImg.getAttribute('src');
                 modalImg.src = imgSrc;
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
-        });
-
-        document.addEventListener('click', (e) => {
-            const img = e.target.closest('#apartments-slider img');
-            if (!img) return;
-            const imgSrc = img.getAttribute('src');
-            modalImg.src = imgSrc;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
         });
 
         const closeModal = () => {

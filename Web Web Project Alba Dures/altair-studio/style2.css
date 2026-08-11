@@ -1205,6 +1205,7 @@ nav a:hover {
   font-weight: 700;
   font-size: 0.95rem;
   gap: 8px;
+  pointer-events: none;
 }
 
 .proof-thumbnail-wrapper:hover .proof-overlay {
