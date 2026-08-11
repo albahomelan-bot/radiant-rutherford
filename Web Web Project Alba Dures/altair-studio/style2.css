@@ -1221,6 +1221,7 @@ nav a:hover {
   font-weight: 800;
   margin-bottom: 8px;
   color: var(--text-dark);
+  line-height: 1.3;
 }
 
 .proof-card p {
@@ -1228,7 +1229,6 @@ nav a:hover {
   color: var(--text-sec);
   line-height: 1.5;
 }
-
 /* Modal Window for Zooming Receipts */
 .receipt-modal {
   position: fixed;
