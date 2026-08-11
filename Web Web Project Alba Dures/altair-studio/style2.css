@@ -1145,10 +1145,19 @@ nav a:hover {
     gap: 15px !important;
   }
   .proof-card {
-    min-width: 210px !important;
-    width: 210px !important;
-    max-width: 210px !important;
+    min-width: 170px !important;
+    width: 170px !important;
+    max-width: 170px !important;
     margin: 0 !important;
+    padding: 10px 8px !important;
+    border-radius: 18px !important;
+  }
+  .proof-card h4 {
+    font-size: 0.8rem !important;
+    margin-bottom: 4px !important;
+  }
+  .proof-card p {
+    font-size: 0.72rem !important;
   }
 }
 

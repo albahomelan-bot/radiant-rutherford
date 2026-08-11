@@ -51,7 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function update() {
-            if (!isPaused && !isDragging) {
+            // Check if there is any active playing video in this slider
+            const videos = slider.querySelectorAll('video');
+            const isAnyVideoPlaying = Array.from(videos).some(v => !v.paused && !v.ended);
+
+            if (!isPaused && !isDragging && !isAnyVideoPlaying) {
                 targetX -= speed; // Move right to left
                 
                 const origWidth = getOriginalWidth();
