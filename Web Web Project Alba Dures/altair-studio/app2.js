@@ -60,8 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            // Lerp currentX to targetX
-            currentX = currentX + (targetX - currentX) * 0.1;
+            // Lerp currentX to targetX unless paused or dragging
+            if (!isPaused && !isDragging) {
+                currentX = currentX + (targetX - currentX) * 0.1;
+            } else {
+                currentX = targetX; // Instantly freeze position
+            }
             
             // Apply loop containment to currentX as well
             const origWidth = getOriginalWidth();
@@ -109,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Mouse drag logic
         wrapper.addEventListener('mousedown', (e) => {
-            if (e.target.closest('.proof-thumbnail-wrapper') || e.target.closest('.video-thumbnail-container')) {
+            if (e.target.closest('.proof-thumbnail-wrapper') || e.target.closest('.video-thumbnail-container') || e.target.closest('#apartments-slider img')) {
                 return; // let click pass through to modals
             }
             if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
@@ -313,6 +317,49 @@ document.addEventListener('DOMContentLoaded', () => {
             modalImg.src = imgSrc;
             modal.classList.add('active');
             document.body.style.overflow = 'hidden'; // Lock scrolling
+        });
+
+        // Apartments lightbox triggers
+        let aptStartX = 0;
+        let aptStartY = 0;
+        let aptHasMoved = false;
+
+        document.addEventListener('touchstart', (e) => {
+            const img = e.target.closest('#apartments-slider img');
+            if (!img) return;
+            aptStartX = e.touches[0].clientX;
+            aptStartY = e.touches[0].clientY;
+            aptHasMoved = false;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            const img = e.target.closest('#apartments-slider img');
+            if (!img) return;
+            const diffX = Math.abs(e.touches[0].clientX - aptStartX);
+            const diffY = Math.abs(e.touches[0].clientY - aptStartY);
+            if (diffX > 10 || diffY > 10) {
+                aptHasMoved = true;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            const img = e.target.closest('#apartments-slider img');
+            if (!img) return;
+            if (!aptHasMoved) {
+                const imgSrc = img.getAttribute('src');
+                modalImg.src = imgSrc;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            const img = e.target.closest('#apartments-slider img');
+            if (!img) return;
+            const imgSrc = img.getAttribute('src');
+            modalImg.src = imgSrc;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         });
 
         const closeModal = () => {
