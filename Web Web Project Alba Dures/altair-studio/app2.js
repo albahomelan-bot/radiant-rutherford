@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         slider.style.display = 'flex';
         slider.style.flexWrap = 'nowrap';
         slider.style.willChange = 'transform';
-        slider.style.transition = 'none';
+        slider.style.setProperty('transition', 'none', 'important');
         wrapper.style.cursor = 'grab';
 
         let originalWidth = 0;
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initialize Apartments Slider
-    initContinuousSlider('#apartments-slider', '.apartments-slider-wrapper', '#slide-prev', '#slide-next', 1.4);
+    initContinuousSlider('#apartments-slider', '.apartments-slider-wrapper', '#slide-prev', '#slide-next', 1.6);
 
     // Interactive Calculator Logic
     const expNo = document.getElementById('exp-no');
@@ -991,13 +991,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Proofs Slider Logic
-    initContinuousSlider('.proofs-grid', '.proofs-slider-wrapper', null, null, 1.2);
+    initContinuousSlider('.proofs-grid', '.proofs-slider-wrapper', null, null, 1.5);
 
     // VNZH Slider Logic
-    initContinuousSlider('.vnzh-list-new', '.vnzh-slider-wrapper', null, null, 1.2);
+    initContinuousSlider('.vnzh-list-new', '.vnzh-slider-wrapper', null, null, 1.5);
 
     // Graphs Slider Logic
-    initContinuousSlider('.graphs-list-new', '.graphs-slider-wrapper', null, null, 1.2);
+    initContinuousSlider('.graphs-list-new', '.graphs-slider-wrapper', null, null, 1.8);
 
     // Compare Slider Logic (Infinite Auto-sliding Carousel for Mobile)
     const compareList = document.querySelector('.compare-list-new');
@@ -1110,7 +1110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Reviews Slider Logic
-    initContinuousSlider('.reviews-list-new', '.reviews-slider-wrapper', null, null, 1.2);
+    initContinuousSlider('.reviews-list-new', '.reviews-slider-wrapper', null, null, 1.5);
 
     // Stats Slider Logic for Mobile
     const statsGrid = document.querySelector('.stats-grid');
