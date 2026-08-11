@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initialize Apartments Slider
-    initContinuousSlider('#apartments-slider', '.apartments-slider-wrapper', '#slide-prev', '#slide-next', 0.5);
+    initContinuousSlider('#apartments-slider', '.apartments-slider-wrapper', '#slide-prev', '#slide-next', 0.6);
 
     // Interactive Calculator Logic
     const expNo = document.getElementById('exp-no');
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('touchstart', (e) => {
-            const thumb = e.target.closest('.proof-thumbnail-wrapper, #apartments-slider img');
+            const thumb = e.target.closest('.proof-thumbnail-wrapper, #apartments-slider .slide-item');
             if (!thumb) return;
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
@@ -331,9 +331,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.style.overflow = 'hidden';
             }
 
-            const aptImg = e.target.closest('#apartments-slider img');
-            if (aptImg && isClickAllowed) {
-                const imgSrc = aptImg.getAttribute('src');
+            const aptSlide = e.target.closest('#apartments-slider .slide-item');
+            if (aptSlide && isClickAllowed) {
+                const img = aptSlide.querySelector('img');
+                const imgSrc = img.getAttribute('src');
                 modalImg.src = imgSrc;
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';

@@ -2912,6 +2912,7 @@ footer {
 .graphs-slider-wrapper img,
 .reviews-slider-wrapper img,
 .stats-slider-wrapper img {
+  pointer-events: none !important;
   -webkit-user-drag: none !important;
   user-select: none !important;
   cursor: zoom-in;
