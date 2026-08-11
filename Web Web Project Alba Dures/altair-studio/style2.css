@@ -1567,8 +1567,9 @@ nav a:hover {
 }
 
 .review-video-card-new {
-  min-width: calc(33.333% - 13.333px) !important;
-  width: calc(33.333% - 13.333px) !important;
+  min-width: 380px !important;
+  width: 380px !important;
+  max-width: 380px !important;
   box-sizing: border-box;
   flex-shrink: 0;
   background: #ffffff;
