@@ -2894,3 +2894,24 @@ footer {
   }
 }
 
+/* Touch and Drag optimizations for all custom carousels */
+.apartments-slider-wrapper,
+.proofs-slider-wrapper,
+.vnzh-slider-wrapper,
+.graphs-slider-wrapper,
+.reviews-slider-wrapper,
+.stats-slider-wrapper {
+  touch-action: pan-y !important;
+}
+
+.apartments-slider-wrapper img,
+.proofs-slider-wrapper img,
+.vnzh-slider-wrapper img,
+.graphs-slider-wrapper img,
+.reviews-slider-wrapper img,
+.stats-slider-wrapper img {
+  pointer-events: none !important;
+  -webkit-user-drag: none !important;
+  user-select: none !important;
+}
+
