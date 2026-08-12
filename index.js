@@ -299,12 +299,18 @@ function initModal() {
   const openBtns = document.querySelectorAll('.open-modal-btn');
   const closeBtns = document.querySelectorAll('.modal-close');
   const modals = document.querySelectorAll('.modal-backdrop');
+  const projectCards = document.querySelectorAll('.project-card');
 
-  if (!openBtns.length) return;
+  const closeModal = (modal) => {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  };
 
+  // Open modal via specific trigger buttons
   openBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       const modalId = btn.getAttribute('data-modal');
       const targetModal = document.getElementById(modalId);
       if (targetModal) {
@@ -314,13 +320,29 @@ function initModal() {
     });
   });
 
-  const closeModal = (modal) => {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  };
+  // Make entire project card clickable to open modal
+  projectCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      // If the user clicked on external link anchor, let it handle naturally
+      const externalLink = e.target.closest('a[target="_blank"]');
+      if (externalLink) return;
+
+      e.preventDefault();
+      const openBtn = card.querySelector('.open-modal-btn');
+      if (openBtn) {
+        const modalId = openBtn.getAttribute('data-modal');
+        const targetModal = document.getElementById(modalId);
+        if (targetModal) {
+          targetModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+    });
+  });
 
   closeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
       const modal = btn.closest('.modal-backdrop');
       if (modal) closeModal(modal);
     });
