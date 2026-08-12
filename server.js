@@ -23,9 +23,9 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   let urlPath = req.url.split('?')[0]; // Remove query strings
   
-  // Default to index10.html if hitting the root
-  if (urlPath === '/' || urlPath === '/index.html') {
-    urlPath = '/index10.html';
+  // Default to index.html if hitting the root
+  if (urlPath === '/') {
+    urlPath = '/index.html';
   }
 
   // URL decoding to support filenames with spaces (like "Web Web Project Alba Dures")
