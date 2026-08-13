@@ -867,19 +867,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const duration = 2200; // Premium slightly slower duration
             const startTime = performance.now();
             
-            // Set starting styles (unblur and fade-in)
-            el.style.opacity = '0';
-            el.style.filter = 'blur(10px)';
-            el.style.transform = 'scale(0.8)';
-            el.style.transition = 'filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-            
-            // Force reflow
-            el.offsetHeight;
-            
-            // Trigger transition values
-            el.style.opacity = '1';
-            el.style.filter = 'blur(0px)';
-            el.style.transform = 'scale(1)';
+            // Keep numbers visible by default to prevent layout blankness if JS is throttled/paused
             
             const animate = (currentTime) => {
                 const elapsed = currentTime - startTime;
@@ -923,6 +911,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }, observerOptions);
         
         observer.observe(statsSection);
+
+        // Failsafe timeout: if after 3 seconds stats are still not animated, force show target values
+        setTimeout(() => {
+            if (!animated) {
+                statNumbers.forEach(el => {
+                    const target = parseInt(el.getAttribute('data-target'), 10);
+                    el.textContent = target.toLocaleString('ru-RU');
+                });
+                animated = true;
+            }
+        }, 3000);
     }
 
     // Observe all reveal titles and conditions cards for scroll animations
