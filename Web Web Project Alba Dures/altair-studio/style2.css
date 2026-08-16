@@ -1576,9 +1576,9 @@ nav a:hover {
 }
 
 .review-video-card-new {
-  min-width: 380px !important;
-  width: 380px !important;
-  max-width: 380px !important;
+  min-width: 285px !important;
+  width: 285px !important;
+  max-width: 285px !important;
   box-sizing: border-box;
   flex-shrink: 0;
   background: #ffffff;
@@ -1605,9 +1605,9 @@ nav a:hover {
     gap: 15px !important;
   }
   .review-video-card-new {
-    min-width: 280px !important;
-    width: 280px !important;
-    max-width: 280px !important;
+    min-width: 210px !important;
+    width: 210px !important;
+    max-width: 210px !important;
     margin: 0 !important;
   }
 }
