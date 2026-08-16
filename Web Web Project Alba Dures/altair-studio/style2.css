@@ -2931,3 +2931,29 @@ footer {
   cursor: zoom-in;
 }
 
+
+.review-text-wrap {
+  position: relative;
+  width: 100%;
+}
+.review-text-wrap.collapsed .review-text-content {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.review-text-wrap .read-more-btn {
+  display: inline-block;
+  color: var(--accent-pink, #ff007f);
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 5px;
+  font-size: 0.85rem;
+  border-bottom: 1px dashed var(--accent-pink, #ff007f);
+  user-select: none;
+}
+.review-text-wrap .read-more-btn:hover {
+  color: #e60072;
+  border-color: #e60072;
+}

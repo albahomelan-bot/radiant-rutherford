@@ -1430,6 +1430,43 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     startFireworks();
+
+    // Read More / Collapse Toggle for Video Reviews
+    document.querySelectorAll('.review-text-wrap').forEach(wrap => {
+        const btn = wrap.querySelector('.read-more-btn');
+        if (btn) {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // prevent card clicks
+                if (wrap.classList.contains('collapsed')) {
+                    wrap.classList.remove('collapsed');
+                    wrap.classList.add('expanded');
+                    btn.textContent = 'свернуть';
+                } else {
+                    wrap.classList.remove('expanded');
+                    wrap.classList.add('collapsed');
+                    btn.textContent = 'ещё';
+                }
+            });
+        }
+    });
+
+    // Auto-collapse when scrolling page or moving slider
+    const collapseAllReviews = () => {
+        document.querySelectorAll('.review-text-wrap.expanded').forEach(wrap => {
+            wrap.classList.remove('expanded');
+            wrap.classList.add('collapsed');
+            const btn = wrap.querySelector('.read-more-btn');
+            if (btn) btn.textContent = 'ещё';
+        });
+    };
+
+    window.addEventListener('scroll', collapseAllReviews, { passive: true });
+    
+    // Also bind to any slider touch/drag starts to prevent overflow layouts
+    document.querySelectorAll('.reviews-slider-wrapper').forEach(wrapper => {
+        wrapper.addEventListener('touchstart', collapseAllReviews, { passive: true });
+        wrapper.addEventListener('mousedown', collapseAllReviews, { passive: true });
+    });
 });
 
 
