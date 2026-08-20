@@ -235,6 +235,12 @@ async function init() {
   });
 
   // Check Onboarding state
+  const urlParams = new URLSearchParams(window.location.search);
+  const isDeepLink = urlParams.has('property');
+  if (isDeepLink) {
+    localStorage.setItem('c21_onboarded', 'true');
+  }
+
   const isOnboarded = localStorage.getItem('c21_onboarded');
   const onboardingOverlay = document.getElementById('onboardingOverlay');
   const mainInterface = document.getElementById('mainInterface');
