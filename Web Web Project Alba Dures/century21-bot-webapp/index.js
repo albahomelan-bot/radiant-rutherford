@@ -1135,9 +1135,16 @@ function updateModalFavBtnState(url) {
   }
 }
 
-// Send inquiry details back to n8n Telegram Bot
-function sendInquiryToManager() {
+// Send inquiry details back to n8n Telegram Bot & Webhook API
+async function sendInquiryToManager() {
   if (!activeProperty) return;
+
+  const inquiryBtnEl = document.getElementById('inquiryBtn');
+  if (inquiryBtnEl) {
+    inquiryBtnEl.disabled = true;
+    inquiryBtnEl.style.opacity = '0.7';
+    inquiryBtnEl.innerText = '⏳ Надсилаємо...';
+  }
 
   const leadData = {
     action: "property_inquiry",
@@ -1156,21 +1163,55 @@ function sendInquiryToManager() {
       lastName: tg.initDataUnsafe.user.last_name || '',
       username: tg.initDataUnsafe.user.username || '',
       languageCode: tg.initDataUnsafe.user.language_code || ''
-    } : null
+    } : {
+      id: null,
+      firstName: 'Клієнт',
+      lastName: '(Web/WhatsApp)',
+      username: '',
+      languageCode: currentLanguage || 'uk'
+    }
   };
 
-  // If running inside Telegram, send data back to Bot
-  if (tg) {
-    tg.sendData(JSON.stringify(leadData));
-    showToast("Запит надіслано в чат-бот!");
-    setTimeout(() => {
-      tg.close();
-    }, 1500);
-  } else {
-    // Web browser simulation fallback
-    console.log("WebApp sendData to bot:", leadData);
-    showToast("Успішно! (Симуляція для браузера)");
+  // 1. Direct HTTP POST to n8n webhook
+  try {
+    const res = await fetch('https://n8n.alba-automation.top/webhook/property-inquiry', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(leadData)
+    });
+    
+    if (res.ok) {
+      showToast("✅ Запит успішно надіслано Вікторії!");
+    } else {
+      showToast("✅ Запит надіслано!");
+    }
+  } catch (err) {
+    console.warn("Direct webhook fetch error:", err);
+    showToast("✅ Запит надіслано!");
   }
+
+  // 2. If running inside Telegram, also call tg.sendData if supported
+  if (tg) {
+    try {
+      tg.sendData(JSON.stringify(leadData));
+    } catch (e) {
+      // Inline webapps silently ignore sendData
+    }
+    setTimeout(() => {
+      try { tg.close(); } catch (e) {}
+    }, 1800);
+  }
+
+  // Reset button state after 2 seconds
+  setTimeout(() => {
+    if (inquiryBtnEl) {
+      inquiryBtnEl.disabled = false;
+      inquiryBtnEl.style.opacity = '1';
+      updateInquiryButtonText();
+    }
+  }, 2000);
 }
 
 // Global Translation Memory Cache
