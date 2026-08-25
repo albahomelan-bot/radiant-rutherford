@@ -158,6 +158,8 @@ let activeProperty = null;
 let filterState = {
   searchQuery: '',
   translatedQueries: [],
+  searchPriceMin: null,
+  searchPriceMax: null,
   category: 'all',
   city: 'all',
   districts: [],
@@ -328,20 +330,84 @@ async function init() {
   })();
 }
 
+// Parse natural language price queries from search input (e.g. "до 500000 евро" -> max price 500k)
+function parseSmartSearchQuery(query) {
+  let cleanQuery = query.toLowerCase();
+  let priceMin = null;
+  let priceMax = null;
+
+  // 1. Parse Price Max ("до 500 000", "under 150k", "deri ne 100000", max/less than/<)
+  const priceMaxRegexes = [
+    /(?:до|under|max|deri\s*në|less\s*than|<|to)\s*([\d\s.,]+)\s*(?:тыс|тис|k|m|евро|euro|eur|€)?/i,
+    /([\d\s.,]+)\s*(?:тыс|тис|k|m|евро|euro|eur|€)?\s*(?:макс|max)/i
+  ];
+
+  for (const regex of priceMaxRegexes) {
+    const match = cleanQuery.match(regex);
+    if (match) {
+      let numStr = match[1].replace(/[\s.,]/g, '');
+      let val = parseInt(numStr, 10);
+      if (!isNaN(val)) {
+        if (val < 1000) val = val * 1000;
+        priceMax = val;
+        cleanQuery = cleanQuery.replace(match[0], ' ');
+        break;
+      }
+    }
+  }
+
+  // 2. Parse Price Min ("від 50 000", "от 100к", "from 150k", ">")
+  const priceMinRegexes = [
+    /(?:від|от|from|over|nga|>)\s*([\d\s.,]+)\s*(?:тыс|тис|k|m|евро|euro|eur|€)?/i
+  ];
+
+  for (const regex of priceMinRegexes) {
+    const match = cleanQuery.match(regex);
+    if (match) {
+      let numStr = match[1].replace(/[\s.,]/g, '');
+      let val = parseInt(numStr, 10);
+      if (!isNaN(val)) {
+        if (val < 1000) val = val * 1000;
+        priceMin = val;
+        cleanQuery = cleanQuery.replace(match[0], ' ');
+        break;
+      }
+    }
+  }
+
+  cleanQuery = cleanQuery.replace(/\s+/g, ' ').trim();
+  return { cleanQuery, priceMin, priceMax };
+}
+
 // Setup Event Listeners
 function setupEventListeners() {
   // Tab Switching
   tabCatalog.addEventListener('click', () => switchTab('catalog'));
   tabFavorites.addEventListener('click', () => switchTab('favorites'));
 
-  // Search input change with smart translation debounce
+  // Search input change with smart translation debounce and natural language query parsing
   let searchTimeout = null;
   searchInput.addEventListener('input', (e) => {
     const rawVal = e.target.value.trim();
-    const val = rawVal.toLowerCase();
     
     // Clear previous timeout
     if (searchTimeout) clearTimeout(searchTimeout);
+    
+    if (rawVal === '') {
+      filterState.searchQuery = '';
+      filterState.translatedQueries = [];
+      filterState.searchPriceMin = null;
+      filterState.searchPriceMax = null;
+      render();
+      return;
+    }
+    
+    // Parse price limits from query
+    const parsed = parseSmartSearchQuery(rawVal);
+    filterState.searchPriceMin = parsed.priceMin;
+    filterState.searchPriceMax = parsed.priceMax;
+    
+    const val = parsed.cleanQuery;
     
     if (val === '') {
       filterState.searchQuery = '';
@@ -353,10 +419,8 @@ function setupEventListeners() {
     // Check if contains Cyrillic characters (Ukrainian / Russian)
     const hasCyrillic = /[а-яА-ЯёЁіІїЇєЄґҐ]/.test(val);
     if (hasCyrillic) {
-      // Capitalize first letter of each word to ensure Google Translate treats it as a proper noun (e.g. city name)
-      const capitalizedVal = rawVal.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      const capitalizedVal = val.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
       
-      // Debounce translation (400ms) to prevent excessive API requests
       searchTimeout = setTimeout(async () => {
         try {
           const [enTrans, sqTrans] = await Promise.all([
@@ -365,7 +429,7 @@ function setupEventListeners() {
           ]);
           filterState.searchQuery = val;
           filterState.translatedQueries = [
-            val, 
+            val.toLowerCase(), 
             enTrans.toLowerCase(), 
             sqTrans.toLowerCase()
           ];
@@ -374,13 +438,13 @@ function setupEventListeners() {
         } catch (err) {
           console.error("Search query translation error:", err);
           filterState.searchQuery = val;
-          filterState.translatedQueries = [val];
+          filterState.translatedQueries = [val.toLowerCase()];
           render();
         }
       }, 400);
     } else {
       filterState.searchQuery = val;
-      filterState.translatedQueries = [val];
+      filterState.translatedQueries = [val.toLowerCase()];
       render();
     }
   });
@@ -951,6 +1015,8 @@ function render() {
     const numericPrice = Number(String(item.price || '').replace(/[^0-9]/g, ''));
     if (filterState.priceMin && numericPrice < filterState.priceMin) return false;
     if (filterState.priceMax && numericPrice > filterState.priceMax) return false;
+    if (filterState.searchPriceMin && numericPrice < filterState.searchPriceMin) return false;
+    if (filterState.searchPriceMax && numericPrice > filterState.searchPriceMax) return false;
     
     // Rooms
     if (filterState.rooms !== 'all') {
