@@ -1417,6 +1417,14 @@ async function executeInquirySubmit(profile, notes) {
 
 // Global Translation Memory Cache
 let translationCache = {};
+try {
+  const cachedDesc = localStorage.getItem('c21_desc_translations');
+  if (cachedDesc) {
+    translationCache = JSON.parse(cachedDesc);
+  }
+} catch (e) {
+  console.warn("Failed to load description translations cache:", e);
+}
 
 // Translate Property Title & Description
 async function translatePropertyDetails(property, lang) {
@@ -1458,6 +1466,11 @@ async function translatePropertyDetails(property, lang) {
       title: translatedTitle,
       description: translatedDesc
     };
+
+    // Save to LocalStorage
+    try {
+      localStorage.setItem('c21_desc_translations', JSON.stringify(translationCache));
+    } catch (e) {}
     
     titleEl.textContent = translatedTitle;
     descEl.textContent = translatedDesc;
@@ -1484,6 +1497,14 @@ async function fetchGoogleTranslate(text, toLang) {
 
 // Global translation cache for card titles to avoid duplicate hits
 let titleTranslationCache = {};
+try {
+  const cachedTitle = localStorage.getItem('c21_title_translations');
+  if (cachedTitle) {
+    titleTranslationCache = JSON.parse(cachedTitle);
+  }
+} catch (e) {
+  console.warn("Failed to load title translations cache:", e);
+}
 
 // Translate card title on grid dynamically
 async function translateCardTitle(element, text, lang) {
@@ -1499,6 +1520,11 @@ async function translateCardTitle(element, text, lang) {
   try {
     const translated = await fetchGoogleTranslate(text, lang);
     titleTranslationCache[cacheKey] = translated;
+    
+    // Save to LocalStorage
+    try {
+      localStorage.setItem('c21_title_translations', JSON.stringify(titleTranslationCache));
+    } catch (e) {}
     
     // Make sure the element still represents the same original text (prevent race condition during fast scrolling/rendering)
     if (element.dataset.originalTitle === text) {
