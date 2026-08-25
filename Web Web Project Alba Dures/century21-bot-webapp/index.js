@@ -1143,7 +1143,7 @@ function getClientProfile() {
     lastName: '',
     username: '',
     phone: '',
-    languageCode: currentLanguage || 'uk'
+    languageCode: localStorage.getItem('c21_lang') || 'uk'
   };
 
   // Check Telegram WebApp user first
@@ -1153,7 +1153,7 @@ function getClientProfile() {
     profile.firstName = u.first_name || '';
     profile.lastName = u.last_name || '';
     profile.username = u.username || '';
-    profile.languageCode = u.language_code || currentLanguage || 'uk';
+    profile.languageCode = u.language_code || localStorage.getItem('c21_lang') || 'uk';
   }
 
   // Check URL query parameters (Method A)
@@ -1296,7 +1296,7 @@ async function executeInquirySubmit(profile, notes) {
       username: profile.username || '',
       phone: profile.phone || '',
       notes: notes || '',
-      languageCode: profile.languageCode || currentLanguage || 'uk'
+      languageCode: profile.languageCode || localStorage.getItem('c21_lang') || 'uk'
     }
   };
 
