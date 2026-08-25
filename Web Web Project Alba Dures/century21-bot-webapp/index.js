@@ -1258,11 +1258,10 @@ async function sendInquiryToManager() {
 
   const profile = getClientProfile();
 
-  // If in browser without Telegram user and without saved phone/username -> Open Contact Modal (Method B)
+  // If in browser (not inside Telegram WebApp), always open the contact modal to confirm details
   const isInsideTelegram = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
-  const hasDirectContact = profile.phone || profile.username || (profile.id && !profile.id.toString().startsWith('web_'));
 
-  if (!isInsideTelegram && !hasDirectContact) {
+  if (!isInsideTelegram) {
     openContactModal();
     return;
   }
