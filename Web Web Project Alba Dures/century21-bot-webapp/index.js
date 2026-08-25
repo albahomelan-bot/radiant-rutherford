@@ -1320,6 +1320,14 @@ async function executeInquirySubmit(profile, notes) {
     showToast("✅ Запит надіслано!");
   }
 
+  // Show a success modal alert to the user
+  const currentLang = localStorage.getItem('c21_lang') || 'uk';
+  let successMsg = "Ваш запит прийнято, очікуйте на відповідь";
+  if (currentLang === 'en') successMsg = "Your request has been received, please wait for a response";
+  else if (currentLang === 'sq') successMsg = "Kërkesa juaj u pranua, prisni për një përgjigje";
+  else if (currentLang === 'ru') successMsg = "Ваш запрос принят, ожидайте ответа";
+  alert(successMsg);
+
   // 2. If running inside Telegram, also call tg.sendData if supported
   if (tg) {
     try {
