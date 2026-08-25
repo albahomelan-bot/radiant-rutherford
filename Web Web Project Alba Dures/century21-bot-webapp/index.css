@@ -1482,3 +1482,123 @@ body {
   align-items: center;
   width: 100%;
 }
+
+/* Contact Modal for Browser/Guest Inquiries */
+.contact-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  transition: opacity 0.3s ease;
+}
+
+.contact-modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contact-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.contact-modal-content {
+  position: relative;
+  background: #15181f;
+  border: 1px solid rgba(229, 169, 59, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  color: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+  animation: scaleIn 0.25s ease-out;
+}
+
+.contact-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  color: #8e95a5;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.contact-modal-close:hover {
+  color: #fff;
+}
+
+.contact-modal-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.contact-modal-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.contact-modal-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e5a93b;
+  margin-bottom: 6px;
+}
+
+.contact-modal-header p {
+  font-size: 13px;
+  color: #a0a6b5;
+  line-height: 1.4;
+}
+
+.contact-modal .form-group {
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.contact-modal label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #d1d5db;
+  margin-bottom: 6px;
+}
+
+.contact-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #0d0f14;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.contact-input:focus {
+  border-color: #e5a93b;
+  box-shadow: 0 0 0 3px rgba(229, 169, 59, 0.15);
+}
+
+.contact-modal-actions {
+  margin-top: 18px;
+}

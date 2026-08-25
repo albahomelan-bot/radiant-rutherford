@@ -352,7 +352,37 @@
       </div>
     </div>
 
+    <!-- Browser Guest Quick Contact Modal -->
+    <div id="contactModal" class="contact-modal hidden">
+      <div class="contact-modal-overlay" id="contactModalOverlay"></div>
+      <div class="contact-modal-content">
+        <button id="closeContactModalBtn" class="contact-modal-close">&times;</button>
+        <div class="contact-modal-header">
+          <div class="contact-modal-icon">📞</div>
+          <h3 id="contactModalTitle">Зв'язатися з Вікторією</h3>
+          <p id="contactModalSubtitle">Вкажіть ваш контакт, щоб наш менеджер надіслав вам планування та відповів на всі питання:</p>
+        </div>
+        <form id="contactModalForm" onsubmit="return false;">
+          <div class="form-group">
+            <label id="contactNameLabel" for="contactNameInput">Ваше ім'я:</label>
+            <input type="text" id="contactNameInput" placeholder="Наприклад: Олена" class="contact-input" />
+          </div>
+          <div class="form-group">
+            <label id="contactPhoneLabel" for="contactPhoneInput">Телефон / WhatsApp / Telegram:</label>
+            <input type="text" id="contactPhoneInput" placeholder="+380... або +355... або @username" class="contact-input" />
+          </div>
+          <div class="form-group">
+            <label id="contactNotesLabel" for="contactNotesInput">Коментар (необов'язково):</label>
+            <input type="text" id="contactNotesInput" placeholder="Коли зручно зателефонувати або подивитись?" class="contact-input" />
+          </div>
+          <div class="contact-modal-actions">
+            <button type="button" id="submitContactModalBtn" class="btn btn-primary btn-block">🚀 Надіслати запит Вікторії</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- App Javascript -->
-    <script src="index.js?v=8"></script>
+    <script src="index.js?v=9"></script>
 </body>
 </html>

@@ -1135,10 +1135,142 @@ function updateModalFavBtnState(url) {
   }
 }
 
+// --- Client Profile & Lead Identification (Methods A & B) ---
+function getClientProfile() {
+  let profile = {
+    id: null,
+    firstName: '',
+    lastName: '',
+    username: '',
+    phone: '',
+    languageCode: currentLanguage || 'uk'
+  };
+
+  // Check Telegram WebApp user first
+  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    const u = tg.initDataUnsafe.user;
+    profile.id = u.id || null;
+    profile.firstName = u.first_name || '';
+    profile.lastName = u.last_name || '';
+    profile.username = u.username || '';
+    profile.languageCode = u.language_code || currentLanguage || 'uk';
+  }
+
+  // Check URL query parameters (Method A)
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('uid')) profile.id = params.get('uid');
+    if (params.get('uname')) profile.username = params.get('uname').replace(/^@/, '');
+    if (params.get('name')) profile.firstName = params.get('name');
+    if (params.get('phone')) profile.phone = params.get('phone');
+  } catch (e) {}
+
+  // Check persistent LocalStorage
+  try {
+    const saved = localStorage.getItem('c21_client_profile');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (!profile.id && parsed.id) profile.id = parsed.id;
+      if (!profile.firstName && parsed.firstName) profile.firstName = parsed.firstName;
+      if (!profile.lastName && parsed.lastName) profile.lastName = parsed.lastName;
+      if (!profile.username && parsed.username) profile.username = parsed.username;
+      if (!profile.phone && parsed.phone) profile.phone = parsed.phone;
+    }
+  } catch (e) {}
+
+  // Save/update persistent profile if we have any info
+  if (profile.id || profile.username || profile.phone || profile.firstName) {
+    try {
+      localStorage.setItem('c21_client_profile', JSON.stringify(profile));
+    } catch (e) {}
+  }
+
+  return profile;
+}
+
+// Modal Contact Elements
+const contactModal = document.getElementById('contactModal');
+const contactModalOverlay = document.getElementById('contactModalOverlay');
+const closeContactModalBtn = document.getElementById('closeContactModalBtn');
+const contactNameInput = document.getElementById('contactNameInput');
+const contactPhoneInput = document.getElementById('contactPhoneInput');
+const contactNotesInput = document.getElementById('contactNotesInput');
+const submitContactModalBtn = document.getElementById('submitContactModalBtn');
+
+function openContactModal() {
+  if (!contactModal) return;
+  const profile = getClientProfile();
+  if (contactNameInput && profile.firstName) {
+    contactNameInput.value = [profile.firstName, profile.lastName].filter(Boolean).join(' ');
+  }
+  if (contactPhoneInput && (profile.phone || profile.username)) {
+    contactPhoneInput.value = profile.phone || ('@' + profile.username);
+  }
+  contactModal.classList.remove('hidden');
+}
+
+function closeContactModal() {
+  if (!contactModal) return;
+  contactModal.classList.add('hidden');
+}
+
+if (closeContactModalBtn) {
+  closeContactModalBtn.addEventListener('click', closeContactModal);
+}
+if (contactModalOverlay) {
+  contactModalOverlay.addEventListener('click', closeContactModal);
+}
+if (submitContactModalBtn) {
+  submitContactModalBtn.addEventListener('click', handleContactModalSubmit);
+}
+
+function handleContactModalSubmit() {
+  const nameVal = contactNameInput ? contactNameInput.value.trim() : '';
+  const phoneVal = contactPhoneInput ? contactPhoneInput.value.trim() : '';
+  const notesVal = contactNotesInput ? contactNotesInput.value.trim() : '';
+
+  if (!phoneVal && !nameVal) {
+    showToast("⚠️ Будь ласка, вкажіть ваш телефон або ім'я!");
+    return;
+  }
+
+  // Update profile in localStorage
+  let profile = getClientProfile();
+  if (nameVal) profile.firstName = nameVal;
+  if (phoneVal) {
+    if (phoneVal.startsWith('@')) {
+      profile.username = phoneVal.replace(/^@/, '');
+    } else {
+      profile.phone = phoneVal;
+    }
+  }
+  try {
+    localStorage.setItem('c21_client_profile', JSON.stringify(profile));
+  } catch (e) {}
+
+  closeContactModal();
+  executeInquirySubmit(profile, notesVal);
+}
+
 // Send inquiry details back to n8n Telegram Bot & Webhook API
 async function sendInquiryToManager() {
   if (!activeProperty) return;
 
+  const profile = getClientProfile();
+
+  // If in browser without Telegram user and without saved phone/username -> Open Contact Modal (Method B)
+  const isInsideTelegram = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+  const hasDirectContact = profile.phone || profile.username || (profile.id && !profile.id.toString().startsWith('web_'));
+
+  if (!isInsideTelegram && !hasDirectContact) {
+    openContactModal();
+    return;
+  }
+
+  executeInquirySubmit(profile, '');
+}
+
+async function executeInquirySubmit(profile, notes) {
   const inquiryBtnEl = document.getElementById('inquiryBtn');
   if (inquiryBtnEl) {
     inquiryBtnEl.disabled = true;
@@ -1157,18 +1289,14 @@ async function sendInquiryToManager() {
       agentName: (activeProperty.agentName || '').replace(/\s+/g, ' ').trim(),
       agentPhone: (activeProperty.agentPhone || '').replace(/\s+/g, ' ').trim()
     },
-    user: tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? {
-      id: tg.initDataUnsafe.user.id,
-      firstName: tg.initDataUnsafe.user.first_name || '',
-      lastName: tg.initDataUnsafe.user.last_name || '',
-      username: tg.initDataUnsafe.user.username || '',
-      languageCode: tg.initDataUnsafe.user.language_code || ''
-    } : {
-      id: null,
-      firstName: 'Клієнт',
-      lastName: '(Web/WhatsApp)',
-      username: '',
-      languageCode: currentLanguage || 'uk'
+    user: {
+      id: profile.id || null,
+      firstName: profile.firstName || 'Клієнт',
+      lastName: profile.lastName || '(з сайту)',
+      username: profile.username || '',
+      phone: profile.phone || '',
+      notes: notes || '',
+      languageCode: profile.languageCode || currentLanguage || 'uk'
     }
   };
 
