@@ -366,22 +366,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Telegram Bot Notifications Integration
     const botToken = '8966078008:AAFB5iWBue64JFBuTBgj_8AE10BjXOTjfIE';
-    const chatId = '5747965677';
+    const chatIds = ['5747965677', '382018774']; // 5747965677 (Lina) & 382018774 (Katya Frank)
     const botRedirectUrl = 'https://t.me/Dream_Geo1';
 
     function sendTelegramMessage(text) {
         const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chat_id: chatId,
-                text: text,
-                parse_mode: 'HTML'
-            })
-        });
+        return Promise.all(chatIds.map(id => {
+            return fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: id,
+                    text: text,
+                    parse_mode: 'HTML'
+                })
+            });
+        }));
     }
 
     // Helper to sanitize and validate Telegram handles or links
